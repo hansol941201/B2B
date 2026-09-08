@@ -63,6 +63,13 @@ a:hover{text-decoration:underline}
 .tb-r{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#96A3BC;flex:0 0 auto;white-space:nowrap}
 .tb-r .num{color:#fff;font-weight:700}
 .dot{width:6px;height:6px;border-radius:50%;background:#6FBF9B;display:inline-block}
+.fb-badge{margin-left:11px;padding:2px 9px;border-radius:100px;font-size:10.5px;font-weight:700;
+          background:rgba(255,255,255,.1);color:#C3CDDE;white-space:nowrap}
+.fb-badge.fb-connecting{background:rgba(255,255,255,.12);color:#C3CDDE}
+.fb-badge.fb-synced{background:rgba(111,191,155,.18);color:#8FE0BA}
+.fb-badge.fb-saving{background:rgba(255,232,219,.18);color:#FFE8DB}
+.fb-badge.fb-error{background:rgba(224,120,110,.2);color:#F3ACA3}
+.fb-badge.fb-offline{background:rgba(224,120,110,.14);color:#E0A79E}
 .main{padding:34px 30px 96px;background:var(--bg);min-height:calc(100vh - 58px)}
 .wrap{max-width:1320px;margin:0 auto}
 
@@ -660,7 +667,7 @@ input.dirty,select.dirty{background:var(--peach);border-color:var(--brand)}
       <span class="tx"><span class="nm">B2B운영팀</span><span class="sb">넷폼 · 업무보드</span></span>
     </div>
     <nav class="tabs" id="nav" aria-label="주요 화면"></nav>
-    <div class="tb-r"><span class="dot" aria-hidden="true"></span>기준일 <span class="num" id="today">—</span></div>
+    <div class="tb-r"><span class="dot" aria-hidden="true"></span>기준일 <span class="num" id="today">—</span><span id="fbStatus" class="fb-badge fb-connecting">연결 중…</span></div>
   </div>
 </header>
 <main class="main" id="view"></main>
@@ -764,62 +771,43 @@ const SEED = {
         {t:"업무확인 페이지 화면 시안", p:30, n:"팀원 업무 공유용 페이지 기획, 화면 시안 작성 단계.", r:"시안 확정 전이며 표시 항목·데이터 원천·갱신 주기 미결정."}
       ]},
 
-    /* === 신한솔 === (task-tracker 실데이터 이관, 2026-09-07) */
-    { id:"S1", prog:"P3", owner:"shs", name:"실적자동화",
-      note:"실적 데이터 동기화와 출력 양식을 자동화해 수작업 정리를 없앤다.",
+    /* === 신한솔 === */
+    { id:"S1", prog:"P4", owner:"shs", name:"플랫폼·앱 운영",
+      note:"기존 플랫폼 운영을 점검하고 협력사를 앱 환경으로 전환한다.",
       tasks:[
-        {t:"실적 데이터 자동 동기화", p:99, n:"", r:""},
-        {t:"수작업·자동화 결과 일치성 검증", p:99, n:"", r:""},
-        {t:"PDF 출력 양식 디자인 개선 (날짜·공종 자동 표기)", p:99, n:"", r:""}
+        {t:"플랫폼 운영 검토 및 앱 전환 대응", p:70, n:"운영 상태 점검과 앱 전환 대응 진행 중.", r:"전환 대상 협력사 도달·첫 사용 여부는 지표 ①②로 측정 필요."}
       ]},
-    { id:"S2", prog:"P3", owner:"shs", name:"시공사 QnA",
-      note:"시공사 질문에 대응하는 기술응답 자료와 AI 추천 체계를 만든다.",
+    { id:"S2", prog:"P3", owner:"shs", name:"업무 자동화",
+      note:"반복 처리 업무를 자동화해 협력사 요청 대응 속도를 확보한다.",
       tasks:[
-        {t:"시공사 질문 기반 기술응답 자료 구축", p:20, n:"", r:""},
-        {t:"1·2차 미팅 시공사 질문 취합", p:90, n:"", r:""},
-        {t:"고객 질문 분석 및 후속 자료 AI 추천", p:60, n:"", r:""}
+        {t:"공종·개념·지역·실적 검색·발행 자동화", p:100, n:"검색과 자료 발행 자동화 완료.", r:""},
+        {t:"AI 전화접수 자동화 검토", p:10, n:"검토 착수 단계.", r:"도입 범위·예외 처리 기준 미정."},
+        {t:"개인 업무 HUB 구축", p:100, n:"개인 업무 진입점 구축 완료.", r:""},
+        {t:"PPT·공종 설명자료 자동생성", p:15, n:"자동생성 구조 검토 단계.", r:"공종 템플릿 확정 필요. 지표 ③ 맞춤자료 사용률과 직접 연결됨."},
+        {t:"AI 전문가 전략회의실", p:100, n:"구축 완료.", r:""},
+        {t:"시공사 Q&A 축적·필요자료 확인·AI 개선 자료 확인", p:100, n:"Q&A 축적 및 개선 자료 확인 체계 완료.", r:""},
+        {t:"월말 실적·공고문 정리 자동화", p:50, n:"정리 자동화 절반 진행.", r:"월말 마감 일정과 연동 미완."}
       ]},
-    { id:"S3", prog:"P3", owner:"shs", name:"월말 실적 정리 엑셀 입력 업무 자동화 예정",
-      note:"월말 실적 정리 엑셀 입력 작업을 자동화한다.",
-      tasks:[]},
-    { id:"S4", prog:"P4", owner:"shs", name:"플랫폼 → 앱 전환 대응",
-      note:"협력사가 앱 환경으로 넘어올 때의 거부감을 낮추고 전환을 돕는다.",
+    { id:"S3", prog:"P4", owner:"shs", name:"자료 제작·조사",
+      note:"협력사가 아파트 고객 앞에서 바로 쓰는 영업 자료를 만든다.",
       tasks:[
-        {t:"플랫폼 → 앱 전환 전·후 안내 팝업 제작", p:70, n:"", r:""},
-        {t:"시공사 앱 전환 거부감 최소화 방안", p:70, n:"", r:""},
-        {t:"대기업 사례 기반 사전조사", p:90, n:"", r:""}
+        {t:"공종별 누락·손상 자료 조사", p:100, n:"공종별 자료 결손 현황 조사 완료.", r:""},
+        {t:"타사 운영·서비스 전환 사례 비교", p:100, n:"경쟁사 운영 방식·전환 사례 비교 완료.", r:""},
+        {t:"홍보영상 제작", p:70, n:"제작 진행 중.", r:"배포 채널·도달 측정 방식 미정."},
+        {t:"플랫폼 1차 안내 팝플렛 제작·발송", p:100, n:"1차 안내물 제작·발송 완료.", r:"발송 후 실제 앱 진입률 미측정 — 지표 ②의 선행 신호로 잡을 것."}
       ]},
-    { id:"S5", prog:"P3", owner:"shs", name:"AI 전화접수 응대 자동화",
-      note:"전화접수 응대를 AI로 자동화할 수 있는 범위를 검토한다.",
+    { id:"S4", prog:"P4", owner:"shs", name:"인수인계·운영 실무",
+      note:"담당 전환에 따른 운영 실무를 인수한다.",
       tasks:[
-        {t:"구현 가능 범위 검토", p:30, n:"", r:""}
+        {t:"인수인계·운영실무", p:100, n:"인수인계 완료.", r:""}
       ]},
-    { id:"S6", prog:"P3", owner:"shs", name:"고객관리카드",
-      note:"고객 실적·매출·요청 이력을 한 화면에서 관리하고 자동 산출한다.",
+    { id:"S5", prog:"P3", owner:"shs", name:"B2B 업무효율화 플랫폼",
+      note:"고객 관리와 팀 업무 배정을 한 화면에서 처리한다.",
       tasks:[
-        {t:"실적·매출·최근 흐름", p:90, n:"", r:""},
-        {t:"협약 진행단계 관리 시스템 구축", p:90, n:"", r:""},
-        {t:"시공사 단계별 안내메일 자동 발송가능 구축", p:100, n:"", r:""},
-        {t:"시공사 매출 동기화", p:30, n:"", r:""},
-        {t:"서류현황 탭 구축", p:70, n:"", r:""},
-        {t:"시공사 지역분포·실적 지도 구축", p:100, n:"", r:""},
-        {t:"고객 플랫폼 중복·오류 내역 취합 및 정리", p:60, n:"", r:""},
-        {t:"고객 인사이트 관리", p:10, n:"", r:""},
-        {t:"시공사별 최근 요청 이력 수집", p:90, n:"", r:""}
-      ]},
-    { id:"S7", prog:"P4", owner:"shs", name:"시공사 안내영상 제작",
-      note:"협력사에게 배포할 안내영상을 제작한다.",
-      tasks:[
-        {t:"영상용 이미지 자료 준비", p:70, n:"", r:""},
-        {t:"대본·이미지 기반 안내영상 최종 제작", p:50, n:"", r:""},
-        {t:"대본 작성", p:95, n:"", r:""}
-      ]},
-    { id:"S8", prog:"P3", owner:"shs", name:"AI 전략자문실",
-      note:"AI 전략가와의 협업 토론 기능과 보고서 출력 체계를 만든다.",
-      tasks:[
-        {t:"이미지 자료 첨부 방식 개선", p:20, n:"", r:""},
-        {t:"보고서 출력 양식 개선", p:70, n:"", r:""},
-        {t:"AI전략가 협업 토론 기능 구축", p:100, n:"", r:""}
+        {t:"B2B 업무효율화 사이트 구축", p:80, n:"사이트 골격 구축 진행.", r:"본 트래커와 진입 동선 통합 필요."},
+        {t:"고객관리카드 구축·자동화", p:93, n:"매출 대비 실적·최근 흐름, 기여도·급상승업체 자동 산출.", r:"협력사 등급 기준을 지표 ①의 '활성' 정의와 맞출 것."},
+        {t:"업무관리 페이지 구축", p:100, n:"고객 L1~L5 단계별 전환·후속요청·신규 협력업체 관리 구축 완료.", r:""},
+        {t:"B2B 일정 배정·관리", p:100, n:"일정 배정·관리 완료.", r:""}
       ]},
 
     /* === 조재연 (리드) 개인 과제 === */
@@ -886,13 +874,10 @@ const SEED = {
       { id:"RC4", t:"월말 지표 산출 · 원본 대조", cy:"월", done:false }
     ],
     shs: [
-      { id:"RS1", t:"공사실적정리", cy:"월", done:false },
-      { id:"RS2", t:"협약서 발행 관리", cy:"일", done:false },
-      { id:"RS3", t:"T4 기술자문문의 분류", cy:"일", done:false },
-      { id:"RS4", t:"고객응대 · 요청접수 · 자료발송", cy:"일", done:false },
-      { id:"RS5", t:"POUR 공고 현장등록", cy:"일", done:false },
-      { id:"RS6", t:"협약 안내 · 협약서 발급 · 협약 체결 · 체결 확인", cy:"일", done:false },
-      { id:"RS7", t:"PT 일정 등록사항 확인", cy:"일", done:false }
+      { id:"RS1", t:"협력사 문의 접수 · 배정", cy:"일", done:false },
+      { id:"RS2", t:"자료 · 견적 발행 처리", cy:"일", done:false },
+      { id:"RS3", t:"주간 협력사 활동 점검", cy:"주", done:false },
+      { id:"RS4", t:"월말 실적 · 공고문 정리", cy:"월", done:false }
     ]
   },
 
@@ -979,8 +964,8 @@ const SEED = {
       {n:"공고 원문 링크 매칭률", d:"수기 공고에 원문 링크가 붙은 비율 (25년분)", cur:74.0, t:85, u:"%"}
     ],
     shs:[
-      {n:"실적자동화 진행률", d:"실적 데이터 자동화 3개 과제 평균 진행률", cur:null, t:100, u:"%", auto:"S1"},
-      {n:"플랫폼 전환 대응 진행률", d:"앱 전환 대응 진행률", cur:null, t:100, u:"%", auto:"S4"},
+      {n:"자동화 과제 완료율", d:"업무 자동화 7개 과제 평균 진행률", cur:null, t:100, u:"%", auto:"S2"},
+      {n:"플랫폼 전환 대응 진행률", d:"앱 전환 대응 진행률", cur:null, t:100, u:"%", auto:"S1"},
       {n:"협력사 활성화 기여", d:"지표 ① 활성 협력사율 (담당 지표)", cur:null, t:50, u:"%", kpi:"K1"},
       {n:"첫 문의 도달 단축", d:"지표 ② 첫 문의까지 걸린 날 (담당 지표)", cur:null, t:90, u:"일", kpi:"K2", dir:"down"}
     ]
@@ -1010,9 +995,104 @@ const SEED = {
   /* ---------- 자동화 업무 ----------
      st: run 운영중 / dev 개발중 / plan 검토 / off 중단
      실체화 항목(how·trig·inp·out·where·fail) — 이 여섯 칸이 채워져야 인수인계가 됩니다.
-     비어 있는 칸은 화면에서 '미기재'로 표시되고 실체화 점수에 반영됩니다.
-     ※ 2026-09-07 요청으로 기존 현행 목록 전체 삭제 — [팀 업무] 화면의 ✎ 편집에서 다시 등록하세요. */
-  automations: [],
+     비어 있는 칸은 화면에서 '미기재'로 표시되고 실체화 점수에 반영됩니다. */
+  automations: [
+    { id:"A1", n:"전국 단지 데이터 매일 자동 수집·갱신", own:"csh", st:"run", cy:"매일", pj:"C1",
+      was:"단지 정보를 필요할 때마다 사람이 조회해 옮겨 적던 일",
+      eff:"2만 2,270개 단지 · 오류 0건 · 매일 정시 자동 실행",
+      how:"공공데이터 API 조회 + 스케줄러 자동 실행", trig:"매일 정해진 시각",
+      inp:"공공데이터 단지 정보 API", out:"전국 단지 마스터 테이블 (매일 덮어쓰기)",
+      where:"", code:"", url:"", fail:"미수립 — 수집 실패 시 알림·재시도 절차 없음", chk:"" },
+    { id:"A2", n:"일별 공고 현황 대시보드 자동 집계", own:"csh", st:"run", cy:"매일", pj:"C2",
+      was:"구글시트를 열어 손으로 세던 일별 공고 집계",
+      eff:"실시간 집계 · 45차 개선 반영",
+      how:"구글 스프레드시트 gviz 실시간 조회 + 웹 화면 렌더링", trig:"화면을 열 때마다 실시간",
+      inp:"구글 스프레드시트 (수기 입력 시트)", out:"일별 현황 캘린더 화면 7개 탭",
+      where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A3", n:"AI 일일 증감 해설 · 문장형 질의응답", own:"csh", st:"run", cy:"매일", pj:"C2",
+      was:"수치가 왜 늘고 줄었는지 사람이 찾아 설명하던 일",
+      eff:"매일 자동 코멘트 생성 · 실사용 검증 완료",
+      how:"GitHub Actions + AI 모델 호출", trig:"매일 자동 실행",
+      inp:"규칙 기반으로 계산된 신호값", out:"latest-insight.json → 화면 상단 코멘트 카드",
+      where:"", code:"", url:"", fail:"실패 시 코멘트 영역만 숨김 (화면은 정상)", chk:"" },
+    { id:"A4", n:"건설산업연구원 주간 보고서 자동 확인", own:"csh", st:"run", cy:"매주", pj:"C2",
+      was:"외부 보고서를 매주 열어 유지보수 관련 내용을 찾던 일",
+      eff:"주간 자동 확인 · 관련 내용만 추출",
+      how:"외부 사이트 크롤링", trig:"주 1회 자동",
+      inp:"건설산업연구원 주간 보고서", out:"유지보수 관련 발췌 → 시장 동향 화면",
+      where:"", code:"", url:"", fail:"미수립 — 외부 사이트 구조 변경 시 조용히 중단될 수 있음", chk:"" },
+    { id:"A5", n:"공고문 자사·경쟁사 공법 자동 분류", own:"csh", st:"run", cy:"매일", pj:"C3",
+      was:"공고문을 하나씩 열어 공법을 판정하던 일",
+      eff:"본문·첨부까지 확인 후 자동 판정 · 오류내역 탭으로 실패 건 추적",
+      how:"공고문 본문·첨부 파싱 + 판정 규칙 적용", trig:"공고 등록 시",
+      inp:"K-APT 공고문 (제목·본문·첨부파일)", out:"공법 판정 결과 + 오류내역 탭",
+      where:"", code:"", url:"", fail:"판독 실패 건은 오류내역 탭에 사유와 함께 남김", chk:"" },
+    { id:"A6", n:"수기 엑셀 ↔ 시스템 결과 일자별 대조 도구", own:"csh", st:"run", cy:"매일", pj:"C3",
+      was:"두 자료를 눈으로 맞춰보던 검수",
+      eff:"일자별 자동 대조 · 검수 절차에 적용 완료",
+      how:"", trig:"1차 자동 분류 이후", inp:"수기 엑셀 + 시스템 판정 결과",
+      out:"일자별 불일치 목록", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A7", n:"공공데이터 · 키프리스 API 연동", own:"csh", st:"run", cy:"상시", pj:"C3",
+      was:"특허번호·공법명을 사람이 검색해 확인하던 일",
+      eff:"내부 DB에 없는 건 자동 보조 조회 · 낙찰 정보 자동 연계",
+      how:"KIPRIS API + 공공데이터포털 낙찰정보 API", trig:"판정 시 내부 DB에 없을 때만 호출",
+      inp:"특허번호 · 공법명", out:"업체명·공법명 보완 결과 (판정 근거로는 미사용)",
+      where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A8", n:"선행지표 자동 계산 (단계 전환·재사용 3종)", own:"csh", st:"dev", cy:"매일", pj:"C2",
+      was:"지표를 1회성 수작업으로 계산하던 방식",
+      eff:"8개 중 3개 코드 반영 · 나머지 5개 대기",
+      how:"", trig:"매일 자동", inp:"기술지원 플랫폼 통합 기록",
+      out:"선행지표 인사이트 대시보드 수치", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A9", n:"공고문 원문 링크 자동 매칭", own:"csh", st:"dev", cy:"상시", pj:"C5",
+      was:"수기 공고에 원문 링크를 하나씩 붙이던 일",
+      eff:"25년분 매칭률 25.7% → 74.0% · 26년분 85.0% 검증",
+      how:"단지명+공고일 매칭 + 제목 유사도 매칭", trig:"공고 정리 시",
+      inp:"수기 공고 목록 + K-APT 원문", out:"원문 링크가 붙은 공고 목록",
+      where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A10", n:"주간 병목 지표 자동 배너", own:"csh", st:"dev", cy:"매주", pj:"C2",
+      was:"어느 지표가 병목인지 회의에서 논의해 정하던 일",
+      eff:"매주 자동 선정 · 화면 상단 배너 표시",
+      how:"", trig:"주 1회", inp:"선행지표 8개 값", out:"병목 지표 1개 + 배너 문구",
+      where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A11", n:"공종·개념·지역·실적 검색 · 자료 발행 자동화", own:"shs", st:"run", cy:"상시", pj:"S2",
+      was:"협력사 요청마다 자료를 찾아 정리해 보내던 일",
+      eff:"검색·발행 전 구간 자동화 완료",
+      how:"", trig:"협력사 요청 시", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A12", n:"개인 업무 HUB", own:"shs", st:"run", cy:"상시", pj:"S2",
+      was:"개인 업무 진입점이 흩어져 있던 상태",
+      eff:"단일 진입점 구축 완료",
+      how:"", trig:"상시", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A13", n:"AI 전문가 전략회의실", own:"shs", st:"run", cy:"상시", pj:"S2",
+      was:"공법·영업 전략 질문을 사람에게 물어보던 일",
+      eff:"질의응답 체계 구축 완료",
+      how:"", trig:"상시", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A14", n:"시공사 Q&A 축적 · AI 개선 자료 확인", own:"shs", st:"run", cy:"상시", pj:"S2",
+      was:"같은 질문에 매번 새로 답하던 일",
+      eff:"Q&A 축적 · 필요자료 자동 확인",
+      how:"", trig:"상시", inp:"시공사 문의 내용", out:"축적된 Q&A + 개선 필요자료 목록",
+      where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A15", n:"B2B 일정 배정 · 관리", own:"shs", st:"run", cy:"상시", pj:"S5",
+      was:"일정 배정을 개별 연락으로 조율하던 일",
+      eff:"배정·관리 자동화 완료",
+      how:"", trig:"", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A16", n:"고객관리카드 자동 산출", own:"shs", st:"dev", cy:"매일", pj:"S5",
+      was:"업체별 실적·기여도를 월말에 손으로 집계하던 일",
+      eff:"매출 대비 실적·최근 흐름·급상승업체 자동 산출 (93%)",
+      how:"", trig:"매일", inp:"매출 데이터 + 협력사 활동 이력",
+      out:"업체별 고객관리카드", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A17", n:"월말 실적 · 공고문 정리 자동화", own:"shs", st:"dev", cy:"매월", pj:"S2",
+      was:"월말마다 실적과 공고문을 손으로 정리하던 일",
+      eff:"절반 자동화 (50%) · 월말 마감 일정과 연동 미완",
+      how:"", trig:"월말", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A18", n:"PPT · 공종 설명자료 자동생성", own:"shs", st:"dev", cy:"상시", pj:"S2",
+      was:"공종별 설명자료를 매번 새로 만들던 일",
+      eff:"구조 검토 단계 (15%) · 지표 ③ 맞춤자료 사용률과 직결",
+      how:"", trig:"", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" },
+    { id:"A19", n:"AI 전화접수 자동화", own:"shs", st:"plan", cy:"상시", pj:"S2",
+      was:"협력사 전화 문의를 사람이 받아 기록하던 일",
+      eff:"검토 착수 (10%) · 도입 범위·예외 처리 기준 미정",
+      how:"", trig:"", inp:"", out:"", where:"", code:"", url:"", fail:"", chk:"" }
+  ],
 
   /* ---------- 업무 허브 링크 ---------- */
   links: [
@@ -1072,7 +1152,10 @@ const SEED = {
     } catch (e) {}
     return clone(SEED);
   }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {} }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {}
+    scheduleFbPush();
+  }
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
   /* ---------- 유틸 ---------- */
@@ -2773,14 +2856,234 @@ const SEED = {
     };
   }
 
+  /* ============================================================
+     Firebase Realtime Database 공동 저장 (shared/b2bOpsTracker)
+     - shared/taskTracker(다른 사이트)에는 절대 손대지 않는다. 경로가 다르다.
+     - 전체를 통째로 덮어쓰지 않는다. 바뀐 최상위 키·항목 단위로만 update(PATCH)한다.
+     - 이 PC의 localStorage 는 임시 캐시일 뿐, Firebase 가 공용 원본이다.
+     ============================================================ */
+  var FB_URL = "https://b2b-task-tracker-39144-default-rtdb.asia-southeast1.firebasedatabase.app";
+  var FB_PATH = "shared/b2bOpsTracker";
+  var FB_SDK_VER = "10.12.5";
+  var FB_POLL_MS = 2000;
+  var FB_SINGLE = ["meta", "bid"];                                  // 통째로 비교·저장하는 단일 객체
+  var FB_BY_ID = ["members", "programs", "projects", "workKpis", "kpis", "automations", "links"]; // id 있는 배열 → {id: item} 맵
+  var FB_BY_MEMBER = ["routines", "personal"];                      // 이미 담당자 id로 묶인 맵
+  var KEY_PENDING = "netform.b2b.tracker.pending.v1";
+
+  var FB = {
+    mode: null,          // 'sdk' | 'rest' | null
+    state: "connecting", // connecting | synced | saving | error | offline
+    sdk: null, db: null, root: null,
+    synced: null,        // 마지막으로 원격과 같다고 확인된 Firebase 모양 스냅샷
+    pending: null,       // 아직 못 올려서 쌓인 변경분 (Firebase 모양 조각)
+    pushTimer: null, pollTimer: null, retryTimer: null
+  };
+
+  function fbSetState(state) {
+    FB.state = state;
+    var el = $("#fbStatus"); if (!el) return;
+    var label = { connecting: "연결 중…", synced: "동기화 완료", saving: "저장 중…",
+      error: "연결 오류 · 재시도 중", offline: "오프라인 · 로컬 저장" }[state] || state;
+    el.textContent = label;
+    el.className = "fb-badge fb-" + state;
+  }
+
+  /* ---- 앱 데이터(D) ↔ Firebase 저장 모양 변환 ---- */
+  function toRemoteShape(d) {
+    var out = {};
+    FB_SINGLE.forEach(function (k) { out[k] = d[k]; });
+    FB_BY_ID.forEach(function (k) {
+      var map = {};
+      (d[k] || []).forEach(function (item) { if (item && item.id != null) map[item.id] = item; });
+      out[k] = map;
+    });
+    FB_BY_MEMBER.forEach(function (k) { out[k] = d[k] || {}; });
+    return out;
+  }
+  function fromRemoteShape(remote) {
+    var d = clone(SEED); // 원격에 없는 최상위 키는 기본값으로 채워 화면이 깨지지 않게 한다
+    if (!remote || typeof remote !== "object") return d;
+    FB_SINGLE.forEach(function (k) { if (remote[k] != null) d[k] = remote[k]; });
+    FB_BY_ID.forEach(function (k) {
+      if (!remote[k]) return;
+      d[k] = Object.keys(remote[k]).sort().map(function (id) { return remote[k][id]; });
+    });
+    FB_BY_MEMBER.forEach(function (k) { if (remote[k]) d[k] = remote[k]; });
+    return d;
+  }
+
+  /* ---- 이전에 확인된 원격 모양과 비교해, 바뀐 항목의 경로만 뽑는다 ---- */
+  function diffRemoteShape(oldShape, newShape) {
+    var patch = {}, changed = false;
+    oldShape = oldShape || {};
+    FB_SINGLE.forEach(function (k) {
+      if (JSON.stringify(oldShape[k]) !== JSON.stringify(newShape[k])) { patch[k] = newShape[k]; changed = true; }
+    });
+    FB_BY_ID.concat(FB_BY_MEMBER).forEach(function (k) {
+      var om = oldShape[k] || {}, nm = newShape[k] || {};
+      Object.keys(nm).forEach(function (id) {
+        if (JSON.stringify(om[id]) !== JSON.stringify(nm[id])) { patch[k + "/" + id] = nm[id]; changed = true; }
+      });
+      Object.keys(om).forEach(function (id) {
+        if (!(id in nm)) { patch[k + "/" + id] = null; changed = true; }
+      });
+    });
+    return changed ? patch : null;
+  }
+  function mergePatch(target, patch) {
+    target = target || {};
+    Object.keys(patch).forEach(function (key) {
+      var slash = key.indexOf("/");
+      if (slash === -1) { target[key] = patch[key]; return; }
+      var col = key.slice(0, slash), id = key.slice(slash + 1);
+      if (!target[col]) target[col] = {};
+      if (patch[key] === null) delete target[col][id]; else target[col][id] = patch[key];
+    });
+    return target;
+  }
+
+  /* ---- 오프라인 큐 (연결 끊긴 동안의 변경분을 이 PC에 잠시 보관) ---- */
+  function loadPending() { try { return JSON.parse(localStorage.getItem(KEY_PENDING) || "null"); } catch (e) { return null; } }
+  function savePending(p) { try { if (p) localStorage.setItem(KEY_PENDING, JSON.stringify(p)); else localStorage.removeItem(KEY_PENDING); } catch (e) {} }
+
+  /* ---- 전송 ---- */
+  function fbWrite(patch) {
+    if (FB.mode === "sdk" && FB.sdk && FB.root) return FB.sdk.update(FB.root, patch);
+    return fetch(FB_URL + "/" + FB_PATH + ".json", {
+      method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(patch)
+    }).then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); });
+  }
+  function fbFullWrite(shape) {
+    if (FB.mode === "sdk" && FB.sdk && FB.root) return FB.sdk.set(FB.root, shape);
+    return fetch(FB_URL + "/" + FB_PATH + ".json", {
+      method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(shape)
+    }).then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); });
+  }
+  function fbRead() {
+    if (FB.mode === "sdk" && FB.sdk && FB.root) return FB.sdk.get(FB.root).then(function (s) { return s.val(); });
+    return fetch(FB_URL + "/" + FB_PATH + ".json", { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    });
+  }
+
+  function scheduleFbPush() {
+    clearTimeout(FB.pushTimer);
+    FB.pushTimer = setTimeout(flushFbPatch, 400);
+  }
+  function flushFbPatch() {
+    var shape = toRemoteShape(D);
+    var patch = diffRemoteShape(FB.synced, shape);
+    if (patch) FB.pending = mergePatch(FB.pending, patch);
+    if (!FB.pending) { fbSetState("synced"); return; }
+    var sending = FB.pending;
+    fbSetState("saving");
+    fbWrite(sending).then(function () {
+      FB.synced = mergePatch(FB.synced || {}, sending);
+      if (FB.pending === sending) FB.pending = null;
+      savePending(null);
+      fbSetState("synced");
+    }).catch(function () {
+      savePending(FB.pending);
+      fbSetState("error");
+      clearTimeout(FB.retryTimer);
+      FB.retryTimer = setTimeout(flushFbPatch, 3000);
+    });
+  }
+
+  /* ---- 다른 컴퓨터의 변경을 화면에 반영 ---- */
+  function onRemoteShape(shape) {
+    if (!shape) return;
+    if (FB.synced && JSON.stringify(shape) === JSON.stringify(FB.synced)) return; // 내가 방금 올린 것의 메아리
+    FB.synced = shape;
+    D = fromRemoteShape(shape);
+    try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {}
+    repaint(true);
+  }
+
+  /* ---- SDK 를 못 쓸 때: 2초 주기 REST 폴링 ---- */
+  function fbPollTick() {
+    fbRead().then(function (raw) {
+      if (FB.state === "error" || FB.state === "offline") fbSetState(FB.pending ? "saving" : "synced");
+      if (FB.pending) return; // 올릴 게 남아 있으면 이번 폴은 건너뛴다 (내 변경을 덮어쓰지 않기 위해)
+      onRemoteShape(raw);
+    }).catch(function () {
+      fbSetState(FB.pending ? "error" : "offline");
+    });
+  }
+  function fbStartRest() {
+    FB.mode = "rest";
+    clearInterval(FB.pollTimer);
+    FB.pollTimer = setInterval(fbPollTick, FB_POLL_MS);
+  }
+
+  /* ---- 최초 원격 데이터 반영 ---- */
+  function applyInitialRemote(raw) {
+    var pending = loadPending();
+    if (raw && Object.keys(raw).length) {
+      FB.synced = raw;
+      D = fromRemoteShape(pending ? mergePatch(clone(raw), pending) : raw);
+      if (pending) FB.pending = pending;
+    } else {
+      // Firebase 가 완전히 비어 있을 때만 이 HTML 의 기본 데이터를 최초 1회 등록한다
+      D = clone(SEED);
+      FB.synced = toRemoteShape(D);
+      fbFullWrite(FB.synced).catch(function () {});
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {}
+    if (FB.pending) { fbSetState("saving"); flushFbPatch(); } else fbSetState("synced");
+  }
+
+  /* ---- 부팅: Firebase 를 먼저 읽은 뒤에만 화면을 그린다 (localStorage 캐시와 자동 병합하지 않는다) ---- */
+  function fbBoot() {
+    fbSetState("connecting");
+    var sdkPromise = Promise.race([
+      Promise.all([
+        import(FB_URL_APP_MOD()),
+        import(FB_URL_DB_MOD())
+      ]).then(function (mods) {
+        var appMod = mods[0], dbMod = mods[1];
+        var app = appMod.initializeApp({ databaseURL: FB_URL });
+        FB.db = dbMod.getDatabase(app);
+        FB.sdk = dbMod;
+        FB.root = dbMod.ref(FB.db, FB_PATH);
+        FB.mode = "sdk";
+        return new Promise(function (resolve, reject) {
+          var first = true;
+          dbMod.onValue(FB.root, function (snap) {
+            if (first) { first = false; resolve(snap.val()); } else onRemoteShape(snap.val());
+          }, function (err) { reject(err); });
+        });
+      }),
+      new Promise(function (_, rej) { setTimeout(function () { rej(new Error("sdk timeout")); }, 6000); })
+    ]);
+    return sdkPromise.catch(function () {
+      fbStartRest();
+      return fbRead();
+    }).then(function (raw) {
+      applyInitialRemote(raw);
+    }).catch(function () {
+      // Firebase 에 아예 닿지 못함 — 이 PC에 남아 있던 캐시(또는 기본값)로 우선 시작하고 계속 재접속을 시도한다
+      var pending = loadPending();
+      D = load();
+      if (pending) FB.pending = pending;
+      fbSetState("offline");
+      if (!FB.pollTimer) { FB.mode = FB.mode || "rest"; fbStartRest(); }
+    });
+  }
+  function FB_URL_APP_MOD() { return "https://www.gstatic.com/firebasejs/" + FB_SDK_VER + "/firebase-app.js"; }
+  function FB_URL_DB_MOD() { return "https://www.gstatic.com/firebasejs/" + FB_SDK_VER + "/firebase-database.js"; }
+
   /* ---------- 시작 ---------- */
   function boot() {
-    D = load();
     var h = (location.hash || "").replace("#", "");
     if (PAGES.some(function (p) { return p.id === h; })) cur = h;
-    $("#today").textContent = D.meta.baseDate;
-    render();
-    window.addEventListener("resize", function () { if (cur === "map") drawMap(); });
+    fbBoot().then(function () {
+      $("#today").textContent = D.meta.baseDate;
+      render();
+      window.addEventListener("resize", function () { if (cur === "map") drawMap(); });
+    });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
@@ -2789,4 +3092,3 @@ const SEED = {
 
 </body>
 </html>
-
