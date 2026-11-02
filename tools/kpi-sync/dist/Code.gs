@@ -19,7 +19,7 @@ var CARD_ACCOUNT = 'hansol2-owner@pour-dashboard.firebaseapp.com';              
 var COMPANIES_DOC = 'shin2-companies-staging';
 var CARD_HTML_URL = 'https://bridgeone-m.github.io/card/index.html';
 var TRACKER_URL = 'https://b2b-task-tracker-39144-default-rtdb.asia-southeast1.firebasedatabase.app/shared/b2bOpsTracker.json';
-var CARD_BUILD = '2da5377';                      // 판정 함수를 잘라 온 카드 버전
+var CARD_BUILD = 'd4a56ea';                      // 판정 함수를 잘라 온 카드 버전
 var SYNC_HOURS = [7, 13];
 /* CARD-LOGIC-START — 고객관리카드 index.html 원본 함수(자동 생성, 직접 고치지 말 것) */
 var window = { SHIN2_PARTNER_SNAPSHOT: [] };
