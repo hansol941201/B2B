@@ -7,12 +7,20 @@
  *
  * 설정(스크립트 속성):
  *   CARD_PASSWORD  고객관리카드 공용(직원) 비밀번호 — 관리자 비밀번호가 아님
- * 실행: installTriggers() 를 한 번 실행하면 매일 07시·13시(한국 시간)에 runKpiSync 가 돈다.
- *       checkKpiSync() 는 계산만 하고 트래커에 쓰지 않는다(점검용).
+ * 실행: kpiSyncInstallTriggers() 를 한 번 실행하면 매일 07시·13시(한국 시간)에 kpiSyncRun 이 돈다.
+ *       kpiSyncCheck() 는 계산만 하고 트래커에 쓰지 않는다(점검용).
+ * 다른 Apps Script 프로젝트(같은 CARD_PASSWORD 를 쓰는 협력사 현황 서버)에 파일 하나로 넣어도 되도록
+ * 밖으로 드러나는 이름은 kpiSync… 함수 3개와 KpiSync 하나뿐이다. 다른 프로젝트의 트리거는 건드리지 않는다.
  * 로그인에 실패하면 그 회차는 멈추고 다시 시도하지 않는다(공용 계정 잠금 방지). 트래커의 마지막 값은 그대로 둔다.
  *
  * 이 파일은 tools/kpi-sync/build-server.cjs 가 server.template.gs + 카드 원본 함수 + meeting-kpi.cjs 로 만든다 — 직접 고치지 말 것.
  */
+// 편집기는 열린 파일의 맨 위 함수를 기본으로 실행한다 — 쓰기 없는 점검 실행을 맨 위에 둔다.
+function kpiSyncCheck() { var r = KpiSync.sync(false); console.log(JSON.stringify(r)); return r; }
+function kpiSyncRun() { return KpiSync.sync(true); }
+function kpiSyncInstallTriggers() { return KpiSync.install(); }
+
+var KpiSync = (function () {
 var FIREBASE_API_KEY = 'AIzaSyDyQBXCc0WN4wFVsGBLZ6GXsyV0sGvyG34';          // 카드 firebaseConfig.js 공개 웹 설정(비밀값 아님)
 var FIREBASE_PROJECT = 'pour-dashboard';
 var CARD_ACCOUNT = 'hansol2-owner@pour-dashboard.firebaseapp.com';                  // 카드 공용 계정
@@ -22,12 +30,9 @@ var TRACKER_URL = 'https://b2b-task-tracker-39144-default-rtdb.asia-southeast1.f
 var CARD_BUILD = 'd4a56ea';                      // 판정 함수를 잘라 온 카드 버전
 var SYNC_HOURS = [7, 13];
 
-// 편집기는 맨 위 함수를 기본으로 실행한다 — 쓰기 없는 점검 실행을 맨 위에 둔다.
-function checkKpiSync() { var r = syncOnce_(false); console.log(JSON.stringify(r)); return r; }
-function runKpiSync() { return syncOnce_(true); }
-function installTriggers() {
-  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'runKpiSync') ScriptApp.deleteTrigger(t); });
-  SYNC_HOURS.forEach(function (h) { ScriptApp.newTrigger('runKpiSync').timeBased().atHour(h).everyDays(1).inTimezone('Asia/Seoul').create(); });
+function installTriggers_() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'kpiSyncRun') ScriptApp.deleteTrigger(t); });
+  SYNC_HOURS.forEach(function (h) { ScriptApp.newTrigger('kpiSyncRun').timeBased().atHour(h).everyDays(1).inTimezone('Asia/Seoul').create(); });
   return SYNC_HOURS;
 }
 /* CARD-LOGIC-START — 고객관리카드 index.html 원본 함수(자동 생성, 직접 고치지 말 것) */
@@ -496,3 +501,5 @@ function extractPartnerSnapshot_(html) {
   }
   try { return JSON.parse(html.slice(start, k + 1)); } catch (err) { return null; }
 }
+return { sync: syncOnce_, install: installTriggers_ };
+})();

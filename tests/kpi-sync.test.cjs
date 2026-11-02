@@ -122,7 +122,7 @@ function gasServer({ password = 'right', trackerCode = 200 } = {}) {
   return { ctx, log, props };
 }
 t('서버: 트래커 perfAuto 에만 쓰고 업체 정보는 보내지 않음', () => {
-  const s = gasServer(); const r = s.ctx.runKpiSync();
+  const s = gasServer(); const r = s.ctx.kpiSyncRun();
   assert.ok(r.ok, r.error); assert.equal(s.log.writes.length, 1); assert.equal(s.log.writes[0].method, 'patch');
   const body = JSON.parse(s.log.writes[0].body);
   assert.deepStrictEqual(Object.keys(body), ['perfAuto/LI01_2026-11']);
@@ -132,13 +132,19 @@ t('서버: 트래커 perfAuto 에만 쓰고 업체 정보는 보내지 않음', 
   COMPANIES.forEach(c => { assert.ok(!text.includes(c.name), '업체명 전송'); assert.ok(!text.includes('"' + c.id + '"'), '업체 id 전송'); });
   assert.deepStrictEqual(s.log.other, []);
 });
-t('서버: 점검 실행(checkKpiSync)은 트래커에 쓰지 않음', () => { const s = gasServer(); const r = s.ctx.checkKpiSync(); assert.ok(r.ok); assert.equal(s.log.writes.length, 0); });
+t('서버: 점검 실행(kpiSyncCheck)은 트래커에 쓰지 않음', () => { const s = gasServer(); const r = s.ctx.kpiSyncCheck(); assert.ok(r.ok); assert.equal(s.log.writes.length, 0); });
 t('서버: 로그인 실패면 한 번만 시도하고 트래커에 쓰지 않음', () => {
-  const s = gasServer({ password: 'wrong' }); const r = s.ctx.runKpiSync();
+  const s = gasServer({ password: 'wrong' }); const r = s.ctx.kpiSyncRun();
   assert.equal(r.ok, false); assert.ok(/AUTH/.test(r.error)); assert.equal(s.log.signIns, 1); assert.equal(s.log.writes.length, 0);
   assert.ok(/AUTH/.test(JSON.parse(s.props.KPI_SYNC_LAST).error));
 });
-t('서버: 트래커 저장 실패는 오류로 남김', () => { const s = gasServer({ trackerCode: 401 }); const r = s.ctx.runKpiSync(); assert.equal(r.ok, false); assert.ok(/WRITE/.test(r.error)); });
+t('서버: 트래커 저장 실패는 오류로 남김', () => { const s = gasServer({ trackerCode: 401 }); const r = s.ctx.kpiSyncRun(); assert.equal(r.ok, false); assert.ok(/WRITE/.test(r.error)); });
 t('서버 파일에 비밀번호·자리표시자 없음', () => { assert.ok(!/__[A-Z_]+__/.test(gs)); assert.ok(gs.includes("getProperty('CARD_PASSWORD')")); });
+t('다른 프로젝트에 넣어도 겹치는 전역 이름 없음(kpiSync… 3개 + KpiSync 만)', () => {
+  const ctx = vm.createContext({ Date, Map, Set, JSON, Math, Object, Array, String, Number, parseInt, isNaN, encodeURIComponent, console });
+  const before = new Set(Object.keys(ctx));
+  vm.runInContext(gs, ctx);
+  assert.equal(JSON.stringify(Object.keys(ctx).filter(k => !before.has(k)).sort()), JSON.stringify(['KpiSync', 'kpiSyncCheck', 'kpiSyncInstallTriggers', 'kpiSyncRun']));
+});
 
 console.log(results.join('\n') + `\n\n${pass} / ${results.length} 성공`);
