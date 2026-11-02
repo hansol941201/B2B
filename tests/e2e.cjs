@@ -21,8 +21,10 @@ const reset = () => fetch(BASE + '/__reset');
 const OLD_KEYS = Object.keys(baseline);
 function sameOld(d) { OLD_KEYS.forEach(k => assert.deepStrictEqual(d[k], baseline[k], k + ' 변경됨')); }
 
-async function newPage(browser, opts) {
+async function newPage(browser, opts, fresh) {
   const ctx = await browser.newContext(opts || { viewport: { width: 1320, height: 900 } });
+  // 시험은 KPI 탭에서 진행한다. 처음 접속 기본 탭은 별도 시험에서 확인.
+  if (!fresh) await ctx.addInitScript(() => { if (!localStorage.getItem('netform.b2b.tracker.tasktab.v1')) localStorage.setItem('netform.b2b.tracker.tasktab.v1', 'kpi'); });
   const p = await ctx.newPage();
   p.on('console', m => { if (m.type() === 'error' && !/__nosdk|ERR_|404|Failed to load/.test(m.text())) consoleErrors.push(m.text()); });
   p.on('pageerror', e => consoleErrors.push(String(e)));
@@ -81,9 +83,26 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
   const browser = await chromium.launch(process.env.E2E_CHROME ? { executablePath: process.env.E2E_CHROME } : {});
   const p = await newPage(browser);
   try {
+    // 로컬 호환 서버는 연결이 끊기면 다른 연결의 쓰기를 놓칠 수 있어, 다른 화면을 열기 전에 시험한다
+    await t('처음 접속하면 팀 업무 현황이 먼저 보이고 KPI는 신한솔 탭에 있음', async () => {
+      const f = await newPage(browser, null, true);
+      await open(f);
+      assert.ok(/팀 업무 현황/.test(await f.locator('.phead h1').innerText()));
+      assert.equal(await f.locator('article.k').count(), 0);
+      await f.click('[data-tt="kpi"]');
+      assert.ok(/신한솔 KPI·선행지표 관리/.test(await f.locator('.phead h1').innerText()));
+      assert.equal(await f.locator('article.k').count(), 3);
+      await f.reload(); await f.waitForFunction(() => document.querySelector('#view .wrap'));
+      assert.equal(await f.locator('article.k').count(), 3, '선택한 탭 기억');
+      await f.context().close();
+    });
     await t('처음 열어도 저장 없음 — 기존 데이터 그대로', async () => {
       await open(p); await new Promise(r => setTimeout(r, 1500));
       assert.deepStrictEqual(await db(), baseline);
+    });
+    await t('선행지표 9개 담당자가 신한솔', async () => {
+      const txt = await p.locator('#view .wrap').innerText();
+      assert.equal((txt.match(/담당 신한솔/g) || []).length, 9);
     });
     await t('메인 KPI 3 · 선행지표 9 · 후행지표 5 표시', async () => {
       assert.equal(await p.locator('article.k').count(), 3);
@@ -215,7 +234,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await p.fill('#pfNote', 'B2B001 점검 완료');
       await p.click('#pfSaveRec');
       const body = await p.locator('#pfModal').innerText();
-      assert.ok(/담당자 미지정 → 담당자A/.test(body) && /목표 달성률 미설정 → 95%/.test(body), '정의 변경 이력');
+      assert.ok(/담당자 신한솔 → 담당자A/.test(body) && /목표 달성률 미설정 → 95%/.test(body), '정의 변경 이력');
       assert.ok(/메모: B2B001 점검 완료/.test(body) && /세부업무 체크리스트 \(2 \/ 11\)/.test(body), '작업 이력');
       await p.click('#pfClose');
       assert.ok(/담당자A/.test(await leadCardText(p, 'LI05')));

@@ -47,6 +47,7 @@ t('선행지표 9개·고유 ID·필수 항목', () => {
   assert.equal(new Set(S.leadDefs.map(l => l.id)).size, 9);
   S.leadDefs.forEach(l => ['name', 'owner', 'purpose', 'cycle', 'measure', 'formula', 'denLabel', 'numLabel', 'src'].forEach(f => assert.ok(l[f], l.id + ' ' + f)));
 });
+t('선행지표 담당자는 모두 신한솔', () => S.leadDefs.forEach(l => assert.equal(l.owner, '신한솔', l.id)));
 t('세부업무 수가 명령서와 일치', () => assert.deepEqual(S.leadDefs.map(l => l.tasks.length), [9, 9, 9, 11, 11, 10, 10, 10, 12]));
 t('KPI별 연결이 명령서 3장과 일치', () => {
   const core = id => S.mainKpis.find(k => k.id === id).links.filter(l => l.rel === 'core').map(l => l.li).sort().join();

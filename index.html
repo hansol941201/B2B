@@ -1266,7 +1266,7 @@ var PERF_SEED = {
       weights: { LI08: 0, LI09: 0 }, rev: 0 }
   ],
   leadDefs: [
-    { id: "LI01", no: "①", name: "1·2차 미팅 누락 방지", owner: "미지정", cycle: "매일", rev: 0,
+    { id: "LI01", no: "①", name: "1·2차 미팅 누락 방지", owner: "신한솔", cycle: "매일", rev: 0,
       purpose: "고객관리카드를 활용해 시공사 및 협력사의 미팅과 후속 업무 누락 방지",
       reported: "고객관리카드 구축 후 1·2차 미팅 누락 0건 (명령서 기재)",
       tasks: ["신규 시공사 및 협력사 미팅 접수", "1차 미팅 일정 등록", "1차 미팅 완료 여부 확인", "2차 미팅 필요 여부 확인", "2차 미팅 일정 등록", "미팅 전 담당자 안내", "미팅 후 진행현황 업데이트", "미완료 및 후속조치 대상 확인", "미팅 일정 누락 여부 점검"],
@@ -1276,7 +1276,7 @@ var PERF_SEED = {
       denLabel: "관리 대상 미팅", numLabel: "정상 관리 완료 미팅",
       metrics: [{ k: "missed", n: "미팅 누락 건수", u: "건" }, { k: "schedRate", n: "일정 등록률", u: "%" }, { k: "followRate", n: "후속조치 완료율", u: "%" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI02", no: "②", name: "미응답 업체 재연락 관리", owner: "미지정", cycle: "매일", rev: 0,
+    { id: "LI02", no: "②", name: "미응답 업체 재연락 관리", owner: "신한솔", cycle: "매일", rev: 0,
       purpose: "자료 발송이나 미팅 안내 후 연락이 없는 업체를 놓치지 않도록 관리",
       tasks: ["최초 메일 발송일 기록", "회신 여부 확인", "미응답 업체 분류", "재연락 예정일 설정", "안내메일 재발송", "필요 시 전화 연락", "재연락 결과 기록", "회신 완료 시 관리 상태 변경", "장기 미응답 업체 별도 분류"],
       measure: "재연락 대상 업체 수 · 재연락 완료 업체 수 · 재연락 완료율 · 재연락 후 회신율",
@@ -1285,7 +1285,7 @@ var PERF_SEED = {
       metrics: [{ k: "targets", n: "재연락 대상 업체 수", u: "곳" }, { k: "contacted", n: "재연락 완료 업체 수", u: "곳" }, { k: "replied", n: "재연락 후 회신 업체 수", u: "곳" },
         { k: "contactRate", n: "재연락 완료율", u: "%", from: ["contacted", "targets"], op: "ratio" }, { k: "replyRate", n: "재연락 후 회신율", u: "%", from: ["replied", "contacted"], op: "ratio" }],
       src: "수동 관리", linkNote: "메일 발송 기록 연동 대기" },
-    { id: "LI03", no: "③", name: "신규업체 첫 이용 활성화", owner: "미지정", cycle: "매주 점검, 필요 시 상시", rev: 0,
+    { id: "LI03", no: "③", name: "신규업체 첫 이용 활성화", owner: "신한솔", cycle: "매주 점검, 필요 시 상시", rev: 0,
       purpose: "신규 MOU 업체의 첫 POUR 서비스 이용 유도",
       tasks: ["신규 MOU 업체 확인", "협약일 기록", "첫 서비스 이용 여부 확인", "미이용 업체 목록 생성", "서비스 안내 및 자료 발송", "기술자문·PT·컨설팅 이용 안내", "후속 연락 일정 관리", "첫 이용 여부 정기 확인", "이용 시 고객관리카드 진행 상태 갱신"],
       measure: "신규 협약업체 수 · 첫 이용 전 관리 대상 업체 수 · 후속관리 완료 건수 · 첫 이용 전환 업체 수",
@@ -1294,7 +1294,7 @@ var PERF_SEED = {
       outcome: "실제 성과는 KPI ① 신규업체 첫 서비스 이용률로 별도 계산합니다.",
       metrics: [{ k: "newMou", n: "신규 협약업체 수", u: "곳" }, { k: "preUse", n: "첫 이용 전 관리 대상 업체 수", u: "곳" }, { k: "converted", n: "첫 이용 전환 업체 수", u: "곳" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI04", no: "④", name: "고객관리카드 최신화", owner: "미지정", cycle: "매일", rev: 0,
+    { id: "LI04", no: "④", name: "고객관리카드 최신화", owner: "신한솔", cycle: "매일", rev: 0,
       purpose: "고객별 활동과 진행 상태를 정확하게 관리해 업무 누락과 중복 방지",
       tasks: ["신규업체 등록", "MOU 체결 여부 및 체결일 관리", "1·2차 미팅 이력 입력", "기술자문 및 PT 요청 현황 관리", "고객 문의사항 기록", "자료 및 메일 발송 이력 확인", "고객별 최근 활동일 갱신", "미진행 업무 및 후속조치 상태 확인", "업체명·현장명 중복 여부 검토", "고객별 실적 및 매출정보 연결", "누락 정보 및 오류 수정"],
       measure: "업데이트 대상 건수 · 업데이트 완료 건수 · 정보 누락 건수",
@@ -1302,7 +1302,7 @@ var PERF_SEED = {
       denLabel: "업데이트 대상 건수", numLabel: "기한 내 최신화 완료 건수",
       metrics: [{ k: "missing", n: "정보 누락 건수", u: "건" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI05", no: "⑤", name: "월말 고객현황 관리", owner: "미지정", cycle: "매월 말", rev: 0,
+    { id: "LI05", no: "⑤", name: "월말 고객현황 관리", owner: "신한솔", cycle: "매월 말", rev: 0,
       purpose: "매월 고객 활동·진행·이용 현황을 정기 점검하고 다음 달 관리 대상을 선정",
       tasks: ["월별 신규 협약업체 현황 확인", "기존 업체 활동 현황 확인", "1·2차 미팅 진행상태 점검", "서비스 이용 업체 현황 정리", "미이용 업체 현황 정리", "장기 미활동 업체 확인", "미응답 및 재연락 필요 업체 확인", "재이용 대상 업체 확인", "고객등급 변경 대상 확인", "월말 고객관리 결과 정리", "다음 달 후속관리 대상 확정"],
       measure: "월말 점검 대상 수 · 점검 완료 수 · 미처리 고객 수",
@@ -1310,7 +1310,7 @@ var PERF_SEED = {
       denLabel: "월말 점검 대상 건수", numLabel: "월말 점검 완료 건수",
       metrics: [{ k: "open", n: "미처리 고객 수", u: "곳" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI06", no: "⑥", name: "고객등급 관리", owner: "미지정", cycle: "매월", rev: 0,
+    { id: "LI06", no: "⑥", name: "고객등급 관리", owner: "신한솔", cycle: "매월", rev: 0,
       purpose: "업체별 중요도와 이용 상태를 구분하여 관리 우선순위 설정",
       tasks: ["신규업체 및 기존업체 구분", "MOU 체결 상태 확인", "최근 활동 이력 확인", "서비스 이용 실적 확인", "다른 현장 재이용 여부 확인", "매출 및 구매 이력 확인", "고객별 등급 계산", "장기 미활동 업체 표시", "등급 상승·하락 이력 기록", "등급별 관리 우선순위 설정"],
       measure: "등급 산출 대상 수 · 등급 산출 완료 수 · 등급 변동 업체 수",
@@ -1319,7 +1319,7 @@ var PERF_SEED = {
       outcome: "고객등급은 기존 등급 기준을 우선 적용합니다. 별도 승인 없이 새로운 등급·점수 기준을 확정하지 않습니다.",
       metrics: [{ k: "changed", n: "등급 변동 업체 수", u: "곳" }],
       src: "수동 관리", linkNote: "등급 기준 확인 대기" },
-    { id: "LI07", no: "⑦", name: "기존업체 재이용 관리", owner: "미지정", cycle: "매주", rev: 0,
+    { id: "LI07", no: "⑦", name: "기존업체 재이용 관리", owner: "신한솔", cycle: "매주", rev: 0,
       purpose: "서비스를 한 번 이용한 시공사의 다른 현장 재이용 촉진",
       tasks: ["첫 서비스 이용업체 확인", "최초 이용일 기록", "최초 이용 현장 기록", "60일 재이용 관리기간 계산", "다른 현장 이용 여부 확인", "재이용하지 않은 업체 확인", "후속 안내 및 재연락", "필요 자료 발송", "이용 이력 업데이트", "60일 관찰 결과 기록"],
       measure: "재이용 관리 대상 업체 수 · 후속관리 완료 업체 수 · 다른 현장 재이용 업체 수",
@@ -1328,7 +1328,7 @@ var PERF_SEED = {
       outcome: "실제 성과는 KPI ② 60일 내 다른 현장 재이용률로 별도 계산합니다.",
       metrics: [{ k: "reused", n: "다른 현장 재이용 업체 수", u: "곳" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI08", no: "⑧", name: "월말실적 자동화 관리", owner: "미지정", cycle: "매월, 자료 요청 시 추가", rev: 0, support: true,
+    { id: "LI08", no: "⑧", name: "월말실적 자동화 관리", owner: "신한솔", cycle: "매월, 자료 요청 시 추가", rev: 0, support: true,
       purpose: "월말실적 정리 업무를 자동화하고 시공사 자료 제공 대기시간 단축",
       tasks: ["월말실적 자료 취합", "공고·낙찰·매출 데이터 확인", "업체명 및 현장명 매칭", "자동 집계 결과 확인", "누락 및 오류 검증", "월말실적 양식 생성", "자동화 결과 검토", "요청 자료 제공", "수작업 및 자동화 소요시간 비교", "자료 요청부터 제공까지의 대기시간 기록"],
       measure: "월말 자동화 처리 대상 수 · 정상 자동처리 완료 수 · 오류 및 수동 수정 건수 · 시공사 자료 제공 평균 대기시간",
@@ -1338,7 +1338,7 @@ var PERF_SEED = {
       metrics: [{ k: "errors", n: "오류 및 수동 수정 건수", u: "건" }, { k: "waitBefore", n: "자동화 전 평균 대기시간", u: "시간" }, { k: "waitAfter", n: "자동화 후 평균 대기시간", u: "시간" },
         { k: "waitCut", n: "평균 대기시간 감소율", u: "%", from: ["waitBefore", "waitAfter"], op: "cut" }],
       src: "수동 관리", linkNote: "월말실적 자동화 연동 대기" },
-    { id: "LI09", no: "⑨", name: "플랫폼 → 앱 전환 부담 최소화", owner: "미지정", cycle: "매일 및 매주", rev: 0, support: true,
+    { id: "LI09", no: "⑨", name: "플랫폼 → 앱 전환 부담 최소화", owner: "신한솔", cycle: "매일 및 매주", rev: 0, support: true,
       purpose: "기존 플랫폼에서 POUR 파트너스 앱으로 전환하는 과정에서 시공사의 불편과 업무 부담 최소화",
       tasks: ["기존 플랫폼 이용업체 확인", "앱 전환 대상 업체 확인", "앱 전환 안내메일 발송", "앱 이용 방법 안내", "앱 가이드북 제공", "앱 설치 및 로그인 관련 문의 대응", "앱 이용 불편사항 접수", "미접속 업체 사유 확인", "플랫폼 및 앱 접수 내역 이중 검토", "접수 누락 여부 점검", "앱 사용 관련 문제 해결 및 개선 요청", "전환 후 지속적인 이용 현황 관리"],
       measure: "앱 전환 관리 대상 업체 수 · 안내 완료 업체 수 · 불편사항 접수 건수 · 불편사항 처리 완료 건수 · 플랫폼·앱 접수 누락 건수",
@@ -1896,7 +1896,7 @@ var PerfCalc = (function () {
      1. 업무 (메인)
      ============================================================ */
   /* ============================================================
-     KPI·선행지표 관리 (팀 업무 화면 첫 탭)
+     신한솔 KPI·선행지표 관리 (팀 업무 화면의 탭 · 팀원 개인 지표이고 팀 전체 KPI가 아니다)
      - 메인 KPI 3 · 선행지표 9 · 후행지표 5. 값은 월별로 따로 보관한다.
      - 저장은 항목 단위 PATCH. 같은 항목을 다른 사람이 먼저 고쳤으면 확인을 받는다.
      ============================================================ */
@@ -1904,8 +1904,8 @@ var PerfCalc = (function () {
   var KEY_TASKTAB = "netform.b2b.tracker.tasktab.v1";
   var KEY_ACTOR = "netform.b2b.tracker.actor.v1";
   var PF_COLS = ["mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory"];
-  var taskTab = "kpi";
-  try { taskTab = localStorage.getItem(KEY_TASKTAB) || "kpi"; } catch (e) {}
+  var taskTab = "work";
+  try { taskTab = localStorage.getItem(KEY_TASKTAB) || "work"; } catch (e) {}
   var pfMonth = pfThisMonth();
   var pfM = null; // 열린 상세 창 { type, id, month, view, baseRev, dirty }
 
@@ -1996,7 +1996,7 @@ var PerfCalc = (function () {
   /* ---------- 화면 ---------- */
   function pfTabs() {
     return '<div class="fg pf-tabs" role="group" aria-label="팀 업무 화면 구분">' +
-      '<button data-tt="kpi" aria-pressed="' + (taskTab === "kpi") + '">KPI·선행지표</button>' +
+      '<button data-tt="kpi" aria-pressed="' + (taskTab === "kpi") + '">신한솔 KPI·선행지표</button>' +
       '<button data-tt="work" aria-pressed="' + (taskTab === "work") + '">팀 업무 현황</button></div>';
   }
   function pfKpiCard(k) {
@@ -2064,7 +2064,7 @@ var PerfCalc = (function () {
     var core = (D.leadDefs || []).filter(function (l) { return !l.support; });
     var sup = (D.leadDefs || []).filter(function (l) { return l.support; });
     var miss = pfMisses();
-    return '<div class="phead"><div><h1>KPI·선행지표 관리</h1><div class="hs">업무 실적을 입력하면 달성률과 KPI 선행점수가 다시 계산됩니다. 실제 KPI는 입력된 실적으로만 계산합니다.</div></div>' +
+    return '<div class="phead"><div><h1>신한솔 KPI·선행지표 관리</h1><div class="hs">업무 실적을 입력하면 달성률과 KPI 선행점수가 다시 계산됩니다. 실제 KPI는 입력된 실적으로만 계산합니다.</div></div>' +
       '<div class="meta"><label>기준 월 <select class="fsel pf-msel" id="pfMonthSel" aria-label="기준 월">' + pfMonthOpts(pfMonth) + "</select></label></div></div>" +
       pfTabs() +
       '<div class="pf-status"><span><b>수동 관리</b> · 고객관리카드·K-apt·이카운트는 자동으로 연결되어 있지 않아 담당자가 직접 입력합니다.</span></div>' +
@@ -2484,7 +2484,7 @@ var PerfCalc = (function () {
         '<span class="sm">' + (ws.complete ? "합계 " + ws.total + "%" + (ws.sum100 ? " · 계산 가능" : " · 100%가 아니어서 산출 대기") : "미설정 " + ws.unset.length + "개 · 산출 대기") + "</span></div>";
     }).join("");
     function num(k, l) { return '<label class="pf-f"><span>' + esc(l) + '</span><input type="number" inputmode="numeric" min="0" step="1" data-pf-cfg="' + k + '" value="' + (PC.isNum(c[k]) ? esc(c[k]) : "") + '" placeholder="미설정"></label>'; }
-    return '<div class="card"><div class="card-h"><h2>KPI·선행지표 설정</h2></div>' + rows +
+    return '<div class="card"><div class="card-h"><h2>신한솔 KPI·선행지표 설정</h2></div>' + rows +
       '<div class="pf-sec"><h3>미응답 재연락 기준 (선행지표 ② 안내용 · 메일 기록 연동 전까지 자동 분류하지 않습니다)</h3><div class="pf-form">' +
       num("noReplyDays", "미응답 판정 기간(일)") + num("resendDays", "재발송 주기(일)") + num("longNoReplyDays", "장기 미응답 기준(일)") + "</div></div></div>";
   }
