@@ -257,6 +257,24 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       assert.deepStrictEqual(d.perfMonthly['LI01_' + MONTH], manual, '직접 입력값 유지');
       assert.ok(!/90%/.test(await p.locator('.ks-sec.lag').innerText()), '후행지표에 섞이지 않음');
     });
+    await t('팀 KPI 대시보드 자동값: "대시보드 자동" 표시·잠금, 직접 입력값 유지, 개인 지표와 섞이지 않음', async () => {
+      const before = (await db()).perfMonthly['MK1_' + MONTH];
+      const auto = { id: 'MK1_' + MONTH, ref: 'MK1', month: MONTH, mode: 'auto', num: 3, den: 15, source: '통합 KPI 대시보드', rule: '통합 KPI 대시보드 대표 KPI · 기준일 2026-05-20 이후 · 관찰 60일', computedAt: new Date().toISOString(), counts: { open: 8, openHit: 2 } };
+      await patchDb({ ['perfAuto/MK1_' + MONTH]: auto });
+      await p.reload(); await ready(p); await tab(p, 'kpi');
+      const card = await indText(p, 'MK1');
+      assert.ok(/20%/.test(card) && /대시보드 자동/.test(card), card);
+      assert.ok(await p.locator('.kpi-ind[data-ind="MK1"] .kmv.tgt').first().getAttribute('readonly') !== null, '잠금');
+      await p.locator('.kpi-ind[data-ind="MK1"] .ks-more').click();
+      const b = await p.locator('#modal-kpi-body').innerText();
+      assert.ok(/통합 KPI 대시보드 자동 계산/.test(b) && /60일 관찰 중\(분모 제외\)\s*8곳/.test(b) && /통합시트/.test(b), b.slice(0, 400));
+      await p.evaluate(() => closeModal());
+      assert.ok(/카드 자동/.test(await indText(p, 'LI01')), '개인 지표는 카드 자동 그대로');
+      await new Promise(r => setTimeout(r, 600));
+      const d = await db();
+      assert.deepStrictEqual(d.perfAuto['MK1_' + MONTH], auto);
+      assert.deepStrictEqual(d.perfMonthly['MK1_' + MONTH], before, '직접 입력값 유지');
+    });
     /* 설정 */
     await t('설정: 가중치 저장, 팀원 삭제 보호, 담당 확인', async () => {
       await tab(p, 'settings');
