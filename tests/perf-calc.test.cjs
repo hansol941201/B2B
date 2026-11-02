@@ -63,7 +63,7 @@ t('초기 가중치: 핵심 연결은 미설정, 운영 지원지표는 0%, 점�
   });
   ['LI08', 'LI09'].forEach(id => assert.ok(S.leadDefs.find(l => l.id === id).support));
 });
-t('후행지표 5개는 신한솔 개인 지표이고 KPI 실적을 참조하지 않음', () => { assert.equal(S.lagDefs.length, 5); S.lagDefs.forEach(g => { assert.equal(g.member, 'shs'); assert.equal(g.ref, undefined); assert.ok(g.denLabel && g.numLabel && g.formula, g.id); }); });
+t('후행지표 5개는 신한솔 개인 지표이고 KPI 실적을 참조하지 않음', () => { assert.equal(S.lagDefs.length, 5); S.lagDefs.forEach(g => { assert.equal(g.member, 'shs'); assert.equal(g.ref, undefined); assert.ok(g.denLabel && g.numLabel && g.formula, g.id); ['scope', 'denLabel', 'numLabel', 'formula'].forEach(f => assert.ok(/담당/.test(g[f]), g.id + ' ' + f)); }); });
 t('선행지표 9개는 신한솔 개인 지표', () => S.leadDefs.forEach(l => assert.equal(l.member, 'shs', l.id)));
 t('개인 점수는 그 팀원의 지표만 계산', () => {
   const k = kpi({ A: 30, B: 70, X: 100 }), only = li => li !== 'X';

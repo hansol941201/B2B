@@ -1362,15 +1362,15 @@ var PERF_SEED = {
   ],
   lagDefs: [
     { id: "LG1", no: "①", name: "신규업체 첫 이용률", member: "shs", owner: "신한솔", rev: 0, measure: "신규 MOU 체결업체 수 · 실제 첫 서비스 이용 업체 수 · 첫 이용 전환율",
-      formula: "실제 첫 서비스 이용 업체 수 ÷ 신규 MOU 체결업체 수 × 100", denLabel: "신규 MOU 체결업체 수", numLabel: "실제 첫 서비스 이용 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+      formula: "담당 업체 중 첫 서비스 이용 업체 수 ÷ 담당 신규 MOU 체결업체 수 × 100", denLabel: "담당 신규 MOU 체결업체 수", numLabel: "담당 업체 중 첫 서비스 이용 업체 수", scope: "신한솔 담당 업체·현장", outcome: "신한솔 담당 업체·현장 기준으로 산출해 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
     { id: "LG2", no: "②", name: "60일 내 재이용률", member: "shs", owner: "신한솔", rev: 0, measure: "60일 관찰 완료 업체 수 · 다른 현장 재이용 업체 수 · 실제 재이용률",
-      formula: "다른 현장 재이용 업체 수 ÷ 60일 관찰 완료 업체 수 × 100", denLabel: "60일 관찰 완료 업체 수", numLabel: "다른 현장 재이용 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+      formula: "담당 업체 중 다른 현장 재이용 업체 수 ÷ 담당 업체 중 60일 관찰 완료 업체 수 × 100", denLabel: "담당 업체 중 60일 관찰 완료 업체 수", numLabel: "담당 업체 중 다른 현장 재이용 업체 수", scope: "신한솔 담당 업체·현장", outcome: "신한솔 담당 업체·현장 기준으로 산출해 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
     { id: "LG3", no: "③", name: "L2 → L3 전환율", member: "shs", owner: "신한솔", rev: 0, measure: "영업활동 대상 수 · 서비스 이용 도달 대상 수 · 전환율",
-      formula: "서비스 이용 도달 대상 수 ÷ 영업활동 대상 수 × 100", denLabel: "영업활동 대상 수", numLabel: "서비스 이용 도달 대상 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "통합 KPI 대시보드 연동 대기" },
+      formula: "담당 업체·현장의 서비스 이용 도달 대상 수 ÷ 담당 업체·현장의 영업활동 대상 수 × 100", denLabel: "담당 업체·현장의 영업활동 대상 수", numLabel: "담당 업체·현장의 서비스 이용 도달 대상 수", scope: "신한솔 담당 업체·현장", outcome: "신한솔 담당 업체·현장 기준으로 산출해 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "통합 KPI 대시보드 연동 대기" },
     { id: "LG4", no: "④", name: "장기 미활동 업체 재활성화율", member: "shs", owner: "신한솔", rev: 0, measure: "재활성화 관리 대상 업체 수 · 재활동 업체 수 · 재활성화율",
-      formula: "재활동 업체 수 ÷ 재활성화 관리 대상 업체 수 × 100", denLabel: "재활성화 관리 대상 업체 수", numLabel: "재활동 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+      formula: "담당 업체 중 재활동 업체 수 ÷ 담당 업체 중 재활성화 관리 대상 수 × 100", denLabel: "담당 업체 중 재활성화 관리 대상 수", numLabel: "담당 업체 중 재활동 업체 수", scope: "신한솔 담당 업체·현장", outcome: "신한솔 담당 업체·현장 기준으로 산출해 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
     { id: "LG5", no: "⑤", name: "고객등급 상승률", member: "shs", owner: "신한솔", rev: 0, measure: "등급 비교 가능 업체 수 · 등급 상승 업체 수 · 등급 상승률",
-      formula: "등급 상승 업체 수 ÷ 등급 비교 가능 업체 수 × 100", denLabel: "등급 비교 가능 업체 수", numLabel: "등급 상승 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "등급 기준 확인 대기" }
+      formula: "담당 업체 중 등급 상승 업체 수 ÷ 담당 업체 중 등급 비교 가능 업체 수 × 100", denLabel: "담당 업체 중 등급 비교 가능 업체 수", numLabel: "담당 업체 중 등급 상승 업체 수", scope: "신한솔 담당 업체·현장", outcome: "신한솔 담당 업체·현장 기준으로 산출해 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "등급 기준 확인 대기" }
   ]
 };
 Object.keys(PERF_SEED).forEach(function (k) { SEED[k] = PERF_SEED[k]; });
@@ -1995,11 +1995,10 @@ var PerfCalc = (function () {
     (d.leadDefs || []).forEach(function (l) { if (!l.member) l.member = "shs"; });
     (d.lagDefs || []).forEach(function (g) {
       if (!g.member) g.member = "shs";
-      if (g.ref) {
-        var s = (SEED.lagDefs || []).filter(function (x) { return x.id === g.id; })[0] || {};
-        ["owner", "formula", "denLabel", "numLabel", "outcome", "src", "linkNote"].forEach(function (f) { if (!g[f] && s[f]) g[f] = s[f]; });
-        delete g.ref;
-      }
+      var s = (SEED.lagDefs || []).filter(function (x) { return x.id === g.id; })[0] || {};
+      ["owner", "src", "linkNote"].forEach(function (f) { if (!g[f] && s[f]) g[f] = s[f]; });
+      ["formula", "denLabel", "numLabel", "scope", "outcome"].forEach(function (f) { if (s[f]) g[f] = s[f]; }); // 화면에서 고치지 않는 산출 기준
+      delete g.ref;
     });
     var have = {};
     (d.members || []).forEach(function (m) { have[m.id] = 1; });
@@ -2142,7 +2141,7 @@ var PerfCalc = (function () {
       pfMeter(r, t) +
       '<div class="pf-sub">담당 <b>' + esc(g.owner || "미지정") + "</b> · " + (r.state === "ok" ? "실적 <b class=\"num\">" + fmt(r.num) + " / " + fmt(r.den) + "</b> · " : "") +
       "목표 <b>" + (PC.isNum(t) ? fmt(t) + "%" : "미설정") + "</b></div>" +
-      '<div class="pf-sub">' + esc(g.measure) + "</div>" +
+      '<div class="pf-sub">집계 범위 <b>' + esc(g.scope || "미정") + "</b><br>" + esc(g.measure) + "</div>" +
       '<div class="pf-acts"><button class="mini" data-pf-open="lag" data-id="' + esc(g.id) + '" data-v="input">실적 입력</button>' +
       '<button class="mini" data-pf-open="lag" data-id="' + esc(g.id) + '" data-v="edit">수정</button></div></article>';
   }
@@ -2179,7 +2178,7 @@ var PerfCalc = (function () {
       '<div class="pf-h2"><h2>KPI별 개인 선행점수</h2><span>팀 공통 KPI 점수에는 팀원 반영 가중치를 거쳐 들어갑니다</span></div><div class="pf-grid k3">' + kpis.map(function (k) { return pfMemberScoreCard(k, mid); }).join("") + "</div>" +
       '<div class="pf-h2"><h2>개인 선행지표</h2><span>' + nm + ' 담당 고객관리 업무</span></div><div class="pf-grid">' + core.map(pfLeadCard).join("") + "</div>" +
       '<div class="pf-h2"><h2>운영 지원지표</h2><span>별도 표시 · KPI 계산 기본 가중치 0%</span></div><div class="pf-grid">' + sup.map(pfLeadCard).join("") + "</div>" +
-      '<div class="pf-h2"><h2>개인 후행지표</h2><span>개인 성과로 별도 저장 · 팀 공통 KPI와 합산하지 않음</span></div><div class="pf-grid">' + lags.map(pfLagCard).join("") + "</div>" +
+      '<div class="pf-h2"><h2>개인 후행지표</h2><span>' + nm + ' 담당 업체·현장 기준 · 개인 성과로 별도 저장 · 팀 공통 KPI와 합산하지 않음</span></div><div class="pf-grid">' + lags.map(pfLagCard).join("") + "</div>" +
       '<div class="note" style="margin-top:14px"><b>주요 미달성 지표</b> — ' + (miss.length ? miss.join(" · ") : "목표 대비 미달로 판정된 후행지표가 없습니다. (목표 미설정·미측정 지표는 판정하지 않습니다)") + "</div>";
   }
   function pfBoardRow(type, x) {
@@ -2199,7 +2198,7 @@ var PerfCalc = (function () {
     return '<button class="pf-h' + (o ? " on" : "") + '" data-pf-board="' + esc(m.id) + '" aria-expanded="' + o + '"><span class="chev" aria-hidden="true">▶</span><span class="k">개인 선행·후행지표 · ' + esc(pfMonth) + '</span><span class="c num">' + (leads.length + lags.length) + "</span></button>" +
       '<div class="pf-body' + (o ? " on" : "") + '"><div class="pfb-list">' +
       '<div class="pfb-sep">개인 선행지표 ' + leads.length + "개</div>" + leads.map(function (l) { return pfBoardRow("lead", l); }).join("") +
-      '<div class="pfb-sep">개인 후행지표 ' + lags.length + "개</div>" + lags.map(function (g) { return pfBoardRow("lag", g); }).join("") +
+      '<div class="pfb-sep">개인 후행지표 ' + lags.length + "개 · 담당 업체·현장 기준</div>" + lags.map(function (g) { return pfBoardRow("lag", g); }).join("") +
       "</div></div>";
   }
 
@@ -2287,7 +2286,7 @@ var PerfCalc = (function () {
   function pfDefInfo(def) {
     var kv = "";
     function row(k, v) { if (v) kv += "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>"; }
-    row("관리 목적", def.purpose); row("담당자", def.owner); row("관리 주기", def.cycle); row("측정 대상", def.measure);
+    row("관리 목적", def.purpose); row("담당자", def.owner); row("집계 범위", def.scope); row("관리 주기", def.cycle); row("측정 대상", def.measure);
     row("목표", def.targetText || (PC.isNum(def.target) ? fmt(def.target) + "%" : "미설정"));
     row("계산식", def.formula); row("보고된 성과", def.reported); row("성과·유의", def.outcome);
     row("데이터", def.src ? def.src + " · " + (def.linkNote || "") : "");
