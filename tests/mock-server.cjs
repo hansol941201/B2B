@@ -47,7 +47,9 @@ function page(file) {
 http.createServer((q, s) => {
   const url = q.url.split('?')[0];
   const send = (code, body, type) => { s.writeHead(code, { 'content-type': type || 'application/json; charset=utf-8', 'cache-control': 'no-store' }); s.end(body); };
-  if (url === '/' || url === '/index.html') return send(200, page(path.join(__dirname, '..', 'index.html')), 'text/html; charset=utf-8');
+  // ROOT_PAGE=legacy.html 이면 이전 화면을 / 에서 시험한다
+  if (url === '/' || url === '/index.html') return send(200, page(path.join(__dirname, '..', process.env.ROOT_PAGE || 'index.html')), 'text/html; charset=utf-8');
+  if (url === '/legacy.html') return send(200, page(path.join(__dirname, '..', 'legacy.html')), 'text/html; charset=utf-8');
   if (url === '/old/' && oldHtmlFile) return send(200, page(oldHtmlFile), 'text/html; charset=utf-8');
   if (url === '/__db') { if (fbs) return fbsVal().then(v => send(200, JSON.stringify(v))); return send(200, JSON.stringify(db)); }
   if (url === '/__reset') { if (fbs) { fbsRoot().set(baseline()); return setTimeout(() => send(200, '{"ok":true}'), 150); } db = baseline(); return send(200, '{"ok":true}'); }
