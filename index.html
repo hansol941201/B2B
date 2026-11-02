@@ -3109,7 +3109,32 @@
   .kt-rate.s-done { background: var(--success-soft); color: var(--success); }
   .kt-none { font-size: 12.5px; color: var(--muted); padding: 6px 0; }
   .ks-sec.lead.support .ks-tag { background: var(--line-2); color: var(--muted); }
-  @media (max-width: 900px) { .ks-team { grid-template-columns: 1fr; } }
+  /* KPI 카드 요약: 큰 달성률 → 짧은 이름 → 실적/목표. 누르면 상세보기 */
+  .kc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .kc-grid.ks-team { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kc { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; min-height: 150px; padding: 16px 16px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; text-align: left; cursor: pointer; font: inherit; color: var(--ink); transition: border-color .15s, box-shadow .15s; }
+  .kc:hover { border-color: var(--accent); box-shadow: 0 4px 14px rgba(27, 68, 128, .10); }
+  .kc.team { border-top: 4px solid var(--accent); }
+  .kc-tag { font-size: 12px; font-weight: 700; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+  .kc-auto { font-style: normal; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+  .kc-pct { font-family: var(--num); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); letter-spacing: -0.02em; }
+  .kc-pct small { font-size: 20px; margin-left: 2px; }
+  .kc.done .kc-pct { color: var(--success); }
+  .kc.none .kc-pct { font-family: inherit; font-size: 22px; color: var(--muted); padding: 9px 0; }
+  .kc-desc { flex: 1; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--ink-2); word-break: keep-all; overflow-wrap: anywhere; }
+  .kc-foot { width: 100%; padding-top: 8px; border-top: 1px solid var(--line-2); font-size: 12px; color: var(--muted); }
+  .kc-foot b { font-family: var(--num); color: var(--ink-2); margin-left: 4px; }
+  .kc-foot b.txt { font-family: inherit; font-weight: 700; }
+  #modal-kpi .ks-rate { flex-wrap: wrap; }
+  .ks-rate-lbl { white-space: nowrap; }
+  .kc-avg { text-align: center; margin: 14px 0 6px; font-size: 15px; font-weight: 700; color: var(--ink-2); }
+  .kc-avg b { font-family: var(--num); font-size: 22px; color: var(--accent); margin-left: 6px; }
+  .kc-avg span { display: block; margin-top: 2px; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .kd-sec { margin-top: 16px; }
+  .kd-sec:first-child { margin-top: 0; }
+  .kd-h { font-size: 14px; font-weight: 800; color: var(--ink); padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .kd-table { overflow-x: auto; }
+  @media (max-width: 640px) { .kc-grid, .kc-grid.ks-team { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .kc { min-height: 140px; padding: 14px 12px 12px; } .kc-pct { font-size: 34px; } }
   @media (max-width: 640px) { .ks-list { grid-template-columns: 1fr; } .ks-month { margin-left: 0; } .ks-item .ks-field .kmv { font-size: 18px; } }
 
   /* 선 아이콘 · 흰색·남색 화면 */
@@ -3331,7 +3356,7 @@
   <!-- ===== PAGE: KPI 체계 ===== -->
   <div class="page" id="page-kpi">
     <div class="section-title">🎯 KPI 체계 <span class="count" id="kpi-updated">—</span></div>
-    <p class="section-sub"><b>목표</b>와 <b>현재 실적</b>에 숫자를 넣으면 <b>달성률</b>이 저절로 계산돼요. 자세한 기준은 <b>상세보기</b>에 있어요.</p>
+    <p class="section-sub">큰 숫자가 이번 달 <b>달성률</b>이에요. 카드를 누르면 <b>목표·현재 실적 입력</b>과 계산식·월별 기록이 나와요.</p>
     <div class="kpi-toolbar">
       <label class="ks-month">몇 월? <select id="kpi-month" onchange="UI.kpiMonth=this.value; renderKpiPage();"></select></label>
     </div>
@@ -8591,14 +8616,12 @@ function b2bIndRow(def, team) {
   const rev = rec ? (rec.rev || 0) : 0, lock = auto ? ' readonly tabindex="-1" aria-readonly="true"' : "";
   const den = rec && rec.mode !== "direct" && PC.isNum(rec.den) ? rec.den : "", num = rec && rec.mode !== "direct" && PC.isNum(rec.num) ? rec.num : "";
   return `<div class="kpi-ind ks-item${team ? " ks-teamcard" : ""}" data-ind="${def.id}">
-    <div class="ks-top"><span class="ks-no">${escapeHtml(def.no || "")}</span><div class="ktext b2b-link" onclick="b2bOpenInd('${def.id}')">${escapeHtml(def.name)}</div></div>
     <div class="ks-rate"><span class="kstatus ${cls}">${b2bRateLabel(r)}</span><span class="ks-rate-lbl">달성률</span>${auto ? `<span class="ks-auto" title="${escapeHtml(auto.rule || "")}">${b2bAutoLabel(auto)} · ${escapeHtml(b2bAutoTime(auto))}</span>` : ""}</div>
     <div class="kpi-mbar"><i style="width:${pct}%; background:${pct >= 100 ? "var(--success)" : "var(--accent)"};"></i></div>
     <div class="ks-inputs">
       <label class="ks-field"><span>목표</span><input type="number" min="0" inputmode="numeric" class="kmv tgt${auto ? " is-auto" : ""}" value="${den}" placeholder="몇 개?" data-rev="${rev}"${lock} onchange="b2bSetVal('${def.id}','den',this)"></label>
       <label class="ks-field"><span>현재 실적</span><input type="number" min="0" inputmode="numeric" class="kmv${auto ? " is-auto" : ""}" value="${num}" placeholder="몇 개?" data-rev="${rev}"${lock} onchange="b2bSetVal('${def.id}','num',this)"></label>
     </div>
-    <button class="ks-more" onclick="b2bOpenInd('${def.id}')">상세보기 ›</button>
   </div>`;
 }
 function b2bAutoTime(a) { const d = new Date(a.computedAt || ""); if (isNaN(d.getTime())) return ""; const p = n => (n < 10 ? "0" : "") + n; return p(d.getMonth() + 1) + "." + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()); }
@@ -8637,15 +8660,37 @@ function b2bKpiTree(k) {
     ${lags.length ? `<div class="kt-sub">관리 후 고객 변화 <span>관리한 업체에서 생긴 변화 · 개인 점수 아님</span></div>${lags.map(g => `<button class="kt-act lag" data-act="${g.id}" onclick="b2bOpenInd('${g.id}')"><span class="kt-no">${escapeHtml(b2bMemberName(g.member))}</span><span class="kt-name">${escapeHtml(g.name)}</span>${b2bRatePill(g.id)}</button>`).join("")}` : ""}
   </div>`;
 }
+/* KPI 카드 요약(2026-11-03 사용자 지시) — 처음 화면은 큰 달성률·지표 이름·실적/목표만 보인다.
+   목표·실적 입력, 계산식, 설명, 월별 기록, 관련 업무는 카드를 눌러 여는 상세보기에만 둔다. 달성률 계산은 그대로(b2bRate). */
+function b2bCard(def, kind) {
+  const month = b2bMonth(), r = b2bRate(def.id, month), auto = b2bAuto(def.id, month), rec = auto || b2bRec(def.id, month), ok = r.state === "ok", pct = ok ? b2bPct(r.value) : 0;
+  const has = rec && rec.mode !== "direct" && PC.isNum(rec.num) && PC.isNum(rec.den), nums = has ? rec.num + " / " + rec.den : rec && rec.mode === "direct" ? "직접 입력" : "입력 전";
+  const tag = kind === "team" ? "팀 KPI " + (def.no || "") : (def.no || "") + (B2B_LEAD_KIND[def.id] ? " · " + (B2B_LEAD_KIND[def.id] === "exec" ? "실행" : "운영 지원") : "");
+  return `<button class="kc ${kind}${!ok ? " none" : pct >= 100 ? " done" : ""}" data-ind="${def.id}" onclick="b2bOpenInd('${def.id}')">
+    <span class="kc-tag">${escapeHtml(tag)}${auto ? `<i class="kc-auto" title="${escapeHtml(b2bAutoLabel(auto) + " · " + b2bAutoTime(auto))}">${b2bAutoLabel(auto)}</i>` : ""}</span>
+    <span class="kc-pct">${ok ? pct + "<small>%</small>" : escapeHtml(b2bRateLabel(r))}</span>
+    <span class="kc-desc">${escapeHtml(def.name)}</span>
+    <span class="kc-foot">실적 / 목표 <b${has ? "" : ' class="txt"'}>${nums}</b></span>
+  </button>`;
+}
+/* 카드 아래 평균 — 측정된 지표만, 100% 넘는 값은 100%로 본다. 화면 표시용이라 저장하지 않고 팀 KPI 실적에도 쓰지 않는다. */
+function b2bAvg(defs) {
+  const v = defs.map(d => b2bRate(d.id, b2bMonth())).filter(r => r.state === "ok").map(r => Math.min(100, r.value));
+  return v.length ? { pct: b2bPct(v.reduce((a, b) => a + b, 0) / v.length), n: v.length, of: defs.length } : null;
+}
+function b2bAvgLine(label, defs) {
+  const a = b2bAvg(defs);
+  return `<div class="kc-avg">${label} <b>${a ? a.pct + "%" : "—"}</b><span>${a ? `측정된 ${a.n}/${a.of}개 평균 · 100% 넘는 값은 100%로` : "아직 측정된 지표가 없어요"}</span></div>`;
+}
 function b2bMemberSection(mid) {
-  const s = B2B.shape, byId = (a, b) => a.id < b.id ? -1 : 1;
-  const leads = Object.values(s.leadDefs).filter(l => l.member === mid).sort(byId), lags = Object.values(s.lagDefs).filter(g => g.member === mid).sort(byId);
-  if (!leads.length && !lags.length) return `<div class="ks-empty">아직 ${escapeHtml(b2bMemberName(mid))}님의 지표가 없어요.</div>`;
-  const group = (cls, tag, title, help, list) => list.length ? `<div class="ks-sec ${cls}"><div class="ks-sec-head"><span class="ks-tag">${tag}</span><b>${title}</b><span class="ks-help">${help}</span></div>
-    <div class="ks-list">${list.map(d => b2bIndRow(d)).join("")}</div></div>` : "";
-  return group("lead", "선행 · 실행", "고객을 직접 움직이는 일", "미팅·연락처럼 고객의 서비스 이용에 직접 닿는 일이에요.", leads.filter(l => B2B_LEAD_KIND[l.id] === "exec")) +
-    group("lead support", "선행 · 운영 지원", "실행을 받쳐 주는 일", "고객관리카드 정리·등급·자동화처럼 실행업무를 돕는 일이에요.", leads.filter(l => B2B_LEAD_KIND[l.id] !== "exec")) +
-    group("lag", "관리 후 고객 변화", "관리한 업체에서 생긴 변화", "개인 평가 점수가 아니에요. 팀 KPI 실적과 따로 보고, 선행 활동 값으로 채우지 않아요.", lags);
+  const s = B2B.shape, byId = (a, b) => a.id < b.id ? -1 : 1, name = escapeHtml(b2bMemberName(mid));
+  const leads = Object.values(s.leadDefs).filter(l => l.member === mid).sort((a, b) => (B2B_LEAD_KIND[a.id] !== "exec") - (B2B_LEAD_KIND[b.id] !== "exec") || byId(a, b));
+  const lags = Object.values(s.lagDefs).filter(g => g.member === mid).sort(byId);
+  if (!leads.length && !lags.length) return `<div class="ks-empty">아직 ${name}님의 지표가 없어요.</div>`;
+  const group = (cls, title, help, label, list) => list.length ? `<div class="ks-sec ${cls}"><div class="ks-h">${title} <span>${help}</span></div>
+    <div class="kc-grid">${list.map(d => b2bCard(d, cls)).join("")}</div>${b2bAvgLine(label, list)}</div>` : "";
+  return group("lead", name + " 선행지표", "직접 하는 일 · 실행과 운영 지원", "선행지표 평균 진척률", leads) +
+    group("lag", name + " 후행지표", "관리한 업체에서 생긴 변화 · 개인 평가 점수 아님", "후행지표 평균 진척률", lags);
 }
 renderKpiPage = function () {
   const root = $("kpi-root"); if (!root || !B2B.shape) return;
@@ -8658,9 +8703,9 @@ renderKpiPage = function () {
     const n = Object.values(s.leadDefs).concat(Object.values(s.lagDefs)).filter(d => d.member === m.id).length;
     return `<button class="member-chip ${m.id === mid ? "on" : ""}" data-kpi-member="${m.id}" onclick="b2bSetKpiMember('${m.id}')"><span class="chip-dot" style="background:${m.color || "#1B4480"};"></span>${escapeHtml(String(m.name || "").trim())}<span class="chip-count">${n}</span></button>`;
   }).join("");
-  root.innerHTML = `<div class="ks-h">🎯 팀 KPI ${kpis.length}개 <span>최상위 목표 · 실적은 전체 업체의 실제 이용으로만 계산해요</span></div>
-    <div class="ks-team">${kpis.map(k => `<div class="kt-block">${b2bIndRow(k, true)}${b2bKpiTree(k)}</div>`).join("")}</div>
-    <div class="ks-h">🙋 팀원별로 보기 <span>이름을 누르면 그 사람의 활동과 관리 후 고객 변화를 보고 값을 넣어요</span></div>
+  root.innerHTML = `<div class="ks-h">🎯 팀 공통 KPI ${kpis.length}개 <span>최상위 목표 · 카드를 누르면 상세보기</span></div>
+    <div class="kc-grid ks-team">${kpis.map(k => b2bCard(k, "team")).join("")}</div>${b2bAvgLine("팀 평균 진척률", kpis)}
+    <div class="ks-h">🙋 팀원별로 보기 <span>이름을 누르면 그 사람의 선행·후행지표</span></div>
     <div class="member-pick ks-pick">${chips}</div>
     <div id="kpi-member-view">${mid ? b2bMemberSection(mid) : ""}</div>`;
 };
@@ -8684,17 +8729,32 @@ function b2bDrawInd() {
     .concat(Object.values(s.perfMonthly).filter(x => x.ref === ref).map(x => Object.assign({ _old: !!b2bAuto(ref, x.month) }, x)));
   const rows = monthRecs.sort((a, b) => a.month < b.month ? 1 : a.month > b.month ? -1 : a._auto ? -1 : 1).map(x => { const y = PC.rate(x), ws = isLead ? PC.workStats(tasks, x) : null; return `<tr><td>${x.month}</td><td>${PC.isNum(x.num) && PC.isNum(x.den) ? x.num + " / " + x.den : x.mode === "direct" ? "직접 입력" : "—"}</td><td>${y.state === "ok" ? b2bPct(y.value) + "%" : y.state === "empty" ? "대상 없음" : "미측정"}</td>${isLead ? `<td>${Math.round(ws.value || 0)}%</td>` : ""}<td>${x._auto ? b2bAutoLabel(x) : escapeHtml(x.updatedBy || "") + (x._old ? " · 직접 입력(이전)" : "")}</td></tr>`; }).join("");
   const hist = Object.values(s.perfHistory).filter(h => h.ref === ref).sort((a, b) => a.at < b.at ? 1 : -1).slice(0, 20).map(h => `<div class="b2b-kv"><span>${escapeHtml((h.at || "").slice(0, 16).replace("T", " "))}</span><b>${escapeHtml(h.by || "")} · ${escapeHtml(h.summary || "")} ${escapeHtml((h.changes || []).map(c => c.f + " " + c.from + "→" + c.to).join(", "))}</b></div>`).join("");
-  const linked = s.mainKpis[ref] ? (def.links || []).map(l => s.leadDefs[l.li]).filter(Boolean) : [];
-  el.innerHTML = `${b2bIndRow(def)}
-    ${autoBox}
-    <div class="ks-what"><div class="ks-what-t">무엇을 세나요?</div><div class="b2b-kv"><span>목표</span><b>${escapeHtml(def.denLabel || "대상 수")}</b></div><div class="b2b-kv"><span>현재 실적</span><b>${escapeHtml(def.numLabel || "완료 수")}</b></div><div class="b2b-kv"><span>달성률</span><b>현재 실적 ÷ 목표 × 100</b></div></div>
-    ${isLead ? `<div class="b2b-kv" style="margin-top:8px;"><span>업무 진행률</span><b>${tasks.length ? Math.round(w.value) + "% · 완료 " + w.done + " / " + w.total : "세부업무 없음"} (달성률과 별개)</b></div>` : ""}
-    <details style="margin-top:12px;"><summary class="b2b-sum">기준·계산식·설명</summary>
-      <div class="b2b-kv"><span>기준 달성률(%) · 선택</span><input type="number" min="0" max="100" id="b2b-target" value="${PC.isNum(def.target) ? def.target : ""}" placeholder="미설정" onchange="b2bSetTarget('${ref}',this)" style="width:100px;"></div>
-      ${linked.length ? kv("연결된 팀원 활동", linked.map(d => b2bMemberName(d.member) + " " + (d.no || "") + " " + d.name).join(", ") + " (달성률은 이 KPI 실적에 더하지 않음)") : ""}${kv("계산식", def.formula)}${kv("집계 범위", def.scope)}${kv("관리 목적", def.purpose)}${kv("측정 항목", def.measure)}${kv("목표 설명", def.targetText)}${kv("연결 팀 KPI", kl)}${kv("연결 프로젝트", projs ? projs + " (진행률 합산 안 함)" : "")}${kv("참고", def.outcome || def.defNote)}${kv("데이터", (def.src || "") + (def.linkNote ? " · " + def.linkNote : ""))}</details>
-    ${isLead ? `<div class="subtask-container" style="margin-top:12px;"><div class="subtask-head"><span>📎 세부업무</span><span style="font-family:var(--num); font-weight:800;">${w.done}/${w.total}</span></div><div class="subtask-list">${subs}</div><div class="subtask-add"><input type="text" id="b2b-sub-add" placeholder="세부업무 추가" onkeydown="if(event.key==='Enter')b2bSubAdd('${ref}')"><button onclick="b2bSubAdd('${ref}')">+ 추가</button></div></div>` : ""}
-    <details style="margin-top:12px;"><summary class="b2b-sum">월별 실적</summary>${rows ? `<table class="table"><thead><tr><th>월</th><th>실적</th><th>달성률</th>${isLead ? "<th>업무 진행률</th>" : ""}<th>입력</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="empty-small">아직 저장된 실적이 없습니다.</div>'}</details>
-    <details style="margin-top:8px;"><summary class="b2b-sum">변경 이력</summary>${hist || '<div class="empty-small">변경 이력이 없습니다.</div>'}</details>`;
+  const lagKpi = s.lagDefs[ref] && s.mainKpis[B2B_LAG_KPI[ref]] ? "KPI " + s.mainKpis[B2B_LAG_KPI[ref]].no + " " + s.mainKpis[B2B_LAG_KPI[ref]].name : "";
+  const sec = (title, body) => `<div class="kd-sec"><div class="kd-h">${title}</div>${body}</div>`;
+  const related = s.mainKpis[ref] ? b2bKpiTree(def)
+    : kv("연결 팀 KPI", kl || lagKpi) + kv("연결 프로젝트", projs ? projs + " (진행률 합산 안 함)" : "") +
+      (isLead ? `<div class="b2b-kv"><span>업무 진행률</span><b>${tasks.length ? Math.round(w.value) + "% · 완료 " + w.done + " / " + w.total : "세부업무 없음"} (달성률과 별개)</b></div>
+      <div class="subtask-container" style="margin-top:8px;"><div class="subtask-head"><span>📎 세부업무</span><span style="font-family:var(--num); font-weight:800;">${w.done}/${w.total}</span></div><div class="subtask-list">${subs}</div><div class="subtask-add"><input type="text" id="b2b-sub-add" placeholder="세부업무 추가" onkeydown="if(event.key==='Enter')b2bSubAdd('${ref}')"><button onclick="b2bSubAdd('${ref}')">+ 추가</button></div></div>` : "");
+  // 목표를 넣고 현재 실적 칸을 누르거나 Tab 으로 넘어가면, 저장 후 다시 그려도 그 칸에 커서가 가게 한다.
+  // 값 저장(change)은 커서가 옮겨 가기 전에 일어나므로 누른 칸·Tab 방향을 미리 기억해 둔다.
+  if (!el.dataset.focusKeep) {
+    el.dataset.focusKeep = "1";
+    const idx = t => [...el.querySelectorAll("input")].indexOf(t);
+    el.addEventListener("pointerdown", e => { UI.b2bFocusTo = { i: idx(e.target), at: Date.now() }; });
+    el.addEventListener("keydown", e => { if (e.key === "Tab" && idx(e.target) >= 0) UI.b2bFocusTo = { i: idx(e.target) + (e.shiftKey ? -1 : 1), at: Date.now() }; });
+  }
+  const to = UI.b2bFocusTo && Date.now() - UI.b2bFocusTo.at < 1000 ? UI.b2bFocusTo.i : -1;
+  const focusAt = to >= 0 ? to : el.contains(document.activeElement) ? [...el.querySelectorAll("input")].indexOf(document.activeElement) : -1;
+  UI.b2bFocusTo = null;
+  el.innerHTML = sec("목표 · 현재 실적", b2bIndRow(def) + autoBox) +
+    sec("계산식", `<div class="b2b-kv"><span>목표</span><b>${escapeHtml(def.denLabel || "대상 수")}</b></div><div class="b2b-kv"><span>현재 실적</span><b>${escapeHtml(def.numLabel || "완료 수")}</b></div><div class="b2b-kv"><span>달성률</span><b>${escapeHtml(def.formula || "현재 실적 ÷ 목표 × 100")}</b></div>${kv("집계 범위", def.scope)}`) +
+    sec("설명", `${kv("관리 목적", def.purpose)}${kv("측정 항목", def.measure)}${kv("목표 설명", def.targetText)}${kv("참고", def.outcome || def.defNote)}${kv("데이터", (def.src || "") + (def.linkNote ? " · " + def.linkNote : ""))}
+      <details style="margin-top:6px;"><summary class="b2b-sum">기준 달성률 설정 (선택)</summary><div class="b2b-kv"><span>기준 달성률(%)</span><input type="number" min="0" max="100" id="b2b-target" value="${PC.isNum(def.target) ? def.target : ""}" placeholder="미설정" onchange="b2bSetTarget('${ref}',this)" style="width:100px;"></div></details>`) +
+    sec("월별 기록", rows ? `<div class="kd-table"><table class="table"><thead><tr><th>월</th><th>실적</th><th>달성률</th>${isLead ? "<th>업무 진행률</th>" : ""}<th>입력</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<div class="empty-small">아직 저장된 실적이 없습니다.</div>') +
+    sec("관련 업무", related || '<div class="empty-small">연결된 업무가 없습니다.</div>') +
+    `<details style="margin-top:8px;"><summary class="b2b-sum">변경 이력</summary>${hist || '<div class="empty-small">변경 이력이 없습니다.</div>'}</details>`;
+  const back = focusAt >= 0 && el.querySelectorAll("input")[focusAt];
+  if (back && !back.readOnly) back.focus();
 }
 const _closeModal = closeModal;
 closeModal = function () { UI.b2bInd = null; _closeModal(); const b = $("modal-kpi-body"); if (b) b.innerHTML = ""; }; // 닫힌 창에 지표 입력칸이 남아 겹치지 않게 비운다

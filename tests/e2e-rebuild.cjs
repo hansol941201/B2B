@@ -25,7 +25,15 @@ const ready = p => p.waitForFunction(() => /동기화 완료/.test((document.que
 const open = async p => { await p.goto(BASE + '/'); await ready(p); await p.waitForTimeout(200); };
 const tab = async (p, id) => { await p.click(`.tab[data-page="${id}"]`); await p.waitForTimeout(120); };
 const keepOld = (d, skip) => Object.keys(baseline).forEach(k => { if (!(skip || []).includes(k)) assert.deepStrictEqual(d[k], baseline[k], k + ' 변경됨'); });
-const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().innerText();
+const indText = (p, id) => p.locator(`#kpi-root .kc[data-ind="${id}"]`).first().innerText();
+// 목표·현재 실적 입력은 카드를 눌러 연 상세보기 안에서 한다
+const openInd = async (p, id) => { await p.evaluate(() => closeModal()); await p.click(`#kpi-root .kc[data-ind="${id}"]`); await p.waitForSelector(`#modal-kpi.open .kpi-ind[data-ind="${id}"]`); };
+const setInd = async (p, id, tgt, cur) => {
+  await openInd(p, id); const box = `#modal-kpi .kpi-ind[data-ind="${id}"]`;
+  if (tgt != null) { await p.fill(box + ' .kmv.tgt', String(tgt)); await p.press(box + ' .kmv.tgt', 'Tab'); }
+  if (cur != null) { await p.fill(box + ' .kmv:not(.tgt)', String(cur)); await p.press(box + ' .kmv:not(.tgt)', 'Tab'); }
+  await p.evaluate(() => closeModal());
+};
 
 (async () => {
   const server = spawn(process.execPath, [path.join(__dirname, 'mock-server.cjs'), String(PORT), baselineFile], { stdio: 'inherit' });
@@ -148,56 +156,73 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
     });
     /* KPI */
     const pick = async name => { await p.click(`#kpi-root .member-chip:has-text("${name}")`); await p.waitForTimeout(80); };
-    await t('KPI 체계: 팀 KPI 3개 카드가 맨 위, 팀원 3명 선택, 선택한 사람 지표만', async () => {
+    await t('KPI 체계: 팀 공통 KPI 카드 3개가 맨 위, 아래 팀 평균 진척률, 팀원 3명 선택, 선택한 사람 지표만', async () => {
       await tab(p, 'kpi');
-      assert.equal(await p.locator('.ks-team .ks-teamcard').count(), 3);
+      assert.equal(await p.locator('.ks-team .kc').count(), 3);
       const first = await p.locator('#kpi-root > *').first().innerText();
-      assert.ok(/팀 KPI 3개/.test(first) && /최상위 목표/.test(first), '팀 KPI가 맨 위');
+      assert.ok(/팀 공통 KPI 3개/.test(first) && /최상위 목표/.test(first), '팀 KPI가 맨 위');
+      assert.ok(/팀 평균 진척률/.test(await p.locator('#kpi-root > .kc-avg').first().innerText()), '카드 아래 팀 평균');
       assert.deepStrictEqual((await p.locator('#kpi-root .member-chip').allInnerTexts()).map(x => x.replace(/\d+/g, '').trim()), ['박희선', '조재연', '신한솔']);
       await pick('신한솔');
-      assert.equal(await p.locator('#kpi-member-view .kpi-ind').count(), 14);
+      assert.equal(await p.locator('#kpi-member-view .kc').count(), 14);
+      assert.equal(await p.locator('#kpi-member-view .ks-sec.lead .kc').count(), 9);
+      assert.equal(await p.locator('#kpi-member-view .ks-sec.lag .kc').count(), 5);
       const v = await p.locator('#kpi-member-view').innerText();
-      assert.ok(/고객을 직접 움직이는 일/.test(v) && /실행을 받쳐 주는 일/.test(v) && /관리 후 고객 변화/.test(v) && /개인 평가 점수가 아니에요/.test(v), '실행·운영 지원·고객 변화 구분');
+      assert.ok(/신한솔 선행지표/.test(v) && /신한솔 후행지표/.test(v) && /선행지표 평균 진척률/.test(v) && /후행지표 평균 진척률/.test(v) && /개인 평가 점수 아님/.test(v), '선행·후행 구분');
+      assert.ok(/실행/.test(v) && /운영 지원/.test(v), '실행·운영 지원 표시');
       assert.ok(!/실제 성과/.test(v), '개인 성과 표현 없음');
       assert.ok(/미응답 업체 재연락 관리/.test(v) && /고객등급 상승률/.test(v));
       await pick('박희선');
-      assert.equal(await p.locator('#kpi-member-view .kpi-ind').count(), 0);
+      assert.equal(await p.locator('#kpi-member-view .kc').count(), 0);
       assert.ok(/아직 박희선님의 지표가 없어요/.test(await p.locator('#kpi-member-view').innerText()));
       await pick('신한솔');
     });
-    await t('팀 KPI 아래 연결된 팀원 활동(실행·운영 지원)과 관리 후 고객 변화가 한눈에', async () => {
-      const blocks = p.locator('.ks-team .kt-block');
-      assert.equal(await blocks.count(), 3);
-      const acts = async i => (await blocks.nth(i).locator('.kt-act').evaluateAll(a => a.map(e => e.dataset.act))).join(',');
-      assert.equal(await acts(0), 'LI01,LI02,LI03,LI04,LI06,LI05,LI09,LG1', 'KPI ① 연결(핵심 먼저, 참고 뒤, 고객 변화 끝)');
-      assert.equal(await acts(1), 'LI04,LI05,LI06,LI07,LG2');
-      assert.equal(await acts(2), 'LI01,LI02,LI04,LI05,LI06,LI08,LI09,LG3');
-      const t0 = await blocks.nth(0).locator('.kt-tree').innerText();
+    await t('팀 KPI 상세보기 관련 업무: 연결된 팀원 활동(실행·운영 지원)과 관리 후 고객 변화', async () => {
+      assert.equal(await p.locator('#kpi-root .kt-act').count(), 0, '첫 화면에는 펼치지 않음');
+      const acts = async id => { await openInd(p, id); return (await p.locator('#modal-kpi .kt-act').evaluateAll(a => a.map(e => e.dataset.act))).join(','); };
+      assert.equal(await acts('MK2'), 'LI04,LI05,LI06,LI07,LG2');
+      assert.equal(await acts('MK3'), 'LI01,LI02,LI04,LI05,LI06,LI08,LI09,LG3');
+      assert.equal(await acts('MK1'), 'LI01,LI02,LI03,LI04,LI06,LI05,LI09,LG1', 'KPI ① 연결(핵심 먼저, 참고 뒤, 고객 변화 끝)');
+      const t0 = await p.locator('#modal-kpi .kt-tree').innerText();
       assert.ok(/이 KPI를 높이는 팀원 활동/.test(t0) && /신한솔/.test(t0) && /실행/.test(t0) && /운영 지원/.test(t0) && /참고/.test(t0), t0.slice(0, 200));
       assert.ok(/박희선 · 조재연: 아직 연결된 활동 없음/.test(t0));
       assert.ok(/관리 후 고객 변화/.test(t0) && /개인 점수 아님/.test(t0));
       assert.ok(!/LG4|장기 미활동|고객등급 상승률/.test(await p.locator('.ks-team').innerText()), '팀 KPI 에 직접 연결 안 된 고객 변화 지표는 팀원별 보기에만');
-      await blocks.nth(0).locator('.kt-act[data-act="LI03"]').click();
+      await p.locator('#modal-kpi .kt-act[data-act="LI03"]').click();
       await p.waitForSelector('#modal-kpi.open');
       assert.ok(/신규업체 첫 이용 활성화/.test(await p.locator('#modal-kpi-title').innerText()));
       await p.evaluate(() => closeModal());
     });
-    await t('평소 화면: 지표명·목표·현재 실적·달성률만 (기준값·계산식은 상세보기 안)', async () => {
+    await t('첫 화면은 카드 요약만: 큰 달성률·짧은 이름·실적/목표 (입력칸·계산식은 상세보기 안)', async () => {
       const v = await p.locator('#kpi-root').innerText();
-      ['계산식', '분모', '분자', '가중치', '선행활동 점수', '담당 업체·현장', '관리 대상 미팅', '미확정'].forEach(w => assert.ok(!v.includes(w), w + ' 노출'));
-      const card = await indText(p, 'LI02');
-      ['목표', '현재 실적', '달성률', '상세보기'].forEach(w => assert.ok(card.includes(w), w));
+      ['계산식', '분모', '분자', '가중치', '선행활동 점수', '담당 업체·현장', '관리 대상 미팅', '미확정', '월별'].forEach(w => assert.ok(!v.includes(w), w + ' 노출'));
+      assert.equal(await p.locator('#kpi-root input').count(), 0, '첫 화면에 입력칸 없음');
+      const parts = await p.locator('#kpi-root .kc[data-ind="LI02"]').evaluate(e => [...e.children].map(c => c.className));
+      assert.deepStrictEqual(parts, ['kc-tag', 'kc-pct', 'kc-desc', 'kc-foot']);
+      assert.ok(/실적 \/ 목표/.test(await indText(p, 'LI02')));
     });
-    await t('입력 없으면 미측정 · 목표·현재 실적 입력하면 달성률 자동', async () => {
+    await t('입력 없으면 미측정 · 상세보기에서 목표·현재 실적 입력하면 카드 달성률 자동', async () => {
       assert.ok(/미측정/.test(await indText(p, 'LI02')));
-      await p.fill('.kpi-ind[data-ind="LI02"] .kmv.tgt', '10'); await p.press('.kpi-ind[data-ind="LI02"] .kmv.tgt', 'Tab');
-      await p.fill('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', '7'); await p.press('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', 'Tab');
+      await setInd(p, 'LI02', 10, 7);
       await until(async () => /70%/.test(await indText(p, 'LI02')));
+      assert.ok(/7 \/ 10/.test(await indText(p, 'LI02')), '카드 하단 실적/목표');
       const r = (await until(async () => { const x = await db(); const v = x.perfMonthly['LI02_' + MONTH]; return v && v.num === 7 ? x : false; })).perfMonthly['LI02_' + MONTH];
       assert.equal(r.den, 10, '목표는 기존 대상 수 칸에 저장'); assert.equal(r.mode, 'auto'); assert.ok(r.updatedBy);
     });
+    await t('상세보기: 목표 입력 후 Tab·클릭으로 현재 실적 칸에 넘어가도 커서가 그 칸에 남음', async () => {
+      await openInd(p, 'LI07'); const box = '#modal-kpi .kpi-ind[data-ind="LI07"]';
+      await p.click(box + ' .kmv.tgt'); await p.keyboard.type('9'); await p.keyboard.press('Tab');
+      await p.keyboard.type('4'); await p.keyboard.press('Tab');
+      let v = await until(async () => { const x = (await db()).perfMonthly['LI07_' + MONTH]; return x && x.num === 4 ? x : false; });
+      assert.equal(v.den, 9, 'Tab');
+      await p.fill(box + ' .kmv.tgt', '10'); await p.click(box + ' .kmv:not(.tgt)');
+      await p.keyboard.press('Control+A'); await p.keyboard.type('5'); await p.keyboard.press('Tab');
+      v = await until(async () => { const x = (await db()).perfMonthly['LI07_' + MONTH]; return x && x.num === 5 ? x : false; });
+      assert.equal(v.den, 10, '클릭');
+      await p.evaluate(() => closeModal());
+    });
     await t('현재 실적이 목표보다 크면 저장 안 됨', async () => {
-      await p.fill('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', '30'); await p.press('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', 'Tab');
+      await setInd(p, 'LI02', null, 30);
       await new Promise(r => setTimeout(r, 300));
       assert.equal((await db()).perfMonthly['LI02_' + MONTH].num, 7);
       assert.ok(/현재 실적이 목표보다/.test(await p.locator('#toast').innerText()));
@@ -206,12 +231,19 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       for (const id of ['LG1', 'LG2', 'LG3', 'LG4', 'LG5']) assert.ok(/미측정/.test(await indText(p, id)), id);
       assert.ok(!/70%/.test(await p.locator('.ks-sec.lag').innerText()));
     });
-    await t('상세보기: 무엇을 세는지·기준·세부업무, 진행률은 달성률과 분리', async () => {
-      await p.locator('.kpi-ind[data-ind="LI03"] .ks-more').click();
-      await p.waitForSelector('#modal-kpi.open');
+    await t('평균 진척률: 측정된 지표만 평균 · 저장하지 않음', async () => {
+      const d0 = JSON.stringify(await db());
+      const lead = await p.locator('#kpi-member-view .ks-sec.lead .kc-avg').innerText();
+      assert.ok(/선행지표 평균 진척률\s*60%/.test(lead) && /측정된 2\/9개/.test(lead), lead); // LI02 70%, LI07 50% → (70+50)/2
+      assert.ok(/후행지표 평균 진척률\s*—/.test(await p.locator('#kpi-member-view .ks-sec.lag .kc-avg').innerText()));
+      assert.equal(JSON.stringify(await db()), d0);
+    });
+    await t('상세보기 순서: 목표·현재 실적 → 계산식 → 설명 → 월별 기록 → 관련 업무, 진행률은 달성률과 분리', async () => {
+      await openInd(p, 'LI03');
+      assert.deepStrictEqual(await p.locator('#modal-kpi .kd-h').allInnerTexts(), ['목표 · 현재 실적', '계산식', '설명', '월별 기록', '관련 업무']);
       const b0 = await p.locator('#modal-kpi-body').innerText();
-      assert.ok(/무엇을 세나요/.test(b0) && /후속관리 대상 업체 수/.test(b0), '목표 설명');
-      await p.locator('#modal-kpi summary:has-text("기준·계산식·설명")').click();
+      assert.ok(/후속관리 대상 업체 수/.test(b0), '목표 설명');
+      await p.locator('#modal-kpi summary:has-text("기준 달성률 설정")').click();
       assert.ok(await p.locator('#b2b-target').isVisible(), '기준 달성률은 상세보기 안');
       await p.locator('#modal-kpi .sub-status-btn').first().click();
       const x = await until(async () => { const v = await db(); const r = v.perfMonthly['LI03_' + MONTH]; return r && r.prog && r.prog.t1 === 50 ? v : false; });
@@ -223,43 +255,42 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       await p.evaluate(() => closeModal());
     });
     await t('팀 KPI 실적과 개인 후행지표는 별도 저장', async () => {
-      await p.fill('.kpi-ind[data-ind="MK1"] .kmv.tgt', '51'); await p.press('.kpi-ind[data-ind="MK1"] .kmv.tgt', 'Tab');
-      await p.fill('.kpi-ind[data-ind="MK1"] .kmv:not(.tgt)', '17'); await p.press('.kpi-ind[data-ind="MK1"] .kmv:not(.tgt)', 'Tab');
+      await setInd(p, 'MK1', 51, 17);
       await until(async () => /33\.3%/.test(await indText(p, 'MK1')));
+      assert.ok(/팀 평균 진척률\s*33\.3%/.test(await p.locator('#kpi-root > .kc-avg').innerText()), '팀 평균은 팀 KPI 카드로만');
       assert.ok(/미측정/.test(await indText(p, 'LG1')), '개인 후행지표에 섞이면 안 됨');
-      await p.fill('.kpi-ind[data-ind="LG1"] .kmv.tgt', '8'); await p.press('.kpi-ind[data-ind="LG1"] .kmv.tgt', 'Tab');
-      await p.fill('.kpi-ind[data-ind="LG1"] .kmv:not(.tgt)', '3'); await p.press('.kpi-ind[data-ind="LG1"] .kmv:not(.tgt)', 'Tab');
+      await setInd(p, 'LG1', 8, 3);
       const x = await until(async () => { const v = await db(); return v.perfMonthly['LG1_' + MONTH] && v.perfMonthly['LG1_' + MONTH].num === 3 ? v : false; });
       assert.equal(x.perfMonthly['MK1_' + MONTH].num, 17);
     });
     await t('팀 KPI 상세에 개인 활동 점수를 섞지 않음 · 가중치 미설정 유지', async () => {
-      await p.locator('.kpi-ind[data-ind="MK1"] .ks-more').click();
-      await p.locator('#modal-kpi summary:has-text("기준·계산식·설명")').click();
+      await openInd(p, 'MK1');
       const b = await p.locator('#modal-kpi-body').innerText();
-      assert.ok(!/선행활동 점수|개인 점수/.test(b), '팀 선행점수 표시 없음');
-      assert.ok(/연결된 팀원 활동/.test(b) && /이 KPI 실적에 더하지 않음/.test(b));
+      assert.ok(!/선행활동 점수|개인 평가 점수/.test(b), '팀 선행점수 표시 없음');
+      assert.ok(/이 KPI를 높이는 팀원 활동/.test(b) && /활동 달성률은 팀 KPI 실적에 더하지 않아요/.test(b));
       await p.evaluate(() => closeModal());
       const x = await db();
       Object.values(x.mainKpis).forEach(k => assert.equal(k.memberWeights, undefined));
     });
     await t('개인 활동 달성률이 올라도 팀 KPI 실적은 그대로', async () => {
-      const before = await p.locator('.kpi-ind[data-ind="MK1"] .kstatus').first().innerText();
-      await p.fill('.kpi-ind[data-ind="LI05"] .kmv.tgt', '4'); await p.press('.kpi-ind[data-ind="LI05"] .kmv.tgt', 'Tab');
-      await p.fill('.kpi-ind[data-ind="LI05"] .kmv:not(.tgt)', '4'); await p.press('.kpi-ind[data-ind="LI05"] .kmv:not(.tgt)', 'Tab');
+      const before = await indText(p, 'MK1'), avg = await p.locator('#kpi-root > .kc-avg').innerText();
+      await setInd(p, 'LI05', 4, 4);
       await until(async () => /100%/.test(await indText(p, 'LI05')));
-      assert.equal(await p.locator('.kpi-ind[data-ind="MK1"] .kstatus').first().innerText(), before);
-      assert.ok(/100%/.test(await p.locator('.kt-act[data-act="LI05"]').first().innerText()), '트리의 활동 달성률은 갱신');
+      assert.equal(await indText(p, 'MK1'), before);
+      assert.equal(await p.locator('#kpi-root > .kc-avg').innerText(), avg, '팀 평균도 그대로');
+      await openInd(p, 'MK1');
+      assert.ok(/100%/.test(await p.locator('#modal-kpi .kt-act[data-act="LI05"]').innerText()), '관련 업무의 활동 달성률은 갱신');
+      await p.evaluate(() => closeModal());
       assert.equal((await db()).perfMonthly['MK1_' + MONTH].num, 17, '팀 KPI 기록 그대로');
     });
     await t('월별 실적 분리: 전월 입력해도 이번 달 유지', async () => {
       await p.selectOption('#kpi-month', PREV);
       assert.ok(/미측정/.test(await indText(p, 'LI02')));
-      await p.fill('.kpi-ind[data-ind="LI02"] .kmv.tgt', '4'); await p.press('.kpi-ind[data-ind="LI02"] .kmv.tgt', 'Tab');
+      await setInd(p, 'LI02', 4, null);
       await until(async () => (await db()).perfMonthly['LI02_' + PREV]);
       await p.selectOption('#kpi-month', MONTH);
       assert.ok(/70%/.test(await indText(p, 'LI02')));
-      await p.locator('.kpi-ind[data-ind="LI02"] .ktext').click();
-      await p.locator('#modal-kpi summary:has-text("월별 실적")').click();
+      await openInd(p, 'LI02');
       const b = await p.locator('#modal-kpi-body').innerText();
       assert.ok(b.includes(MONTH) && b.includes(PREV), b.slice(0, 200));
       await p.evaluate(() => closeModal());
@@ -277,15 +308,15 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       await p.reload(); await ready(p); await tab(p, 'kpi'); await pick('신한솔');
       const card = await indText(p, 'LI01');
       assert.ok(/90%/.test(card) && /카드 자동/.test(card), card);
-      assert.equal(await p.locator('.kpi-ind[data-ind="LI01"] .kmv.tgt').first().inputValue(), '50');
-      assert.ok(await p.locator('.kpi-ind[data-ind="LI01"] .kmv.tgt').first().getAttribute('readonly') !== null, '잠금');
+      assert.ok(/45 \/ 50/.test(card), '카드 하단은 자동값');
+      await openInd(p, 'LI01');
+      assert.equal(await p.locator('#modal-kpi .kpi-ind[data-ind="LI01"] .kmv.tgt').inputValue(), '50');
+      assert.ok(await p.locator('#modal-kpi .kpi-ind[data-ind="LI01"] .kmv.tgt').getAttribute('readonly') !== null, '잠금');
       await p.evaluate(() => b2bSetVal('LI01', 'num', { value: '1', dataset: {} }));
       assert.ok(/자동으로 계산되는 지표/.test(await p.locator('#toast').innerText()));
-      await p.locator('.kpi-ind[data-ind="LI01"] .ks-more').click();
       const b = await p.locator('#modal-kpi-body').innerText();
       assert.ok(/고객관리카드 자동 계산/.test(b) && /누락\s*2건/.test(b) && /등록 지연\s*3건/.test(b), b.slice(0, 300));
-      await p.locator('#modal-kpi summary:has-text("월별 실적")').click();
-      assert.ok(/직접 입력\(이전\)/.test(await p.locator('#modal-kpi-body').innerText()));
+      assert.ok(/직접 입력\(이전\)/.test(b), '월별 기록에 직접 입력값');
       await p.evaluate(() => closeModal());
       await new Promise(r => setTimeout(r, 600));
       const d = await db();
@@ -300,8 +331,8 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       await p.reload(); await ready(p); await tab(p, 'kpi');
       const card = await indText(p, 'MK1');
       assert.ok(/20%/.test(card) && /대시보드 자동/.test(card), card);
-      assert.ok(await p.locator('.kpi-ind[data-ind="MK1"] .kmv.tgt').first().getAttribute('readonly') !== null, '잠금');
-      await p.locator('.kpi-ind[data-ind="MK1"] .ks-more').click();
+      await openInd(p, 'MK1');
+      assert.ok(await p.locator('#modal-kpi .kpi-ind[data-ind="MK1"] .kmv.tgt').getAttribute('readonly') !== null, '잠금');
       const b = await p.locator('#modal-kpi-body').innerText();
       assert.ok(/통합 KPI 대시보드 자동 계산/.test(b) && /60일 관찰 중\(분모 제외\)\s*8곳/.test(b) && /통합시트/.test(b), b.slice(0, 400));
       await p.evaluate(() => closeModal());

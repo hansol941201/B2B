@@ -62,7 +62,7 @@ h = h.replace(/<p class="section-sub">팀원들이 만든 자동화·대시보�
 once('＋ 대시보드 추가</button>', '＋ 앱·도구 추가</button>');
 
 /* 4. KPI 체계 머리글 */
-h = h.replace(/<p class="section-sub">팀 목표 2개 아래에 담당자별 KPI를 정렬했습니다\.[^\n]*\n/, '<p class="section-sub"><b>목표</b>와 <b>현재 실적</b>에 숫자를 넣으면 <b>달성률</b>이 저절로 계산돼요. 자세한 기준은 <b>상세보기</b>에 있어요.</p>\n');
+h = h.replace(/<p class="section-sub">팀 목표 2개 아래에 담당자별 KPI를 정렬했습니다\.[^\n]*\n/, '<p class="section-sub">큰 숫자가 이번 달 <b>달성률</b>이에요. 카드를 누르면 <b>목표·현재 실적 입력</b>과 계산식·월별 기록이 나와요.</p>\n');
 once('🎯 B2B운영팀 KPI 체계 <span class="count" id="kpi-updated">최종본</span>', '🎯 KPI 체계 <span class="count" id="kpi-updated">—</span>');
 once(`<button class="btn ghost btn-sm" onclick="exportKpiSummary()" style="margin-left:auto;">📋 텍스트 복사</button>`, `<label class="ks-month">몇 월? <select id="kpi-month" onchange="UI.kpiMonth=this.value; renderKpiPage();"></select></label>`);
 /* 보기 전환 버튼 대신 화면 안의 팀원 선택을 쓴다 */
@@ -196,7 +196,32 @@ once('</style>\n</head>', `
   .kt-rate.s-done { background: var(--success-soft); color: var(--success); }
   .kt-none { font-size: 12.5px; color: var(--muted); padding: 6px 0; }
   .ks-sec.lead.support .ks-tag { background: var(--line-2); color: var(--muted); }
-  @media (max-width: 900px) { .ks-team { grid-template-columns: 1fr; } }
+  /* KPI 카드 요약: 큰 달성률 → 짧은 이름 → 실적/목표. 누르면 상세보기 */
+  .kc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .kc-grid.ks-team { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kc { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; min-height: 150px; padding: 16px 16px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; text-align: left; cursor: pointer; font: inherit; color: var(--ink); transition: border-color .15s, box-shadow .15s; }
+  .kc:hover { border-color: var(--accent); box-shadow: 0 4px 14px rgba(27, 68, 128, .10); }
+  .kc.team { border-top: 4px solid var(--accent); }
+  .kc-tag { font-size: 12px; font-weight: 700; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+  .kc-auto { font-style: normal; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+  .kc-pct { font-family: var(--num); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); letter-spacing: -0.02em; }
+  .kc-pct small { font-size: 20px; margin-left: 2px; }
+  .kc.done .kc-pct { color: var(--success); }
+  .kc.none .kc-pct { font-family: inherit; font-size: 22px; color: var(--muted); padding: 9px 0; }
+  .kc-desc { flex: 1; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--ink-2); word-break: keep-all; overflow-wrap: anywhere; }
+  .kc-foot { width: 100%; padding-top: 8px; border-top: 1px solid var(--line-2); font-size: 12px; color: var(--muted); }
+  .kc-foot b { font-family: var(--num); color: var(--ink-2); margin-left: 4px; }
+  .kc-foot b.txt { font-family: inherit; font-weight: 700; }
+  #modal-kpi .ks-rate { flex-wrap: wrap; }
+  .ks-rate-lbl { white-space: nowrap; }
+  .kc-avg { text-align: center; margin: 14px 0 6px; font-size: 15px; font-weight: 700; color: var(--ink-2); }
+  .kc-avg b { font-family: var(--num); font-size: 22px; color: var(--accent); margin-left: 6px; }
+  .kc-avg span { display: block; margin-top: 2px; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .kd-sec { margin-top: 16px; }
+  .kd-sec:first-child { margin-top: 0; }
+  .kd-h { font-size: 14px; font-weight: 800; color: var(--ink); padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .kd-table { overflow-x: auto; }
+  @media (max-width: 640px) { .kc-grid, .kc-grid.ks-team { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .kc { min-height: 140px; padding: 14px 12px 12px; } .kc-pct { font-size: 34px; } }
   @media (max-width: 640px) { .ks-list { grid-template-columns: 1fr; } .ks-month { margin-left: 0; } .ks-item .ks-field .kmv { font-size: 18px; } }
 </style>
 </head>`);
