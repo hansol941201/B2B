@@ -365,6 +365,8 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       const m = await newPage(browser, { viewport: { width: w, height: h }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
       await t(`모바일 ${w}px: 메뉴 전체 가로 넘침 없음`, async () => {
         await open(m);
+        const tabBar = await m.evaluate(() => ({ h: document.querySelector('.tabs').getBoundingClientRect().height, wrapped: [...document.querySelectorAll('.tabs > *')].filter(e => e.getBoundingClientRect().height > 60).map(e => e.innerText.trim()) }));
+        assert.ok(tabBar.h <= 60, '탭 줄 높이 ' + tabBar.h + ' · 글자 꺾임 ' + tabBar.wrapped.join(','));
         for (const id of ['today', 'detail', 'kpi', 'automation', 'manage', 'settings']) {
           await m.tap(`.tab[data-page="${id}"]`); await m.waitForTimeout(150);
           const over = await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);

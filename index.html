@@ -3042,6 +3042,9 @@
   .tab-link { padding: 16px 22px; color: var(--accent); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; flex: none; }
   .tab-link:hover { color: var(--ink); background: var(--accent-soft); }
   .tab-ext { font-size: 12px; opacity: .7; }
+  /* 탭 이름이 한 글자씩 꺾이지 않게 — 좁은 화면에서는 탭 줄을 옆으로 밀어 본다 */
+  .tabs > .tab { white-space: nowrap; flex: none; }
+  @media (max-width: 720px) { .tabs > .tab, .tab-link { padding: 14px 14px; gap: 6px; } }
   /* KPI 체계: 쉬운 카드 */
   .ks-month { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
   .ks-month select { min-height: 40px; }
