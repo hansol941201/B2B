@@ -21,6 +21,15 @@ var CARD_HTML_URL = 'https://bridgeone-m.github.io/card/index.html';
 var TRACKER_URL = 'https://b2b-task-tracker-39144-default-rtdb.asia-southeast1.firebasedatabase.app/shared/b2bOpsTracker.json';
 var CARD_BUILD = 'd4a56ea';                      // 판정 함수를 잘라 온 카드 버전
 var SYNC_HOURS = [7, 13];
+
+// 편집기는 맨 위 함수를 기본으로 실행한다 — 쓰기 없는 점검 실행을 맨 위에 둔다.
+function checkKpiSync() { var r = syncOnce_(false); console.log(JSON.stringify(r)); return r; }
+function runKpiSync() { return syncOnce_(true); }
+function installTriggers() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'runKpiSync') ScriptApp.deleteTrigger(t); });
+  SYNC_HOURS.forEach(function (h) { ScriptApp.newTrigger('runKpiSync').timeBased().atHour(h).everyDays(1).inTimezone('Asia/Seoul').create(); });
+  return SYNC_HOURS;
+}
 /* CARD-LOGIC-START — 고객관리카드 index.html 원본 함수(자동 생성, 직접 고치지 말 것) */
 var window = { SHIN2_PARTNER_SNAPSHOT: [] };
 var _partnerNameIndexCache = null;
@@ -397,14 +406,6 @@ var MeetingKpi = (function () {
 })();
 /* KPI-SYNC-END */
 function ruleText_() { return '카드 미팅 판정 · 유예 ' + CardLogic.rule.grace + '일 · 등록 기한 ' + CardLogic.rule.reg + '일 · 조율 기한 ' + CardLogic.rule.coord + '일 (카드 ' + CARD_BUILD + ')'; }
-
-function runKpiSync() { return syncOnce_(true); }
-function checkKpiSync() { var r = syncOnce_(false); console.log(JSON.stringify(r)); return r; }
-function installTriggers() {
-  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'runKpiSync') ScriptApp.deleteTrigger(t); });
-  SYNC_HOURS.forEach(function (h) { ScriptApp.newTrigger('runKpiSync').timeBased().atHour(h).everyDays(1).inTimezone('Asia/Seoul').create(); });
-  return SYNC_HOURS;
-}
 
 // 계산하고(write 이면) 트래커에 쓴다. 실패해도 예외를 밖으로 던지지 않고 상태만 남긴다.
 function syncOnce_(write) {
