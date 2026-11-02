@@ -368,7 +368,7 @@ function b2bIndRow(def, team) {
   </div>`;
 }
 function b2bAutoTime(a) { const d = new Date(a.computedAt || ""); if (isNaN(d.getTime())) return ""; const p = n => (n < 10 ? "0" : "") + n; return p(d.getMonth() + 1) + "." + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()); }
-const B2B_AUTO_COUNTS = [["done", "완료"], ["scheduled", "정상 예정"], ["waiting", "등록 대기"], ["missed", "누락"], ["late", "등록 지연"], ["carried", "그중 지난달 이월"], ["coord", "일정 조율 중"], ["branch", "지사 진행"], ["format", "날짜 확인 필요"], ["exempt", "예외(집계 제외)"]];
+const B2B_AUTO_COUNTS = [["done", "완료"], ["scheduled", "정상 예정"], ["waiting", "등록 대기"], ["missed", "누락"], ["late", "등록 지연"], ["carried", "지난달 이전 남은 누락(비율 제외)"], ["coord", "일정 조율 중"], ["branch", "지사 진행"], ["format", "날짜 확인 필요"], ["exempt", "예외(집계 제외)"]];
 function b2bKpiMember() {
   const s = B2B.shape, ids = Object.keys(s.members).sort();
   if (UI.kpiMember && s.members[UI.kpiMember]) return UI.kpiMember;

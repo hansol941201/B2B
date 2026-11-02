@@ -1,9 +1,10 @@
 /* 1·2차 미팅 누락 방지(LI01) 월별 집계 — 고객관리카드 classifyMeetingMiss 결과를 받아 분자·분모를 낸다.
    Apps Script(집계 서버)와 Node 시험이 같은 코드를 쓴다(ES5). 원본 데이터는 받지도 쓰지도 않는다.
      관리 대상(분모) = 기준일(예정일·완료일·등록 기한)이 기준월에 있는 미팅
-                     + 이번 달 계산이면 지난달 이전에 이미 누락·등록 지연이 되어 아직 남은 미팅(이월)
      정상 관리(분자) = 그중 완료·정상 예정·등록 대기
-   조율 중·지사 진행·날짜 확인은 분모에서 빼고 이번 달 건수로만 남긴다. 예외(날짜 없는 완료)는 제외. */
+   지난달 이전에 이미 누락·등록 지연이 되어 아직 남은 미팅(이월)은 비율에서 빼고(사용자 결정 2026-11-02)
+   이번 달 계산에서 carried 건수로만 남긴다. 조율 중·지사 진행·날짜 확인도 분모에서 빼고 이번 달 건수로만
+   남긴다. 예외(날짜 없는 완료)는 제외. */
 /* KPI-SYNC-START */
 var MeetingKpi = (function () {
   var OK = { done: 1, scheduled: 1, waiting: 1 }, MISS = { missed: 1, late: 1 }, CHECK = { coord: 1, branch: 1, format: 1 };
@@ -18,12 +19,12 @@ var MeetingKpi = (function () {
       if (it.status === 'exempt') { c.exempt++; return; }
       if (CHECK[it.status]) { if (current) c[it.status]++; return; }
       if (it.due == null || !(OK[it.status] || MISS[it.status])) return;
-      var inMonth = monthOf(it.due) === month;
-      var carried = current && !inMonth && MISS[it.status] && it.due < start;
-      if (!inMonth && !carried) return;
+      if (monthOf(it.due) !== month) {
+        if (current && MISS[it.status] && it.due < start) c.carried++;
+        return;
+      }
       den++;
       c[it.status]++;
-      if (carried) c.carried++;
       if (OK[it.status]) num++;
     });
     return { num: num, den: den, counts: c };

@@ -392,12 +392,12 @@ var MeetingKpi = (function () {
       if (it.status === 'exempt') { c.exempt++; return; }
       if (CHECK[it.status]) { if (current) c[it.status]++; return; }
       if (it.due == null || !(OK[it.status] || MISS[it.status])) return;
-      var inMonth = monthOf(it.due) === month;
-      var carried = current && !inMonth && MISS[it.status] && it.due < start;
-      if (!inMonth && !carried) return;
+      if (monthOf(it.due) !== month) {
+        if (current && MISS[it.status] && it.due < start) c.carried++;
+        return;
+      }
       den++;
       c[it.status]++;
-      if (carried) c.carried++;
       if (OK[it.status]) num++;
     });
     return { num: num, den: den, counts: c };

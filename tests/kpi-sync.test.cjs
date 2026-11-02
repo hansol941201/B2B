@@ -53,11 +53,11 @@ t('기한: 미팅 필요 후 14일 안이면 대기, 넘으면 등록 지연', (
   assert.equal(one('2026-11-15'), 'waiting'); assert.equal(one('2026-11-16'), 'late');
 });
 
-t('월별 집계: 이번 달(11월) 분자·분모와 이월', () => {
+t('월별 집계: 이번 달(11월) 분자·분모, 이월은 비율에서 빼고 건수만', () => {
   const r = MeetingKpi.monthly(items, '2026-11', NOW);
-  // 11월 기준일: c2 대기(11.24) · c3 누락(11.10) · c4 예정(11.19) · c5 완료(11.10)·2차 대기(11.24) / 이월: c1(10.15)·c7(10.31)·c10(10.19)
-  assert.equal(r.den, 8); assert.equal(r.num, 4);
-  assert.equal(r.counts.carried, 3); assert.equal(r.counts.missed, 1); assert.equal(r.counts.late, 3);
+  // 11월 기준일: c2 대기(11.24) · c3 누락(11.10) · c4 예정(11.19) · c5 완료(11.10)·2차 대기(11.24) / 이월(비율 제외): c1(10.15)·c7(10.31)·c10(10.19)
+  assert.equal(r.den, 5); assert.equal(r.num, 4);
+  assert.equal(r.counts.carried, 3); assert.equal(r.counts.missed, 1); assert.equal(r.counts.late, 0);
   assert.equal(r.counts.coord, 1); assert.equal(r.counts.branch, 1); assert.equal(r.counts.format, 1); assert.equal(r.counts.exempt, 1);
 });
 t('월별 집계: 지난달(10월)은 기준일이 10월인 미팅만, 확인 필요 건수는 넣지 않음', () => {
@@ -65,12 +65,12 @@ t('월별 집계: 지난달(10월)은 기준일이 10월인 미팅만, 확인 �
   // 10월: c9 완료(10.05) · c10 완료(10.05) · c1 지연(10.15) · c10 2차 지연(10.19) · c7 지연(10.31)
   assert.equal(r.den, 5); assert.equal(r.num, 2); assert.equal(r.counts.carried, 0); assert.equal(r.counts.coord, 0);
 });
-t('트래커 달성률 계산과 맞물림: 4/8 = 50%', () => {
+t('트래커 달성률 계산과 맞물림: 4/5 = 80%', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
   const block = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).find(b => b.includes('var PerfCalc'));
   const c = { SEED: {} }; vm.runInNewContext(block, c);
   const r = MeetingKpi.monthly(items, '2026-11', NOW);
-  assert.equal(c.PerfCalc.rate({ mode: 'auto', num: r.num, den: r.den }).value, 50);
+  assert.equal(c.PerfCalc.rate({ mode: 'auto', num: r.num, den: r.den }).value, 80);
 });
 t('다시 계산할 달: 5일까지는 지난달 포함, 6일부터 이번 달만', () => {
   assert.deepStrictEqual(MeetingKpi.targetMonths(day('2026-12-05')), ['2026-11', '2026-12']);
@@ -127,7 +127,7 @@ t('서버: 트래커 perfAuto 에만 쓰고 업체 정보는 보내지 않음', 
   const body = JSON.parse(s.log.writes[0].body);
   assert.deepStrictEqual(Object.keys(body), ['perfAuto/LI01_2026-11']);
   const rec = body['perfAuto/LI01_2026-11'];
-  assert.equal(rec.num, 4); assert.equal(rec.den, 8); assert.equal(rec.mode, 'auto'); assert.equal(rec.ref, 'LI01');
+  assert.equal(rec.num, 4); assert.equal(rec.den, 5); assert.equal(rec.mode, 'auto'); assert.equal(rec.ref, 'LI01');
   const text = s.log.writes[0].body;
   COMPANIES.forEach(c => { assert.ok(!text.includes(c.name), '업체명 전송'); assert.ok(!text.includes('"' + c.id + '"'), '업체 id 전송'); });
   assert.deepStrictEqual(s.log.other, []);
