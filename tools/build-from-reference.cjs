@@ -58,11 +58,11 @@ h = h.replace(/<p class="section-sub">팀원들이 만든 자동화·대시보�
 once('＋ 대시보드 추가</button>', '＋ 앱·도구 추가</button>');
 
 /* 4. KPI 체계 머리글 */
-h = h.replace(/<p class="section-sub">팀 목표 2개 아래에 담당자별 KPI를 정렬했습니다\.[^\n]*\n/, '<p class="section-sub"><b>팀 공통 KPI 3개</b>는 팀 전체 실적으로, <b>개인 후행지표(성과)</b>와 <b>개인 선행지표(실행)</b>는 담당자별로 관리합니다. 완료 수와 대상 수를 입력하면 달성률이 계산됩니다. 업무 진행률은 실적에 섞이지 않습니다.</p>\n');
+h = h.replace(/<p class="section-sub">팀 목표 2개 아래에 담당자별 KPI를 정렬했습니다\.[^\n]*\n/, '<p class="section-sub"><b>목표</b>와 <b>현재 실적</b>에 숫자를 넣으면 <b>달성률</b>이 저절로 계산돼요. 자세한 기준은 <b>상세보기</b>에 있어요.</p>\n');
 once('🎯 B2B운영팀 KPI 체계 <span class="count" id="kpi-updated">최종본</span>', '🎯 KPI 체계 <span class="count" id="kpi-updated">—</span>');
-once('<button id="kpi-view-goal" class="on" onclick="setKpiView(\'goal\')">목표별 보기</button>', '<button id="kpi-view-goal" class="on" onclick="setKpiView(\'goal\')">팀 공통 KPI</button>');
-once('<button id="kpi-view-owner" onclick="setKpiView(\'owner\')">담당자별 보기</button>', '<button id="kpi-view-owner" onclick="setKpiView(\'owner\')">담당자별 개인 지표</button>');
-once(`<button class="btn ghost btn-sm" onclick="exportKpiSummary()" style="margin-left:auto;">📋 텍스트 복사</button>`, `<label style="margin-left:auto; font-size:12px; font-weight:700; color:var(--muted);">기준 월 <select id="kpi-month" onchange="UI.kpiMonth=this.value; renderKpiPage();"></select></label>`);
+once(`<button class="btn ghost btn-sm" onclick="exportKpiSummary()" style="margin-left:auto;">📋 텍스트 복사</button>`, `<label class="ks-month">몇 월? <select id="kpi-month" onchange="UI.kpiMonth=this.value; renderKpiPage();"></select></label>`);
+/* 보기 전환 버튼 대신 화면 안의 팀원 선택을 쓴다 */
+cut('<div class="kpi-viewtoggle">', '<label class="ks-month">', '');
 
 /* 5. 전체 업무 관리 / 설정 분리 */
 const memberSec = grab('<div class="section-title">멤버 <span class="count" id="manage-member-count">', '<div class="section-title">🔄 루틴 업무 <span class="count" id="manage-routine-count">');
@@ -122,6 +122,46 @@ once('</style>\n</head>', `
   #page-settings .form-card > div { min-width: 0; }
   @media (max-width: 640px) { #page-settings .form-card > div { grid-template-columns: 1fr !important; } }
   @media (max-width: 640px) { .b2b-search input, #kpi-month, .kmv, .b2b-kv input { font-size: 16px; } }
+  /* KPI 체계: 쉬운 카드 */
+  .ks-month { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+  .ks-month select { min-height: 40px; }
+  .ks-h { font-size: 15px; font-weight: 800; margin: 22px 0 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .ks-h:first-child { margin-top: 4px; }
+  .ks-h span { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+  .ks-team { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .ks-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kpi-ind.ks-item { display: flex; flex-direction: column; align-items: stretch; gap: 10px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; min-width: 0; }
+  .kpi-ind.ks-item + .kpi-ind.ks-item { border-top: 1px solid var(--line); }
+  .ks-teamcard { border-top: 4px solid var(--accent) !important; }
+  .ks-top { display: flex; gap: 8px; align-items: flex-start; min-width: 0; }
+  .ks-no { flex: 0 0 auto; font-weight: 700; color: var(--accent); font-size: 18px; line-height: 1.1; }
+  .ks-item .ktext { font-size: 15px; font-weight: 700; line-height: 1.35; min-width: 0; word-break: keep-all; overflow-wrap: anywhere; }
+  .ks-rate { display: flex; align-items: center; gap: 8px; }
+  .ks-item .kstatus { font-family: var(--num); font-size: 20px; font-weight: 800; padding: 4px 12px; border-radius: 10px; min-width: 0; }
+  .ks-rate-lbl { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+  .ks-item .kpi-mbar { flex: 0 0 8px; width: 100%; height: 8px; }
+  .ks-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ks-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .ks-field span { font-size: 12.5px; font-weight: 800; color: var(--ink-2); }
+  .ks-item .ks-field .kmv { width: 100%; min-width: 0; height: 44px; font-family: var(--num); font-size: 18px; font-weight: 700; text-align: center; padding: 0 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); -moz-appearance: textfield; }
+  .ks-item .ks-field .kmv::-webkit-outer-spin-button, .ks-item .ks-field .kmv::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ks-item .ks-field .kmv:focus { outline: none; border-color: var(--accent); background: var(--accent-soft); }
+  .ks-item .ks-field .kmv::placeholder { color: var(--muted); font-size: 14px; font-weight: 600; }
+  .ks-more { align-self: flex-start; background: none; border: 0; padding: 6px 0; min-height: 36px; font-size: 13px; font-weight: 700; color: var(--accent); cursor: pointer; }
+  #modal-kpi .ks-more { display: none; }
+  #modal-kpi .ks-item .ktext { pointer-events: none; }
+  .ks-pick .member-chip { min-height: 44px; font-size: 15px; padding: 8px 18px; }
+  .ks-sec { margin-top: 16px; }
+  .ks-sec-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-bottom: 10px; }
+  .ks-sec-head b { font-size: 16px; font-weight: 800; }
+  .ks-tag { font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+  .ks-sec.lag .ks-tag { background: var(--warn-soft); color: var(--warn); }
+  .ks-help { flex-basis: 100%; font-size: 13px; color: var(--muted); }
+  .ks-empty { padding: 18px; text-align: center; color: var(--muted); font-size: 14px; background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; grid-column: 1 / -1; }
+  .ks-what { margin-top: 12px; padding: 10px 12px; background: var(--line-2); border-radius: 10px; }
+  .ks-what-t { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  @media (max-width: 900px) { .ks-team { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .ks-list { grid-template-columns: 1fr; } .ks-month { margin-left: 0; } .ks-item .ks-field .kmv { font-size: 18px; } }
 </style>
 </head>`);
 

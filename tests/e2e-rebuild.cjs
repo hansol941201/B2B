@@ -140,33 +140,54 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       await p.selectOption('#b2b-task-who', '');
     });
     /* KPI */
-    await t('KPI 체계: 팀 공통 3개와 신한솔 선행 9·후행 5, 다른 팀원 빈 상태', async () => {
+    const pick = async name => { await p.click(`#kpi-root .member-chip:has-text("${name}")`); await p.waitForTimeout(80); };
+    await t('KPI 체계: 팀 KPI 3개 카드가 맨 위, 팀원 3명 선택, 선택한 사람 지표만', async () => {
       await tab(p, 'kpi');
-      assert.equal(await p.locator('.kpi-goalcard').count(), 3);
-      await p.click('#kpi-view-owner');
-      assert.equal(await p.locator('.kpi-ind').count(), 14);
-      const txt = await p.locator('#kpi-root').innerText();
-      assert.ok(/개인 선행·후행지표가 아직 등록되지 않았습니다/.test(txt));
-      assert.ok(/미응답 업체 재연락 관리/.test(txt) && /고객등급 상승률/.test(txt));
-      assert.ok(/담당 업체·현장/.test(txt));
+      assert.equal(await p.locator('.ks-team .ks-teamcard').count(), 3);
+      const first = await p.locator('#kpi-root > *').first().innerText();
+      assert.ok(/우리 팀 목표/.test(first), '팀 KPI가 맨 위');
+      assert.deepStrictEqual((await p.locator('#kpi-root .member-chip').allInnerTexts()).map(x => x.replace(/\d+/g, '').trim()), ['박희선', '조재연', '신한솔']);
+      await pick('신한솔');
+      assert.equal(await p.locator('#kpi-member-view .kpi-ind').count(), 14);
+      const v = await p.locator('#kpi-member-view').innerText();
+      assert.ok(/내가 하는 일/.test(v) && /실제 성과/.test(v), '쉬운 설명');
+      assert.ok(/미응답 업체 재연락 관리/.test(v) && /고객등급 상승률/.test(v));
+      await pick('박희선');
+      assert.equal(await p.locator('#kpi-member-view .kpi-ind').count(), 0);
+      assert.ok(/아직 박희선님의 지표가 없어요/.test(await p.locator('#kpi-member-view').innerText()));
+      await pick('신한솔');
     });
-    await t('입력 없으면 미측정 · 완료·대상 입력하면 달성률 자동', async () => {
+    await t('평소 화면: 지표명·목표·현재 실적·달성률만 (기준값·계산식은 상세보기 안)', async () => {
+      const v = await p.locator('#kpi-root').innerText();
+      ['계산식', '분모', '분자', '가중치', '선행활동 점수', '담당 업체·현장', '관리 대상 미팅', '미확정'].forEach(w => assert.ok(!v.includes(w), w + ' 노출'));
+      const card = await indText(p, 'LI02');
+      ['목표', '현재 실적', '달성률', '상세보기'].forEach(w => assert.ok(card.includes(w), w));
+    });
+    await t('입력 없으면 미측정 · 목표·현재 실적 입력하면 달성률 자동', async () => {
       assert.ok(/미측정/.test(await indText(p, 'LI02')));
       await p.fill('.kpi-ind[data-ind="LI02"] .kmv.tgt', '10'); await p.press('.kpi-ind[data-ind="LI02"] .kmv.tgt', 'Tab');
       await p.fill('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', '7'); await p.press('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', 'Tab');
       await until(async () => /70%/.test(await indText(p, 'LI02')));
       const r = (await until(async () => { const x = await db(); const v = x.perfMonthly['LI02_' + MONTH]; return v && v.num === 7 ? x : false; })).perfMonthly['LI02_' + MONTH];
-      assert.equal(r.den, 10); assert.equal(r.mode, 'auto'); assert.ok(r.updatedBy);
+      assert.equal(r.den, 10, '목표는 기존 대상 수 칸에 저장'); assert.equal(r.mode, 'auto'); assert.ok(r.updatedBy);
     });
-    await t('완료 수가 대상 수보다 크면 저장 안 됨', async () => {
+    await t('현재 실적이 목표보다 크면 저장 안 됨', async () => {
       await p.fill('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', '30'); await p.press('.kpi-ind[data-ind="LI02"] .kmv:not(.tgt)', 'Tab');
       await new Promise(r => setTimeout(r, 300));
       assert.equal((await db()).perfMonthly['LI02_' + MONTH].num, 7);
-      assert.ok(/완료 수가 대상 수보다/.test(await p.locator('#toast').innerText()));
+      assert.ok(/현재 실적이 목표보다/.test(await p.locator('#toast').innerText()));
     });
-    await t('세부업무 진행률은 달성률과 분리 · 프로젝트 합산 없음', async () => {
-      await p.locator('.kpi-ind[data-ind="LI03"] .ktext').click();
+    await t('후행지표 미측정은 선행지표 달성률로 채우지 않음', async () => {
+      for (const id of ['LG1', 'LG2', 'LG3', 'LG4', 'LG5']) assert.ok(/미측정/.test(await indText(p, id)), id);
+      assert.ok(!/70%/.test(await p.locator('.ks-sec.lag').innerText()));
+    });
+    await t('상세보기: 무엇을 세는지·기준·세부업무, 진행률은 달성률과 분리', async () => {
+      await p.locator('.kpi-ind[data-ind="LI03"] .ks-more').click();
       await p.waitForSelector('#modal-kpi.open');
+      const b0 = await p.locator('#modal-kpi-body').innerText();
+      assert.ok(/무엇을 세나요/.test(b0) && /후속관리 대상 업체 수/.test(b0), '목표 설명');
+      await p.locator('#modal-kpi summary:has-text("기준·계산식·설명")').click();
+      assert.ok(await p.locator('#b2b-target').isVisible(), '기준 달성률은 상세보기 안');
       await p.locator('#modal-kpi .sub-status-btn').first().click();
       const x = await until(async () => { const v = await db(); const r = v.perfMonthly['LI03_' + MONTH]; return r && r.prog && r.prog.t1 === 50 ? v : false; });
       assert.equal(x.perfMonthly['LI03_' + MONTH].den, undefined);
@@ -177,25 +198,24 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       await p.evaluate(() => closeModal());
     });
     await t('팀 KPI 실적과 개인 후행지표는 별도 저장', async () => {
-      await p.click('#kpi-view-goal');
       await p.fill('.kpi-ind[data-ind="MK1"] .kmv.tgt', '51'); await p.press('.kpi-ind[data-ind="MK1"] .kmv.tgt', 'Tab');
       await p.fill('.kpi-ind[data-ind="MK1"] .kmv:not(.tgt)', '17'); await p.press('.kpi-ind[data-ind="MK1"] .kmv:not(.tgt)', 'Tab');
       await until(async () => /33\.3%/.test(await indText(p, 'MK1')));
-      await p.click('#kpi-view-owner');
       assert.ok(/미측정/.test(await indText(p, 'LG1')), '개인 후행지표에 섞이면 안 됨');
       await p.fill('.kpi-ind[data-ind="LG1"] .kmv.tgt', '8'); await p.press('.kpi-ind[data-ind="LG1"] .kmv.tgt', 'Tab');
       await p.fill('.kpi-ind[data-ind="LG1"] .kmv:not(.tgt)', '3'); await p.press('.kpi-ind[data-ind="LG1"] .kmv:not(.tgt)', 'Tab');
       const x = await until(async () => { const v = await db(); return v.perfMonthly['LG1_' + MONTH] && v.perfMonthly['LG1_' + MONTH].num === 3 ? v : false; });
       assert.equal(x.perfMonthly['MK1_' + MONTH].num, 17);
     });
-    await t('팀 선행점수는 가중치 확정 전 미확정', async () => {
-      await p.click('#kpi-view-goal');
-      assert.ok(/미확정/.test(await p.locator('.kpi-goalcard').first().innerText()));
+    await t('팀 선행점수는 가중치 확정 전 미확정 (상세보기 안)', async () => {
+      await p.locator('.kpi-ind[data-ind="MK1"] .ks-more').click();
+      await p.locator('#modal-kpi summary:has-text("기준·계산식·설명")').click();
+      assert.ok(/팀 선행활동 점수\s*미확정/.test(await p.locator('#modal-kpi-body').innerText()));
+      await p.evaluate(() => closeModal());
       const x = await db();
       Object.values(x.mainKpis).forEach(k => assert.equal(k.memberWeights, undefined));
     });
     await t('월별 실적 분리: 전월 입력해도 이번 달 유지', async () => {
-      await p.click('#kpi-view-owner');
       await p.selectOption('#kpi-month', PREV);
       assert.ok(/미측정/.test(await indText(p, 'LI02')));
       await p.fill('.kpi-ind[data-ind="LI02"] .kmv.tgt', '4'); await p.press('.kpi-ind[data-ind="LI02"] .kmv.tgt', 'Tab');
@@ -207,6 +227,11 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       const b = await p.locator('#modal-kpi-body').innerText();
       assert.ok(b.includes(MONTH) && b.includes(PREV), b.slice(0, 200));
       await p.evaluate(() => closeModal());
+    });
+    await t('팀원 선택은 새로고침 후에도 유지', async () => {
+      await pick('조재연'); await p.reload(); await ready(p); await tab(p, 'kpi');
+      assert.ok(/조재연/.test(await p.locator('#kpi-root .member-chip.on').innerText()));
+      await pick('신한솔');
     });
     /* 설정 */
     await t('설정: 가중치 저장, 팀원 삭제 보호, 담당 확인', async () => {
@@ -268,7 +293,8 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
           assert.ok(over <= 0, id + ' 넘침 ' + over);
           await m.screenshot({ path: path.join(outDir, `모바일${w}_${id}.png`) });
         }
-        await m.tap('.tab[data-page="kpi"]'); await m.tap('#kpi-view-owner');
+        await m.tap('.tab[data-page="kpi"]'); await m.tap('#kpi-root .member-chip:has-text("신한솔")');
+        await m.screenshot({ path: path.join(outDir, `모바일${w}_kpi_신한솔.png`), fullPage: true });
         const o2 = await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         assert.ok(o2 <= 0, '개인 지표 넘침 ' + o2);
       });
