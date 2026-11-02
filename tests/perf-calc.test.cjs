@@ -41,6 +41,18 @@ t('전월 계산은 연도를 넘김', () => { assert.equal(PC.prevMonth('2026-0
 t('입력 검사: 분자>분모, 음수, 범위 초과, 분자만 입력 거부', () => { assert.ok(PC.validate(auto(5, 3)).length); assert.ok(PC.validate(auto(-1, 3)).length); assert.ok(PC.validate(dir(101)).length); assert.ok(PC.validate({ mode: 'auto', num: 3 }).length); assert.equal(PC.validate(auto(3, 3)).length, 0); assert.equal(PC.validate(auto(0, 0)).length, 0); });
 t('보조 수치: 대기시간 감소율·비율, 자료 없으면 계산 안 함', () => { assert.equal(PC.derive({ from: ['a', 'b'], op: 'cut' }, { a: 10, b: 4 }), 60); assert.equal(PC.derive({ from: ['a', 'b'], op: 'ratio' }, { a: 1, b: 4 }), 25); assert.equal(PC.derive({ from: ['a', 'b'], op: 'ratio' }, { a: 1, b: 0 }), null); assert.equal(PC.derive({ from: ['a', 'b'], op: 'cut' }, { a: 1 }), null); });
 
+t('세부업무 진행률: 평균 자동 · 이전 체크는 완료 · 진행률이 우선', () => {
+  const w = PC.workStats(['a', 'b', 'c', 'd'], { prog: { t1: 100, t2: 50 }, checks: { t3: true, t1: true } });
+  assert.equal(w.value, (100 + 50 + 100 + 0) / 4); assert.equal(w.done, 2); assert.equal(w.doing, 1); assert.equal(w.todo, 1); assert.ok(w.started);
+  assert.equal(PC.taskPct({ prog: { t1: 0 }, checks: { t1: true } }, 0), 0);
+  assert.equal(PC.taskPct({ prog: { t1: 140 } }, 0), 100);
+  const e = PC.workStats(['a'], null); assert.equal(e.value, 0); assert.equal(e.started, false);
+  assert.equal(PC.workStats([], null).value, null);
+});
+t('상태 순환 ○→▶→✓→○', () => { assert.equal(PC.nextStep(0), 50); assert.equal(PC.nextStep(50), 100); assert.equal(PC.nextStep(30), 100); assert.equal(PC.nextStep(100), 0); });
+t('달성률은 세부업무로 대체되지 않음 (입력 없으면 미측정)', () => { const r = PC.rate({ mode: 'auto', prog: { t1: 100, t2: 100 } }); assert.equal(r.state, 'none'); assert.equal(r.value, undefined); const v = PC.rate({ mode: 'auto', den: 10, num: 9, prog: { t1: 0 } }); assert.equal(v.value, 90); });
+t('경과 일수: 날짜 없으면 판단하지 않음', () => { const now = Date.parse('2026-11-11T00:00:00Z'); assert.equal(PC.daysSince('2026-11-01T00:00:00Z', now), 10); assert.equal(PC.daysSince(undefined, now), null); assert.equal(PC.daysSince('없음', now), null); });
+
 // 등록 내용이 명령서와 맞는지
 t('선행지표 9개·고유 ID·필수 항목', () => {
   assert.equal(S.leadDefs.length, 9);

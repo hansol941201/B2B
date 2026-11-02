@@ -96,7 +96,18 @@ const kpiCardText = async (p, kid) => { await tab(p, 'work'); return p.locator(`
 const personalText = async (p, kid) => { await tab(p, 'kpi:shs'); return p.locator(`article.ms:has([data-id="${kid}"])`).innerText(); };
 const leadCardText = async (p, id) => { await tab(p, 'kpi:shs'); return p.locator(`article:has([data-pf-open="lead"][data-id="${id}"][data-v="edit"])`).innerText(); };
 const lagCardText = async (p, id) => { await tab(p, 'kpi:shs'); return p.locator(`article:has([data-pf-open="lag"][data-id="${id}"][data-v="edit"])`).innerText(); };
-const boardCard = mid => `.bcol:has([data-edsc="${mid}"])`;
+const boardCard = mid => `.bcol:has([data-pf-card="${mid}"])`;
+async function openCard(p, mid) {
+  await tab(p, 'work');
+  const b = p.locator(`[data-pf-card="${mid}"]`);
+  if ((await b.getAttribute('aria-expanded')) !== 'true') await b.click();
+}
+async function openRow(p, id) {
+  const b = p.locator(`[data-pfb-acc="${id}"]`);
+  if ((await b.getAttribute('aria-expanded')) !== 'true') await b.click();
+}
+const rowText = (p, id) => p.locator(`[data-pfb-acc="${id}"]`).innerText();
+const reload = async p => { await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap')); };
 const API = BASE + '/__rtdb/shared/b2bOpsTracker.json';
 const patchDb = o => fetch(API, { method: 'PATCH', body: JSON.stringify(o) });
 const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; while (Date.now() < end) { try { const r = await fn(); if (r !== false) return r; } catch (x) { e = x; } await new Promise(r => setTimeout(r, 150)); } throw e || new Error('시간 초과'); };
@@ -141,16 +152,43 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       assert.ok(/팀 전체 실제 달성률/.test(txt) && /팀 선행활동 점수/.test(txt), txt);
       await p.screenshot({ path: path.join(outDir, '01_초기_팀업무현황.png'), fullPage: true });
     });
-    await t('담당자 카드: 신한솔은 기존 업무 유지 + 지표 14개, 다른 팀원은 추후 등록 안내', async () => {
+    await t('팀원 카드는 접힌 상태로 시작하고 요약을 보여 줌', async () => {
       await tab(p, 'work');
+      assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 0, '처음엔 접힘');
+      const sum = await p.locator(boardCard('shs') + ' .pf-card-sum').innerText();
+      assert.ok(/지표 세부업무 진행률/.test(sum) && /선행 달성률 평균/.test(sum) && /후행 실적/.test(sum), sum);
+      assert.equal(await p.locator(boardCard('m1') + ' .pf-card-sum').count(), 0, '지표 없는 팀원은 지표 요약 없음');
+    });
+    await t('담당자 카드: 신한솔은 기존 업무 유지 + 지표 14개, 다른 팀원은 추후 등록 안내', async () => {
+      await openCard(p, 'shs');
       const shs = await p.locator(boardCard('shs')).innerText();
       assert.ok(/공사실적정리/.test(shs), '기존 루틴');
       assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14);
       assert.ok(/개인 선행지표 9개/.test(shs) && /개인 후행지표 5개/.test(shs), shs);
       assert.ok(/목표/.test(shs) && /실적/.test(shs) && /미측정/.test(shs));
       assert.ok(/담당 업체·현장 기준/.test(shs), '후행지표 집계 범위 표시');
+      await openCard(p, 'm1');
       assert.equal(await p.locator(boardCard('m1') + ' .pfb-row').count(), 0);
       assert.ok(/추후 별도 등록/.test(await p.locator(boardCard('m1')).innerText()));
+      await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
+      assert.equal(await p.locator('[data-pf-card="shs"]').getAttribute('aria-expanded'), 'true', '펼침 기억');
+    });
+    await t('팀원 필터: 고른 팀원 카드만 펼쳐서 표시', async () => {
+      await tab(p, 'work');
+      await p.click('[data-pf-member="m1"]');
+      assert.equal(await p.locator('.bcol').count(), 1);
+      assert.equal(await p.locator(boardCard('m1')).count(), 1);
+      await p.click('[data-pf-member="shs"]');
+      assert.equal(await p.locator('.bcol').count(), 1);
+      assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14);
+      await p.click('[data-pf-member="all"]');
+      assert.equal(await p.locator('.bcol').count(), 2);
+    });
+    await t('갱신 날짜가 없는 기존 프로젝트는 정체로 단정하지 않음', async () => {
+      await tab(p, 'work');
+      const s = await p.locator('details.disc summary').first().innerText();
+      assert.ok(/진행이 더딘 업무 0건/.test(s) && /갱신 기록 없는 프로젝트 1건/.test(s), s);
+      assert.deepStrictEqual(await db(), baseline, '보기만으로 저장되면 안 됨');
     });
     await t('회귀 방지: 기존 개인 성과 줄 배치가 유지됨', async () => {
       await p.click('[data-perf="shs"]');
@@ -160,7 +198,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
     });
     await t('초기 상태: 실적 미측정 · 점수 산출 대기 (0으로 표시 안 함)', async () => {
       const txt = await kpiCardText(p, 'MK1');
-      assert.ok(/미측정/.test(txt) && /산출 대기/.test(txt) && /팀원 반영 가중치 미설정 1명/.test(txt), txt);
+      assert.ok(/미측정/.test(txt) && /미확정/.test(txt) && /팀원 반영 가중치 미설정 1명/.test(txt), txt);
       assert.ok(!/\b0%/.test(txt), txt);
       assert.ok(/수동 관리/.test(txt), '수동 관리 표시 없음');
       assert.ok(/가중치 미설정 5개/.test(await personalText(p, 'MK1')));
@@ -205,7 +243,8 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await saveDirect(p, 'LI01', 100); await saveDirect(p, 'LI02', 80); await saveDirect(p, 'LI03', 60);
       assert.ok(/78\s*%/.test(await personalText(p, 'MK1')));
       const team = await kpiCardText(p, 'MK1');
-      assert.ok(/산출 대기/.test(team) && /팀원 반영 가중치 미설정 1명/.test(team) && !/78\s*%/.test(team), team);
+      assert.ok(/미확정/.test(team) && /팀원 반영 가중치 미설정 1명/.test(team) && /신한솔 개인 점수 78% \(참고\)/.test(team), team);
+      assert.ok(!/\d/.test(await p.locator('article.k:has([data-id="MK1"]) .pf-v').nth(1).locator('.n').innerText()), '팀 점수 칸에 숫자 없음');
       const saved = await db();
       Object.values(saved.mainKpis).forEach(k => assert.equal(k.memberWeights, undefined, k.id + ' 저장으로 팀원 가중치가 생기면 안 됨'));
     });
@@ -288,17 +327,18 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       assert.equal(d.perfMonthly['LG3_' + MONTH].num, 3);
     });
     await t('담당자 카드와 개인 화면 자동 동기화 (양방향)', async () => {
-      await tab(p, 'work');
-      await p.click(boardCard('shs') + ' .pfb-row[data-id="LI06"]');
+      await openCard(p, 'shs');
+      await openRow(p, 'LI06');
+      await p.click(boardCard('shs') + ' [data-pf-open="lead"][data-id="LI06"]');
       await p.waitForSelector('#pfModal.on');
       await p.check('input[name=pfmode][value=direct]');
       await p.fill('[data-pf="direct"]', '33'); await p.fill('#pfActor', '시험자');
       await p.click('#pfSaveRec'); await p.click('#pfClose');
-      assert.ok(/33\s*%/.test(await p.locator(boardCard('shs') + ' .pfb-row[data-id="LI06"]').innerText()));
+      assert.ok(/33\s*%/.test(await rowText(p, 'LI06')));
       assert.ok(/33\s*%/.test(await leadCardText(p, 'LI06')));
       await saveDirect(p, 'LI06', 44);
       await tab(p, 'work');
-      assert.ok(/44\s*%/.test(await p.locator(boardCard('shs') + ' .pfb-row[data-id="LI06"]').innerText()));
+      assert.ok(/44\s*%/.test(await rowText(p, 'LI06')));
     });
     await t('후행지표 직접 실적 · 목표 대비 미달 목록', async () => {
       await saveAuto(p, 'lag', 'LG4', 1, 4);
@@ -313,12 +353,15 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await p.fill('[data-pf-def="owner"]', '담당자A'); await p.fill('[data-pf-def-num="target"]', '95'); await p.fill('#pfActor', '시험자');
       await p.click('#pfSaveDef');
       await p.click('[data-pf-view="input"]');
-      await p.check('[data-pf-chk="t1"]'); await p.check('[data-pf-chk="t2"]');
+      await p.click('[data-sub-cycle="LI05"][data-i="0"]');
+      await p.click('[data-sub-cycle="LI05"][data-i="0"]');
+      await p.click('[data-sub-cycle="LI05"][data-i="1"]');
       await p.fill('#pfNote', 'B2B001 점검 완료');
       await p.click('#pfSaveRec');
       const body = await p.locator('#pfModal').innerText();
       assert.ok(/담당자 신한솔 → 담당자A/.test(body) && /목표 달성률 미설정 → 95%/.test(body), '정의 변경 이력');
-      assert.ok(/메모: B2B001 점검 완료/.test(body) && /세부업무 체크리스트 \(2 \/ 11\)/.test(body), '작업 이력');
+      assert.ok(/메모: B2B001 점검 완료/.test(body) && /완료 1 \/ 11/.test(body), '작업 이력');
+      assert.ok(/\s50% → 100%|50% → 100%/.test(body), '세부업무 변경 이력');
       await p.click('#pfClose');
       assert.ok(/담당자A/.test(await leadCardText(p, 'LI05')));
     });
@@ -407,6 +450,189 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
     });
 
+    /* 1·2단계 */
+    await t('세부업무 ○ ▶ ✓ 순환 · 업무 진행률 평균 자동 · 달성률은 미측정 유지', async () => {
+      await reload(p); await openCard(p, 'shs'); await openRow(p, 'LI09');
+      const key = 'LI09_' + MONTH, sub = '[data-sub-cycle="LI09"][data-i="0"]';
+      const txt0 = await p.locator(sub).innerText(); assert.equal(txt0, '○');
+      await p.click(sub); assert.equal(await p.locator(sub).innerText(), '▶');
+      await until(async () => { const d = await db(); return d.perfMonthly[key] && d.perfMonthly[key].prog.t1 === 50; });
+      await p.click(sub); assert.equal(await p.locator(sub).innerText(), '✓');
+      await p.click(sub); assert.equal(await p.locator(sub).innerText(), '○');
+      await p.click(sub); await p.click(sub);
+      const row = await rowText(p, 'LI09');
+      assert.ok(/미측정/.test(row) && /업무 진행률 8%/.test(row), row);
+      const r = await until(async () => { const d = await db(); return d.perfMonthly[key].prog.t1 === 100 ? d.perfMonthly[key] : false; });
+      assert.equal(r.den, undefined, '세부업무로 분모가 생기면 안 됨');
+      assert.equal(r.direct, undefined);
+      assert.ok(/78\s*%/.test(await personalText(p, 'MK1')), '개인 점수 불변');
+    });
+    await t('세부업무 진행률 직접 입력 · 범위 제한 · 평균 재계산', async () => {
+      await openCard(p, 'shs'); await openRow(p, 'LI09');
+      await p.fill('#pfs-b-LI09-1', '40'); await p.press('#pfs-b-LI09-1', 'Tab');
+      assert.ok(/업무 진행률 12%/.test(await rowText(p, 'LI09')), await rowText(p, 'LI09')); // (100+40)/12
+      await p.fill('#pfs-b-LI09-1', '150'); await p.press('#pfs-b-LI09-1', 'Tab');
+      assert.equal(await p.inputValue('#pfs-b-LI09-1'), '100');
+      assert.ok(/업무 진행률 17%/.test(await rowText(p, 'LI09')), await rowText(p, 'LI09'));
+      assert.ok(/미측정/.test(await rowText(p, 'LI09')));
+    });
+    await t('달성률 입력값이 있으면 세부업무를 바꿔도 달성률·KPI 점수 불변', async () => {
+      await openRow(p, 'LI01');
+      const before = (await db()).perfMonthly['LI01_' + MONTH];
+      assert.ok(/100%/.test(await rowText(p, 'LI01')));
+      await p.click('[data-sub-cycle="LI01"][data-i="2"]');
+      const row = await rowText(p, 'LI01');
+      assert.ok(/업무 진행률 6%/.test(row), row);
+      assert.ok(/^[\s\S]*100%/.test(row), row);
+      const after = await until(async () => { const x = (await db()).perfMonthly['LI01_' + MONTH]; return x.prog ? x : false; });
+      assert.equal(after.direct, before.direct);
+      assert.equal(after.mode, before.mode);
+      assert.ok(/78\s*%/.test(await personalText(p, 'MK1')));
+      assert.ok(/33\.3\s*%/.test(await kpiCardText(p, 'MK1')), '팀 실제 달성률 불변');
+    });
+    await t('세부업무 추가: 기존 진행률 유지 · 새로고침 후에도 유지 · 이력 기록', async () => {
+      await openCard(p, 'shs'); await openRow(p, 'LI09');
+      await p.fill('#pfs-add-b-LI09', '시험 세부업무'); await p.click('[data-sub-add="LI09"]');
+      const d = await until(async () => { const x = await db(); return x.leadDefs.LI09.tasks.length === 13 ? x : false; });
+      assert.equal(d.perfMonthly['LI09_' + MONTH].prog.t1, 100, '기존 진행률 유지');
+      assert.ok(Object.values(d.perfHistory).some(h => h.ref === 'LI09' && h.summary === '세부업무 추가'));
+      await reload(p); await openCard(p, 'shs'); await openRow(p, 'LI09');
+      assert.ok(/시험 세부업무/.test(await p.locator('.pfb-acc:has(.pfb-row[data-id="LI09"])').innerText()));
+      assert.ok(/업무 진행률 15%/.test(await rowText(p, 'LI09')), await rowText(p, 'LI09')); // 200/13
+    });
+    await t('상태 필터가 세부업무에도 적용됨', async () => {
+      await openCard(p, 'shs'); await openRow(p, 'LI09');
+      await p.click('[data-f="st"][data-v="done"]');
+      const n = await p.locator('.pfb-acc:has(.pfb-row[data-id="LI09"]) .pfs-row').count();
+      assert.equal(n, 2);
+      assert.equal(await p.locator('.pfb-acc:has(.pfb-row[data-id="LI09"]) .pfs-row:not(.done)').count(), 0);
+      await p.click('[data-f="st"][data-v="all"]');
+    });
+    await t('월별 분리: 전월 진행률은 별도 · 월별 실적 표 확인', async () => {
+      await openCard(p, 'shs'); await openRow(p, 'LI09');
+      await p.selectOption('#pfMonthSel', PREV);
+      assert.ok(/업무 진행률 0%/.test(await rowText(p, 'LI09')), await rowText(p, 'LI09'));
+      await p.selectOption('#pfMonthSel', MONTH);
+      const body = await p.locator('.pfb-acc:has(.pfb-row[data-id="LI09"])').innerText();
+      assert.ok(body.includes(MONTH) && /업무 진행률 15%/.test(body), body.slice(0, 300));
+    });
+    await t('이전 체크 표시는 완료로 읽고, 바꾸면 진행률로 넘어감', async () => {
+      const r = (await db()).perfMonthly['LI05_' + MONTH];
+      await patchDb({ ['perfMonthly/LI05_' + MONTH]: Object.assign({}, r, { prog: {}, checks: { t1: true, t2: true } }) });
+      await reload(p); await openCard(p, 'shs'); await openRow(p, 'LI05');
+      assert.ok(/업무 진행률 18%/.test(await rowText(p, 'LI05')), await rowText(p, 'LI05')); // 200/11
+      assert.equal(await p.locator('[data-sub-cycle="LI05"][data-i="0"]').innerText(), '✓');
+      await p.click('[data-sub-cycle="LI05"][data-i="0"]');
+      const x = await until(async () => { const v = (await db()).perfMonthly['LI05_' + MONTH]; return v.prog && v.prog.t1 === 0 ? v : false; });
+      assert.equal(x.checks.t2, true, '다른 체크 유지');
+      assert.equal(x.checks.t1, undefined);
+    });
+    await t('입력 중인 상세 창에서 세부업무를 바꿔도 입력값 유지 · 저장 충돌 없음', async () => {
+      await openModal(p, 'lead', 'LI07', 'input');
+      await p.check('input[name=pfmode][value=auto]');
+      await p.fill('[data-pf="den"]', '20'); await p.fill('[data-pf="num"]', '5'); await p.fill('#pfNote', '입력 중');
+      await p.click('[data-sub-cycle="LI07"][data-i="0"]');
+      assert.equal(await p.inputValue('[data-pf="den"]'), '20');
+      assert.equal(await p.inputValue('#pfNote'), '입력 중');
+      p.dialogs.length = 0;
+      await p.click('#pfSaveRec');
+      assert.deepStrictEqual(p.dialogs, [], '자기 변경을 충돌로 보면 안 됨');
+      const r = await until(async () => { const x = (await db()).perfMonthly['LI07_' + MONTH]; return x.den === 20 ? x : false; });
+      assert.equal(r.prog.t1, 50, '세부업무 진행률 유지'); assert.equal(r.num, 5);
+      await p.click('#pfClose');
+    });
+    await t('입력자가 없으면 세부업무를 저장하지 않고 안내', async () => {
+      await p.evaluate(() => localStorage.removeItem('netform.b2b.tracker.actor.v1'));
+      await reload(p); await openCard(p, 'shs'); await openRow(p, 'LI09');
+      const before = (await db()).perfMonthly['LI09_' + MONTH].rev;
+      await p.click('[data-sub-cycle="LI09"][data-i="3"]');
+      await new Promise(r => setTimeout(r, 500));
+      assert.equal((await db()).perfMonthly['LI09_' + MONTH].rev, before);
+      assert.ok(/입력자/.test(await p.locator('#toast').innerText()));
+      await p.fill('#pfActorBar', '시험자'); await p.press('#pfActorBar', 'Tab');
+      await p.click('[data-sub-cycle="LI09"][data-i="3"]');
+      const r = await until(async () => { const x = (await db()).perfMonthly['LI09_' + MONTH]; return x.rev > before ? x : false; });
+      assert.equal(r.updatedBy, '시험자');
+    });
+    await t('프로젝트 세부업무: 상태 변경 · 평균 자동 · 추가 · 프로젝트 추가 · 갱신일 기록', async () => {
+      await openCard(p, 'shs');
+      if ((await p.locator('[data-proj="SX1"]').getAttribute('aria-expanded')) !== 'true') await p.click('[data-proj="SX1"]');
+      await p.click('[data-task-cycle="SX1:0"]');
+      const a = await until(async () => { const d = await db(); return d.projects.SX1.tasks[0].p === 50 ? d : false; });
+      assert.ok(a.projects.SX1.updatedAt, '갱신일');
+      assert.equal(a.projects.SX1.name, baseline.projects.SX1.name);
+      await p.click('[data-task-cycle="SX1:0"]');
+      await p.fill('#pfa-task-SX1', '시험 하위업무'); await p.click('[data-task-add="SX1"]');
+      await until(async () => (await db()).projects.SX1.tasks.length === 2);
+      await p.click('[data-task-cycle="SX1:1"]');
+      assert.ok(/75%/.test(await p.locator('[data-proj="SX1"]').innerText()), await p.locator('[data-proj="SX1"]').innerText()); // (100+50)/2
+      await p.fill('#pfa-proj-shs', '시험 프로젝트'); await p.click('[data-proj-add="shs"]');
+      const b = await until(async () => { const d = await db(); return Object.keys(d.projects).length === 2 ? d : false; });
+      const np = Object.values(b.projects).find(x => x.id !== 'SX1');
+      assert.equal(np.owner, 'shs'); assert.equal(np.name, '시험 프로젝트'); assert.ok(np.updatedAt);
+    });
+    await t('프로젝트 진행률은 지표에 합산되지 않음 — 연결은 표시만', async () => {
+      await openCard(p, 'shs');
+      const before = await rowText(p, 'LI08');
+      await p.locator(boardCard('shs') + ' .myedit').click();
+      await p.click('[data-pjedit="SX1"]');
+      await p.check('[data-pe-lead="SX1"][value="LI08"]');
+      const d = await until(async () => { const x = await db(); return x.projects.SX1.leads && x.projects.SX1.leads.LI08 ? x : false; });
+      assert.ok(/연결 선행지표: /.test(await p.locator(boardCard('shs')).innerText()));
+      await p.locator(boardCard('shs') + ' .myedit').click();
+      await openRow(p, 'LI08');
+      const acc = await p.locator('.pfb-acc:has(.pfb-row[data-id="LI08"])').innerText();
+      assert.ok(/연결 프로젝트/.test(acc) && /협약서 PDF/.test(acc) && /진행률 합산 안 함/.test(acc), acc.slice(0, 200));
+      assert.equal(await rowText(p, 'LI08'), before, '연결해도 지표 수치 불변');
+      assert.equal(d.perfMonthly['LI08_' + MONTH], undefined, '지표 기록이 생기면 안 됨');
+    });
+    await t('정체 표시: 기준일 지난 프로젝트·지표만 표시, 완료·미시작 제외', async () => {
+      const old = new Date(Date.now() - 10 * 86400000).toISOString(), d0 = await db();
+      const others = Object.values(d0.projects).find(x => x.id !== 'SX1');
+      await patchDb({ 'projects/SX1': Object.assign({}, d0.projects.SX1, { updatedAt: old }), ['projects/' + others.id]: Object.assign({}, others, { tasks: [{ t: '끝난 일', p: 100, n: '', r: '' }], updatedAt: old }), ['perfMonthly/LI09_' + MONTH]: Object.assign({}, d0.perfMonthly['LI09_' + MONTH], { updatedAt: old }) });
+      await reload(p); await tab(p, 'work');
+      const s = await p.locator('details.disc summary').first().innerText();
+      assert.ok(/진행이 더딘 업무 2건/.test(s), s); // SX1, LI09. 완료된 프로젝트는 제외
+      await p.locator('details.disc summary').first().click();
+      const list = await p.locator('details.disc .body').first().innerText();
+      assert.ok(/협약서 PDF/.test(list) && /10일/.test(list) && /앱 전환/.test(list), list);
+      await openCard(p, 'shs');
+      assert.ok(/10일 정체/.test(await p.locator('[data-proj="SX1"]').innerText()));
+      assert.ok(/10일 정체/.test(await rowText(p, 'LI09')));
+      await p.click('details.disc [data-pf-stale-proj="SX1"]');
+      assert.equal(await p.locator('.bcol').count(), 1, '해당 팀원으로 이동');
+      await p.click('[data-pf-member="all"]');
+      await patchDb({ 'projects/SX1': baseline.projects.SX1, ['projects/' + others.id]: null, 'leadDefs/LI09': Object.assign({}, d0.leadDefs.LI09, { tasks: d0.leadDefs.LI09.tasks.slice(0, 12) }) });
+      await reload(p);
+    });
+    await t('다른 팀원 개인 지표 추가 (편집 모드): 신한솔 지표·점수와 분리', async () => {
+      const before = await db(), mk2 = before.mainKpis.MK2;
+      await openCard(p, 'm1');
+      await p.locator(boardCard('m1') + ' .myedit').click();
+      await p.locator(boardCard('m1') + ' details.disc summary').click();
+      await p.fill('#pfnd-name-m1', '시험 선행지표'); await p.fill('#pfnd-den-m1', '대상 건수'); await p.fill('#pfnd-num-m1', '완료 건수');
+      await p.check('[data-pfnd-kpi="m1"][value="MK2"]');
+      await p.click('[data-pfnd-add="m1"]');
+      const d = await until(async () => { const x = await db(); return x.leadDefs.LIm11 ? x : false; });
+      assert.equal(d.leadDefs.LIm11.member, 'm1');
+      assert.ok(d.mainKpis.MK2.links.some(l => l.li === 'LIm11'));
+      assert.deepStrictEqual(d.mainKpis.MK2.weights || {}, mk2.weights || {}, '가중치 자동 설정 금지');
+      assert.equal(d.mainKpis.MK2.memberWeights, undefined, '팀원 가중치 자동 설정 금지');
+      await p.locator(boardCard('m1') + ' .myedit').click();
+      assert.equal(await p.locator(boardCard('m1') + ' .pfb-row').count(), 1);
+      assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14);
+      assert.ok(await p.locator('[data-tt="kpi:m1"]').count());
+      await patchDb({ 'leadDefs/LIm11': null, 'mainKpis/MK2': mk2, 'members/m1': before.members.m1 });
+      await reload(p);
+    });
+    await t('변경 이력·월별 기록 보존 — 위 조작 뒤에도 삭제 없음', async () => {
+      const d = await db();
+      assert.ok(Object.keys(d.perfHistory).length >= 30, '이력 ' + Object.keys(d.perfHistory).length);
+      ['LI01', 'LI02', 'LI03'].forEach(id => { assert.ok(d.perfMonthly[id + '_' + MONTH], id); assert.ok(d.perfMonthly[id + '_' + PREV], id + ' 전월'); });
+      assert.deepStrictEqual(d.projects, baseline.projects, '시험 후 프로젝트 원복');
+      assert.deepStrictEqual(d.routines, baseline.routines);
+      assert.deepStrictEqual(d.members.m1, baseline.members.m1, 'm1 수정 없음');
+    });
     await t('다른 팀원 지표 추가: 팀 점수는 가중 종합, 신한솔 개인 점수·실적은 그대로', async () => {
       const before = await db(), mk1 = before.mainKpis.MK1;
       const personalBefore = await personalText(p, 'MK1');
@@ -418,7 +644,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
       assert.ok(await p.locator('[data-tt="kpi:m1"]').count(), '다른 팀원 탭 생성');
       await saveDirect(p, 'LX01', 50);
-      assert.ok(/산출 대기/.test(await kpiCardText(p, 'MK1')) , '새 팀원 가중치 전에는 대기');
+      assert.ok(/미확정/.test(await kpiCardText(p, 'MK1')) , '새 팀원 가중치 전에는 미확정');
       await setMemberWeights(p, 'MK1', { shs: 60, m1: 40 });
       const team = await kpiCardText(p, 'MK1'); // 78×0.6 + 50×0.4 = 66.8
       assert.ok(/66\.8\s*%/.test(team) && /신한솔 60%/.test(team), team);
@@ -426,7 +652,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await openModal(p, 'kpi', 'MK1', 'weights');
       assert.equal(await p.locator('#pfmMember').count(), 1, '팀원 선택 칸');
       await p.click('#pfClose');
-      await tab(p, 'work');
+      await openCard(p, 'shs'); await openCard(p, 'm1');
       assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14, '신한솔 카드에 다른 팀원 지표 없음');
       assert.equal(await p.locator(boardCard('m1') + ' .pfb-row').count(), 1, '다른 팀원 카드 지표 줄: ' + (await p.locator(boardCard('m1')).innerText()).slice(0, 300));
       const d = await db();
@@ -577,12 +803,19 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
         const cardBtn = await m.evaluate(() => Math.min(...[...document.querySelectorAll('.pf-acts .mini')].map(e => e.offsetHeight)));
         assert.ok(cardBtn >= 36, '카드 버튼 ' + cardBtn);
       });
-      await t(`모바일 ${w}px: 팀 업무 현황·담당자 카드 넘침 없음 · 지표 줄 터치 영역 44px`, async () => {
+      await t(`모바일 ${w}px: 팀 업무 현황·담당자 카드 넘침 없음 · 터치 영역`, async () => {
         assert.ok(/팀 업무 현황/.test(await m.locator('.phead h1').innerText()));
-        const o = await over(); assert.ok(o.scroll <= 0 && !o.bad.length, JSON.stringify(o));
-        const small = await m.evaluate(() => [...document.querySelectorAll('.pfb-row')].filter(e => e.offsetHeight < 44).length);
-        assert.equal(small, 0);
-        await m.screenshot({ path: path.join(outDir, `06_모바일${w}_팀업무현황.png`), fullPage: true });
+        let o = await over(); assert.ok(o.scroll <= 0 && !o.bad.length, JSON.stringify(o));
+        await m.screenshot({ path: path.join(outDir, `06_모바일${w}_접힘.png`), fullPage: true });
+        await m.tap('[data-pf-card="shs"]');
+        await m.tap('.pfb-row[data-id="LI02"]');
+        await m.tap('[data-proj="SX1"]');
+        o = await over(); assert.ok(o.scroll <= 0 && !o.bad.length, JSON.stringify(o));
+        const small = await m.evaluate(() => [...document.querySelectorAll('.pfb-row,.pfs,.pfs-pct,.pfa-row input,.pfa-row button,.pf-card-tg,.fg button')].filter(e => e.offsetHeight && e.offsetHeight < 30).map(e => e.className));
+        assert.deepStrictEqual(small, []);
+        const min = await m.evaluate(() => Math.min(...[...document.querySelectorAll('.pfs,.pfs-pct,.pfb-row,.pf-card-tg')].map(e => e.offsetHeight)));
+        assert.ok(min >= 38, '최소 높이 ' + min);
+        await m.screenshot({ path: path.join(outDir, `07_모바일${w}_펼침.png`) });
       });
       await m.context().close();
     }

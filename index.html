@@ -733,10 +733,6 @@ body.pf-lock{overflow:hidden}
 .pf-preview b{font-size:15px}
 .pf-save{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .pf-save .btn{min-height:42px;padding:9px 18px}
-.pf-chk{display:grid;gap:2px}
-.pf-chk label{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;padding:8px 6px;border-radius:6px;cursor:pointer}
-.pf-chk label:hover{background:var(--surf)}
-.pf-chk input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--brand)}
 .pfr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;padding:9px 0;border-top:1px solid var(--line-2);font-size:13px;align-items:center}
 .pfr:first-child{border-top:0}
 .pfr .nm{font-weight:700;min-width:0}
@@ -756,6 +752,42 @@ body.pf-lock{overflow:hidden}
 .pfb-row .val.txt{font-weight:600;color:var(--text-3);font-size:11.5px}
 .pfb-row .sm{grid-column:1 / -1;font-size:11.5px;color:var(--text-3);line-height:1.45}
 .pfb-row .meter{grid-column:1 / -1;margin-top:3px}
+.pfs{width:38px;height:38px;flex:0 0 auto;border-radius:8px;border:1px solid var(--line);background:var(--bg);text-align:center;font-weight:800;font-size:13px;color:var(--text-3);line-height:1}
+.pfs.prog{background:var(--tint);color:var(--brand);border-color:var(--brand-2)}
+.pfs.done{background:var(--ok-bg);color:var(--ok);border-color:#CFE0D7}
+.pfs.on-row{display:block;position:relative;z-index:1;margin:5px 0 -43px 7px}
+.bgrp-b .btk{padding-left:54px;min-height:48px}
+.pfs-row{display:grid;grid-template-columns:38px minmax(0,1fr) 62px;gap:6px 8px;align-items:center;font-size:12.5px;padding:3px 0}
+.pfs-row .t{min-width:0;line-height:1.4}
+.pfs-row.done .t{color:var(--text-2);text-decoration:line-through}
+.pfs-pct,.pf-task-pct{width:62px;min-height:38px;border:1px solid var(--line);border-radius:7px;text-align:right;padding:4px 7px;font-size:13px;background:var(--bg)}
+.pfa-row{display:flex;gap:6px;padding:6px 0}
+.pfa-row input{flex:1 1 auto;min-width:0;min-height:38px;border:1px solid var(--line);border-radius:7px;padding:5px 9px;font-size:13px;background:var(--bg)}
+.pfa-row button{min-height:38px;padding:5px 11px;border:1px dashed var(--brand-2);border-radius:7px;font-size:12px;font-weight:700;color:var(--brand);white-space:nowrap}
+.bgrp-b .pfa-row,.bprojs > .pfa-row{padding:8px 15px}
+.pf-card-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,124px),1fr));gap:6px;padding:10px 15px 2px}
+.pf-card-sum .tl{background:var(--surf);border-radius:7px;padding:7px 9px;min-width:0}
+.pf-card-sum .tl.perf{background:var(--peach)}
+.pf-card-sum .l{display:block;font-size:11px;font-weight:700;color:var(--text-3);line-height:1.35}
+.pf-card-sum .n{display:block;font-size:16px;font-weight:800;line-height:1.35}
+.pf-card-sum .s{display:block;font-size:11px;color:var(--text-3);line-height:1.35}
+.pf-card-tg{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:42px;font-size:12.5px;font-weight:700;color:var(--brand);border-top:1px solid var(--line-2);margin-top:9px}
+.pf-card-tg:hover{background:var(--surf)}
+.pf-card-tg .chev{font-size:9px;transition:transform .15s}
+.pf-card-tg[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.pfb-acc{border-top:1px solid var(--line-2)}
+.pfb-acc .pfb-row{border-top:0}
+.pfb-det{padding:2px 2px 12px;display:grid;gap:7px}
+.pfb-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:5px}
+.pfb-facts div{background:var(--bg);border-radius:6px;padding:5px 8px;font-size:11.5px;color:var(--text-3);line-height:1.45;min-width:0}
+.pfb-facts b{color:var(--ink)}
+.pf-stale{display:inline-block;font-size:10.5px;font-weight:700;color:var(--warn);background:var(--warn-bg);border-radius:100px;padding:0 6px;margin-left:5px;white-space:nowrap}
+.pf-stale.none{color:var(--text-3);background:var(--surf)}
+.pf-links{font-size:11.5px;color:var(--text-3);padding:7px 15px 0;line-height:1.5}
+.pf-actor{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text-3)}
+.pf-actor input{width:104px;min-height:32px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;font-size:12.5px;font-weight:500;background:var(--bg)}
+.pf-link-pick{display:grid;gap:2px;margin-top:4px}
+.pf-link-pick label{display:flex;gap:7px;align-items:center;font-size:12.5px;min-height:30px}
 .pf-empty{font-size:12.5px;color:var(--text-2);padding:8px 0}
 @media (max-width:640px){
   .pf-vals{grid-template-columns:1fr}
@@ -766,6 +798,8 @@ body.pf-lock{overflow:hidden}
   .pf-form{grid-template-columns:minmax(0,1fr)}
   .pf-f input,.pf-f select,.pf-f textarea,.pf-wrow input{font-size:16px}
   .pf-kv{grid-template-columns:78px minmax(0,1fr)}
+  .pf-actor input{font-size:16px}
+  .pfs-pct,.pf-task-pct,.pfa-row input{font-size:16px}
 }
 @media print{ #pfModal{display:none!important} }
 </style>
@@ -1457,6 +1491,28 @@ var PerfCalc = (function () {
     return base;
   }
 
+  /* 세부업무 진행률 — 실행 정도이며 달성률(실제 관리 실적)과 별개다. 이전의 체크 표시는 완료로 읽는다 */
+  function taskPct(rec, i) {
+    var k = "t" + (i + 1), p = rec && rec.prog && rec.prog[k];
+    if (isNum(p)) return clamp(p);
+    return rec && rec.checks && rec.checks[k] ? 100 : 0;
+  }
+  function workStats(names, rec) {
+    var total = (names || []).length, sum = 0, done = 0, doing = 0, todo = 0;
+    for (var i = 0; i < total; i++) {
+      var p = taskPct(rec, i);
+      sum += p;
+      if (p >= 100) done++; else if (p > 0) doing++; else todo++;
+    }
+    return { total: total, done: done, doing: doing, todo: todo, value: total ? sum / total : null, started: done + doing > 0 };
+  }
+  function nextStep(p) { return p >= 100 ? 0 : p > 0 ? 100 : 50; }
+  function daysSince(iso, now) {
+    var t = Date.parse(iso);
+    if (!iso || isNaN(t)) return null;
+    return Math.floor(((now || Date.now()) - t) / 86400000);
+  }
+
   function delta(cur, prev) {
     if (!isNum(cur) || !isNum(prev)) return null;
     return round1(round1(cur) - round1(prev));
@@ -1496,7 +1552,7 @@ var PerfCalc = (function () {
     return errs;
   }
 
-  return { rate: rate, weightStatus: weightStatus, score: score, teamScore: teamScore, delta: delta, prevMonth: prevMonth, monthsBack: monthsBack, derive: derive, validate: validate, round1: round1, isNum: isNum };
+  return { rate: rate, weightStatus: weightStatus, score: score, teamScore: teamScore, taskPct: taskPct, workStats: workStats, nextStep: nextStep, daysSince: daysSince, delta: delta, prevMonth: prevMonth, monthsBack: monthsBack, derive: derive, validate: validate, round1: round1, isNum: isNum };
 })();
 </script>
 <script>/* ============================================================
@@ -1735,6 +1791,7 @@ var PerfCalc = (function () {
     var q = flt.q.trim().toLowerCase();
     var out = list.filter(function (r) {
       if (ownOverride && r.pj.owner !== ownOverride) return false;
+      if (pfMemberFilter !== "all" && r.pj.owner !== pfMemberFilter) return false;
       if (flt.st !== "all" && tkState(r.t.p) !== flt.st) return false;
       if (flt.rem && !r.t.r) return false;
       if (q) {
@@ -1771,7 +1828,8 @@ var PerfCalc = (function () {
         '<label class="ef-l">잔여 · 남은 확인 사항</label><textarea class="ef-i" rows="3" data-te="' + kk + '" data-f="r">' + esc(r.t.r || "") + "</textarea>" +
         '<div class="ef-btns"><button class="mini danger" data-tdel="' + kk + '">이 업무 삭제</button></div>';
     } else {
-      body = '<span class="lbl">소속</span>' + esc(r.pg.id) + " " + esc(r.pg.name) + " · " + esc(r.pj.name) +
+      body = '<span class="lbl">진행률</span><input class="pf-task-pct num" id="pf-task-pct-' + esc(r.key.replace(":", "-")) + '" type="number" inputmode="numeric" min="0" max="100" step="10" value="' + (Number(r.t.p) || 0) + '" data-task-pct="' + esc(r.key) + '" aria-label="' + esc(r.t.t) + ' 진행률">' +
+        '<span class="lbl">소속</span>' + esc(r.pg.id) + " " + esc(r.pg.name) + " · " + esc(r.pj.name) +
         (r.t.n ? '<span class="lbl">진행 내용</span>' + esc(r.t.n) : "") +
         (r.t.r ? '<span class="lbl">잔여</span>' + esc(r.t.r) : "") +
         (!r.t.n && !r.t.r ? '<span class="lbl">기록</span><span style="color:var(--text-3)">아직 적힌 내용이 없습니다. 편집을 켜고 남겨 주세요.</span>' : "");
@@ -1781,8 +1839,9 @@ var PerfCalc = (function () {
 
   function taskRow(r) {
     var v = Number(r.t.p) || 0, k = tkState(v), o = !!open[r.key], can = edt(r.pj.owner);
-    return '<button class="btk k-' + k + (o ? " on" : "") + '" data-tk="' + esc(r.key) + '" aria-expanded="' + o + '">' +
-      '<span class="n">' + esc(r.t.t) + (r.t.r ? '<span class="flag">잔여</span>' : "") + "</span>" +
+    return '<button class="pfs on-row ' + k + '" data-task-cycle="' + esc(r.key) + '" aria-label="' + esc(r.t.t || "이름 없는 업무") + " 상태 변경, 현재 " + PF_ST[k] + '">' + PF_ICON[k] + "</button>" +
+      '<button class="btk k-' + k + (o ? " on" : "") + '" data-tk="' + esc(r.key) + '" aria-expanded="' + o + '">' +
+      '<span class="n">' + esc(r.t.t || "(이름 없음)") + (r.t.r ? '<span class="flag">잔여</span>' : "") + "</span>" +
       "<span>" + mb(v, barCls(k)) + "</span>" +
       '<span class="v num">' + v + "</span></button>" + taskDetail(r, "btk-d", can);
   }
@@ -1848,6 +1907,13 @@ var PerfCalc = (function () {
   /* ============================================================
      사람 열 (보드)
      ============================================================ */
+  function pfProjLinkPick(p) {
+    var defs = (D.leadDefs || []).filter(function (l) { return l.member === p.owner; });
+    if (!defs.length) return "";
+    return '<label class="ef-l">연결 선행지표 (표시만 · 진행률 합산 안 함)</label><div class="pf-link-pick">' + defs.map(function (l) {
+      return '<label><input type="checkbox" data-pe-lead="' + esc(p.id) + '" value="' + esc(l.id) + '"' + (p.leads && p.leads[l.id] ? " checked" : "") + ">" + esc(l.no) + " " + esc(l.name) + "</label>";
+    }).join("") + "</div>";
+  }
   function projEditForm(p) {
     return '<div class="ef"><label class="ef-l">프로젝트명</label>' +
       '<input class="ef-i" type="text" data-pe="' + esc(p.id) + '" data-f="name" value="' + esc(p.name) + '">' +
@@ -1856,10 +1922,15 @@ var PerfCalc = (function () {
       '<label class="ef-l">담당</label><select class="ef-i" data-pe="' + esc(p.id) + '" data-f="owner">' +
       D.members.map(function (o) { return '<option value="' + esc(o.id) + '"' + (o.id === p.owner ? " selected" : "") + ">" + esc(o.name) + "</option>"; }).join("") + "</select>" +
       '<label class="ef-l">설명</label><textarea class="ef-i" rows="2" data-pe="' + esc(p.id) + '" data-f="note">' + esc(p.note || "") + "</textarea>" +
+      pfProjLinkPick(p) +
       '<div class="ef-btns"><button class="mini" data-pjclose="1">닫기</button>' +
       '<button class="mini danger" data-pjdel="' + esc(p.id) + '">프로젝트 삭제</button></div></div>';
   }
 
+  function pfProjLinks(p) {
+    var names = Object.keys(p.leads || {}).map(function (id) { var d = pfFind("leadDefs", id); return d ? d.no + " " + d.name : ""; }).filter(Boolean);
+    return names.length ? '<div class="pf-links">연결 선행지표: <b>' + esc(names.join(", ")) + "</b> · 진행률은 합산하지 않습니다</div>" : "";
+  }
   function personCol(m, all) {
     var can = edt(m.id), col = mcolor(m.id);
     var ps = projectsOf(m.id);
@@ -1869,6 +1940,7 @@ var PerfCalc = (function () {
     var done = mineAll.filter(function (r) { return tkState(r.t.p) === "done"; }).length;
     var todo = mineAll.filter(function (r) { return tkState(r.t.p) === "todo"; }).length;
     var allOpen = ps.length > 0 && ps.every(function (p) { return jOpen[p.id]; });
+    var cardOpen = !!pfCardOpen[m.id] || pfMemberFilter === m.id || filterOn() || edt(m.id);
 
     var byPj = {};
     mine.forEach(function (r) { (byPj[r.pj.id] = byPj[r.pj.id] || []).push(r); });
@@ -1881,7 +1953,7 @@ var PerfCalc = (function () {
       var head = '<button class="bgrp' + (isOpen ? " on" : "") + '" data-proj="' + esc(p.id) + '" aria-expanded="' + isOpen + '">' +
         '<span class="chev" aria-hidden="true">▶</span>' +
         '<span class="pg">' + esc(p.prog) + "</span>" +
-        '<span class="t">' + esc(p.name) + "</span>" +
+        '<span class="t">' + esc(p.name) + pfStaleTag(pfProjStale(p)) + "</span>" +
         '<span class="c num">' + rows.length + (filterOn() ? "/" + (p.tasks || []).length : "") + "</span>" +
         '<span class="v num">' + ppct + "%</span></button>";
       var body = '<div class="bgrp-b' + (isOpen ? " on" : "") + '">' +
@@ -1889,7 +1961,9 @@ var PerfCalc = (function () {
           '<button class="mini" data-pjedit="' + esc(p.id) + '">프로젝트 수정</button>' +
           '<button class="mini add" data-tadd="' + esc(p.id) + '">+ 하위업무</button></div>' : "") +
         (pjEdit === p.id && can ? projEditForm(p) : "") +
-        (rows.length ? rows.map(taskRow).join("") : '<div class="bempty">하위업무가 없습니다.</div>') + "</div>";
+        pfProjLinks(p) +
+        (rows.length ? rows.map(taskRow).join("") : '<div class="bempty">하위업무가 없습니다.</div>') +
+        '<div class="pfa-row"><input type="text" id="pfa-task-' + esc(p.id) + '" placeholder="세부업무 추가" aria-label="' + esc(p.name) + ' 세부업무 추가"><button data-task-add="' + esc(p.id) + '">+ 추가</button></div></div>';
       return head + body;
     }).join("");
 
@@ -1904,10 +1978,13 @@ var PerfCalc = (function () {
       mb(pct) +
       '<span class="cnt"><span>프로젝트 <b>' + ps.length + "</b></span><span>업무 <b>" + mineAll.length +
       "</b></span><span>완료 <b>" + done + "</b></span><span>미착수 <b>" + todo + "</b></span></span></button>" +
-      routineBlock(m) + perfBlock(m) + pfBoardBlock(m) +
-      '<div class="bprojs">' + (groups || '<div class="bempty">조건에 맞는 업무가 없습니다.</div>') +
-      (can ? '<div class="pj-add"><button class="mini add" data-pjadd="' + esc(m.id) + '">+ 프로젝트</button></div>' : "") +
-      "</div></section>";
+      pfCardSummary(m) +
+      '<button class="pf-card-tg" data-pf-card="' + esc(m.id) + '" aria-expanded="' + cardOpen + '"><span class="chev" aria-hidden="true">▶</span>' + (cardOpen ? "담당 업무·지표 접기" : "담당 업무·지표 펼치기") + "</button>" +
+      (cardOpen ? routineBlock(m) + perfBlock(m) + pfBoardBlock(m) +
+        '<div class="bprojs">' + (groups || '<div class="bempty">조건에 맞는 업무가 없습니다.</div>') +
+        '<div class="pfa-row"><input type="text" id="pfa-proj-' + esc(m.id) + '" placeholder="프로젝트 추가" aria-label="' + esc(m.name) + ' 프로젝트 추가"><button data-proj-add="' + esc(m.id) + '">+ 추가</button></div>' +
+        (can ? '<div class="pj-add"><button class="mini add" data-pjadd="' + esc(m.id) + '">+ 프로젝트</button></div>' : "") +
+        "</div>" : "") + "</section>";
   }
 
   /* ============================================================
@@ -1952,7 +2029,13 @@ var PerfCalc = (function () {
   try { taskTab = localStorage.getItem(KEY_TASKTAB) || "work"; } catch (e) {}
   if (taskTab === "kpi") taskTab = "kpi:shs";
   var pfBoardOpen = {}; // 담당자 카드의 개인 지표 접기
+  var pfBoardAcc = {};  // 담당자 카드의 지표별 펼침
+  var pfMemberFilter = "all";
+  var KEY_CARDOPEN = "netform.b2b.tracker.cardopen.v1";
+  var pfCardOpen = {};
+  try { pfCardOpen = JSON.parse(localStorage.getItem(KEY_CARDOPEN) || "{}") || {}; } catch (e) {}
   var pfMonth = pfThisMonth();
+  var PF_ST = { todo: "미착수", prog: "진행 중", done: "완료" }, PF_ICON = { todo: "○", prog: "▶", done: "✓" };
   var pfM = null; // 열린 상세 창 { type, id, month, view, baseRev, dirty }
 
   function pfThisMonth() {
@@ -2014,6 +2097,38 @@ var PerfCalc = (function () {
     var d = new Date(iso); if (isNaN(d)) return "—";
     function z(n) { return (n < 10 ? "0" : "") + n; }
     return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate()) + " " + z(d.getHours()) + ":" + z(d.getMinutes());
+  }
+  function pfStaleDays() { var d = (D.perfConfig || {}).staleDays; return PC.isNum(d) && d > 0 ? d : 7; }
+  function pfTasksOf(def) { return def.tasks || []; }
+  function pfWork(def, month) { return PC.workStats(pfTasksOf(def), pfRec(def.id, month)); }
+  function pfProjStale(p) {
+    if (pctOfProject(p) >= 100) return null;
+    var d = PC.daysSince(p.updatedAt);
+    if (d == null) return { none: true };
+    return d >= pfStaleDays() ? { days: d } : null;
+  }
+  function pfDefStale(def, month) {
+    var rec = pfRec(def.id, month), w = pfWork(def, month);
+    if (!rec || !w.started || w.value >= 100) return null;
+    var d = PC.daysSince(rec.updatedAt);
+    return d != null && d >= pfStaleDays() ? { days: d } : null;
+  }
+  function pfStaleTag(s) {
+    if (!s) return "";
+    return s.none ? '<span class="pf-stale none">갱신 기록 없음</span>' : '<span class="pf-stale">' + s.days + "일 정체</span>";
+  }
+  function pfLinkedProjects(liId) { return D.projects.filter(function (p) { return p.leads && p.leads[liId]; }); }
+  function pfActorOrAsk() {
+    var v = pfActor();
+    if (!v && pfM) { var a = $("#pfActor"); if (a && (a.value || "").trim()) { v = a.value.trim(); try { localStorage.setItem(KEY_ACTOR, v); } catch (e) {} } }
+    if (v) return v;
+    toast("입력자를 먼저 적어 주세요");
+    var el = $("#pfActorBar") || $("#pfActor");
+    if (el) el.focus();
+    return null;
+  }
+  function pfActorField() {
+    return '<label class="pf-actor">입력자 <input type="text" id="pfActorBar" autocomplete="name" value="' + esc(pfActor()) + '" placeholder="이름"></label>';
   }
   function pfMonths() {
     var o = {}, cur = pfThisMonth();
@@ -2097,9 +2212,14 @@ var PerfCalc = (function () {
     var month = pfMonth, r = pfRate(k.id, month), s = pfTeamScore(k, month);
     var ps = pfTeamScore(k, PC.prevMonth(month));
     var pr = pfRate(k.id, PC.prevMonth(month));
+    var undecided = s.state === "wait" && (s.code === "unset" || s.code === "sum");
     var scoreHtml = s.state === "ok"
       ? '<span class="n num">' + pf1(s.value) + "<small>%</small></span>"
-      : '<span class="n txt">' + (s.state === "empty" ? "대상 없음" : "산출 대기") + "</span>";
+      : '<span class="n txt">' + (s.state === "empty" ? "대상 없음" : undecided ? "미확정" : "산출 대기") + "</span>";
+    var refs = s.state === "ok" ? "" : pfMembersOf(k).map(function (mid) {
+      var ms = pfMemberScore(k, mid, month);
+      return '<span class="s">' + esc(member(mid).name) + " 개인 점수 " + (ms.state === "ok" ? pf1(ms.value) + "%" : ms.state === "empty" ? "대상 없음" : "산출 대기") + " (참고)</span>";
+    }).join("");
     return '<article class="pf-card k">' +
       '<div class="pf-t"><h3><span class="no">KPI ' + esc(k.no) + "</span>" + esc(k.name) + "</h3></div>" +
       '<div class="pf-vals">' +
@@ -2108,7 +2228,7 @@ var PerfCalc = (function () {
       pfDelta(r.state === "ok" ? r.value : null, pr.state === "ok" ? pr.value : null) +
       (PC.isNum(k.target) ? '<span class="s">목표 ' + fmt(k.target) + "%</span>" : "") + "</div>" +
       '<div class="pf-v"><span class="l">팀 선행활동 점수</span>' + scoreHtml +
-      '<span class="s">' + (s.state === "ok" ? pfMemberNames(s) : esc(s.reason)) + "</span>" +
+      '<span class="s">' + (s.state === "ok" ? pfMemberNames(s) : esc(s.reason)) + "</span>" + refs +
       pfDelta(s.state === "ok" ? s.value : null, ps.state === "ok" ? ps.value : null) + "</div></div>" +
       '<div class="pf-tags"><span class="pf-tag link">' + esc(k.src) + " · " + esc(k.linkNote) + "</span></div>" +
       '<div class="pf-acts"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">팀 점수 근거 보기</button>' +
@@ -2117,6 +2237,22 @@ var PerfCalc = (function () {
   function pfTeamSection() {
     return '<div class="pf-h2" style="margin-top:0"><h2>B2B팀 공통 KPI</h2><span>팀 전체 공통 · 모든 팀원에게 같은 값 표시</span><span style="margin-left:auto">' + pfMonthField() + "</span></div>" +
       '<div class="pf-grid k3" style="margin-bottom:22px">' + (D.mainKpis || []).map(pfKpiCard).join("") + "</div>";
+  }
+  function pfStaleSection() {
+    var items = [], none = 0;
+    D.projects.forEach(function (p) {
+      var s = pfProjStale(p);
+      if (!s) return;
+      if (s.none) { none++; return; }
+      items.push('<button class="pfb-row" data-pf-stale-proj="' + esc(p.id) + '"><span class="nm">' + esc(p.name) + '</span><span class="val num">' + s.days + '일</span><span class="sm">' + esc(member(p.owner).name) + " · 프로젝트 · 진행률 " + pctOfProject(p) + "%</span></button>");
+    });
+    (D.leadDefs || []).forEach(function (l) {
+      var s = pfDefStale(l, pfMonth);
+      if (s) items.push('<button class="pfb-row" data-pf-open="lead" data-id="' + esc(l.id) + '" data-v="input"><span class="nm">' + esc(l.name) + '</span><span class="val num">' + s.days + '일</span><span class="sm">' + esc(member(l.member).name) + " · 선행지표 세부업무 · 진행률 " + Math.round(pfWork(l, pfMonth).value) + "%</span></button>");
+    });
+    if (!items.length && !none) return "";
+    return '<details class="disc" style="margin:0 0 16px"><summary>진행이 더딘 업무 ' + items.length + "건 (" + pfStaleDays() + "일 이상 갱신 없음)" + (none ? " · 갱신 기록 없는 프로젝트 " + none + "건" : "") + '</summary><div class="body">' +
+      (items.length ? '<div class="pfb-list">' + items.join("") + "</div>" : '<div class="pf-empty">정체로 판단된 업무가 없습니다. 갱신 기록이 없는 프로젝트는 다음 변경부터 날짜가 쌓입니다.</div>') + "</div></details>";
   }
   function pfLeadCard(l) {
     var month = pfMonth, r = pfRate(l.id, month), rec = pfRec(l.id, month);
@@ -2174,32 +2310,96 @@ var PerfCalc = (function () {
     return '<div class="phead"><div><h1>' + nm + ' 개인 지표</h1><div class="hs">담당자 카드와 같은 데이터입니다. 선행지표 달성률이 바뀌면 개인 선행점수와 팀 공통 KPI 선행점수가 다시 계산됩니다.</div></div>' +
       '<div class="meta">' + pfMonthField() + "</div></div>" +
       pfTabs() +
-      '<div class="pf-status"><span><b>수동 관리</b> · 고객관리카드·K-apt·이카운트는 자동으로 연결되어 있지 않아 담당자가 직접 입력합니다.</span></div>' +
+      '<div class="pf-status"><span><b>수동 관리</b> · 고객관리카드·K-apt·이카운트는 자동으로 연결되어 있지 않아 담당자가 직접 입력합니다.</span>' + pfActorField() + "</div>" +
       '<div class="pf-h2"><h2>KPI별 개인 선행점수</h2><span>팀 공통 KPI 점수에는 팀원 반영 가중치를 거쳐 들어갑니다</span></div><div class="pf-grid k3">' + kpis.map(function (k) { return pfMemberScoreCard(k, mid); }).join("") + "</div>" +
       '<div class="pf-h2"><h2>개인 선행지표</h2><span>' + nm + ' 담당 고객관리 업무</span></div><div class="pf-grid">' + core.map(pfLeadCard).join("") + "</div>" +
       '<div class="pf-h2"><h2>운영 지원지표</h2><span>별도 표시 · KPI 계산 기본 가중치 0%</span></div><div class="pf-grid">' + sup.map(pfLeadCard).join("") + "</div>" +
       '<div class="pf-h2"><h2>개인 후행지표</h2><span>' + nm + ' 담당 업체·현장 기준 · 개인 성과로 별도 저장 · 팀 공통 KPI와 합산하지 않음</span></div><div class="pf-grid">' + lags.map(pfLagCard).join("") + "</div>" +
       '<div class="note" style="margin-top:14px"><b>주요 미달성 지표</b> — ' + (miss.length ? miss.join(" · ") : "목표 대비 미달로 판정된 후행지표가 없습니다. (목표 미설정·미측정 지표는 판정하지 않습니다)") + "</div>";
   }
-  function pfBoardRow(type, x) {
-    var r = pfRate(x.id, pfMonth);
+  function pfSubRows(def, month, scope, useFilter) {
+    var rec = pfRec(def.id, month);
+    var rows = pfTasksOf(def).map(function (t, i) {
+      var p = PC.taskPct(rec, i), k = tkState(p);
+      if (useFilter && flt.st !== "all" && flt.st !== k) return "";
+      return '<div class="pfs-row ' + k + '"><button class="pfs ' + k + '" data-sub-cycle="' + esc(def.id) + '" data-month="' + esc(month) + '" data-i="' + i + '" aria-label="' + esc(t) + " 상태 변경, 현재 " + PF_ST[k] + '">' + PF_ICON[k] + "</button>" +
+        '<span class="t">' + (i + 1) + ". " + esc(t) + "</span>" +
+        '<input class="pfs-pct num" id="pfs-' + scope + "-" + esc(def.id) + "-" + i + '" type="number" inputmode="numeric" min="0" max="100" step="10" value="' + p + '" data-sub-pct="' + esc(def.id) + '" data-month="' + esc(month) + '" data-i="' + i + '" aria-label="' + esc(t) + ' 진행률"></div>';
+    }).join("");
+    return (rows || '<div class="pf-empty">표시할 세부업무가 없습니다.</div>') +
+      '<div class="pfa-row"><input type="text" id="pfs-add-' + scope + "-" + esc(def.id) + '" data-add-for="sub" placeholder="세부업무 추가" aria-label="' + esc(def.name) + ' 세부업무 추가"><button data-sub-add="' + esc(def.id) + '" data-scope="' + scope + '">+ 추가</button></div>';
+  }
+  function pfBoardLead(l) {
+    var o = !!pfBoardAcc[l.id], r = pfRate(l.id, pfMonth), w = pfWork(l, pfMonth), st = pfDefStale(l, pfMonth);
     var val = r.state === "ok" ? '<span class="val num">' + pf1(r.value) + "%</span>" : '<span class="val txt">' + (r.state === "empty" ? "대상 없음" : "미측정") + "</span>";
     var now = r.state === "ok" && r.mode === "auto" ? fmt(r.num) + " / " + fmt(r.den) : r.state === "ok" ? "직접 입력" : "—";
-    var tgt = x.targetText || (PC.isNum(x.target) ? fmt(x.target) + "%" : "미설정");
-    return '<button class="pfb-row" data-pf-open="' + type + '" data-id="' + esc(x.id) + '" data-v="input"><span class="nm">' + esc(x.no) + " " + esc(x.name) + "</span>" + val +
-      '<span class="sm">목표 ' + esc(tgt) + " · 실적 " + esc(now) + "</span>" + pfMeter(r, x.target) + "</button>";
+    var tgt = l.targetText || (PC.isNum(l.target) ? fmt(l.target) + "%" : "미설정");
+    var links = pfLinkedProjects(l.id).map(function (p) { return esc(p.name); }).join(", ");
+    var kpis = pfKpisOf(l.id).map(function (k) { return "KPI " + esc(k.no); }).join(", ");
+    var head = '<button class="pfb-row" data-pfb-acc="' + esc(l.id) + '" data-id="' + esc(l.id) + '" aria-expanded="' + o + '"><span class="nm">' + esc(l.no) + " " + esc(l.name) + pfStaleTag(st) + "</span>" + val +
+      '<span class="sm">목표 ' + esc(tgt) + " · 실적 " + esc(now) + " · 업무 진행률 " + (w.value == null ? "—" : Math.round(w.value) + "%") + "</span>" + pfMeter(r, l.target) + "</button>";
+    if (!o) return '<div class="pfb-acc">' + head + "</div>";
+    return '<div class="pfb-acc">' + head + '<div class="pfb-det"><div class="pfb-facts">' +
+      "<div>업무 진행률 <b>" + (w.value == null ? "—" : Math.round(w.value) + "%") + "</b> · 완료 " + w.done + " · 진행 " + w.doing + " · 미착수 " + w.todo + "</div>" +
+      "<div>달성률 <b>" + (r.state === "ok" ? pf1(r.value) + "%" : r.state === "empty" ? "대상 없음" : "미측정") + "</b> · 실제 관리 실적 기준</div>" +
+      "<div>연결 팀 KPI <b>" + (kpis || "없음") + "</b></div>" +
+      "<div>연결 프로젝트 <b>" + (links || "없음") + "</b>" + (links ? " · 진행률 합산 안 함" : "") + "</div></div>" +
+      pfSubRows(l, pfMonth, "b", true) +
+      '<div class="pf-acts"><button class="mini" data-pf-open="lead" data-id="' + esc(l.id) + '" data-v="input">실적 입력 · 상세</button></div>' +
+      pfMonthlyRows(l.id, l) + "</div></div>";
+  }
+  function pfBoardLag(g) {
+    var o = !!pfBoardAcc[g.id], r = pfRate(g.id, pfMonth);
+    var val = r.state === "ok" ? '<span class="val num">' + pf1(r.value) + "%</span>" : '<span class="val txt">' + (r.state === "empty" ? "대상 없음" : "미측정") + "</span>";
+    var now = r.state === "ok" ? fmt(r.num) + " / " + fmt(r.den) : "—";
+    var head = '<button class="pfb-row" data-pfb-acc="' + esc(g.id) + '" data-id="' + esc(g.id) + '" aria-expanded="' + o + '"><span class="nm">' + esc(g.no) + " " + esc(g.name) + "</span>" + val +
+      '<span class="sm">목표 ' + (PC.isNum(g.target) ? fmt(g.target) + "%" : "미설정") + " · 실적 " + esc(now) + "</span>" + pfMeter(r, g.target) + "</button>";
+    if (!o) return '<div class="pfb-acc">' + head + "</div>";
+    return '<div class="pfb-acc">' + head + '<div class="pfb-det"><div class="pfb-facts"><div>집계 범위 <b>' + esc(g.scope || "미정") + "</b></div><div>전월 대비 " + pfRateDelta(g.id, pfMonth) + "</div></div>" +
+      '<div class="pf-acts"><button class="mini" data-pf-open="lag" data-id="' + esc(g.id) + '" data-v="input">실적 입력</button></div>' + pfMonthlyRows(g.id) + "</div></div>";
+  }
+  /* 담당자 카드 위쪽 요약: 프로젝트와 지표 진행률을 합치지 않고 나눈다 */
+  function pfCardSummary(m) {
+    var leads = (D.leadDefs || []).filter(function (l) { return l.member === m.id; });
+    var lags = (D.lagDefs || []).filter(function (g) { return g.member === m.id; });
+    if (!leads.length && !lags.length) return "";
+    var done = 0, doing = 0, todo = 0, sum = 0, n = 0, rates = [];
+    leads.forEach(function (l) {
+      var w = pfWork(l, pfMonth), r = pfRate(l.id, pfMonth);
+      done += w.done; doing += w.doing; todo += w.todo;
+      if (w.total) { sum += w.value * w.total; n += w.total; }
+      if (r.state === "ok") rates.push(r.value);
+    });
+    var lagN = lags.filter(function (g) { return pfRate(g.id, pfMonth).state === "ok"; }).length;
+    var avg = rates.length ? rates.reduce(function (a, b) { return a + b; }, 0) / rates.length : null;
+    return '<div class="pf-card-sum">' +
+      '<div class="tl"><span class="l">지표 세부업무 진행률</span><span class="n num">' + (n ? Math.round(sum / n) + "%" : "—") + '</span><span class="s num">완료 ' + done + " · 진행 " + doing + " · 미착수 " + todo + "</span></div>" +
+      '<div class="tl"><span class="l">선행 달성률 평균</span><span class="n num">' + (avg == null ? "미측정" : pf1(avg) + "%") + '</span><span class="s">' + leads.length + "개 중 " + rates.length + "개 측정</span></div>" +
+      '<div class="tl perf"><span class="l">후행 실적 (실제 성과)</span><span class="n num">' + lagN + " / " + lags.length + '</span><span class="s">측정된 지표 수</span></div></div>';
+  }
+  function pfDefAddForm(m) {
+    var id = esc(m.id);
+    return '<details class="disc" style="margin:10px 15px"><summary>개인 지표 추가</summary><div class="body"><div class="pf-form">' +
+      '<label class="pf-f"><span>종류</span><select id="pfnd-type-' + id + '"><option value="lead">선행지표</option><option value="lag">후행지표</option></select></label>' +
+      '<label class="pf-f"><span>지표명</span><input type="text" id="pfnd-name-' + id + '"></label>' +
+      '<label class="pf-f"><span>대상 항목 (분모)</span><input type="text" id="pfnd-den-' + id + '" placeholder="예: 관리 대상 건수"></label>' +
+      '<label class="pf-f"><span>완료 항목 (분자)</span><input type="text" id="pfnd-num-' + id + '" placeholder="예: 완료 건수"></label></div>' +
+      '<div class="pf-link-pick" aria-label="연결 팀 KPI (선행지표만)"><span class="pf-sub">연결 팀 KPI (선행지표만)</span>' + (D.mainKpis || []).map(function (k) {
+        return '<label><input type="checkbox" data-pfnd-kpi="' + id + '" value="' + esc(k.id) + '">KPI ' + esc(k.no) + " " + esc(k.name) + "</label>";
+      }).join("") + '</div><div class="pf-save"><button class="btn" data-pfnd-add="' + id + '">지표 추가</button></div></div></details>';
   }
   /* 담당자 카드: 개인 지표가 있으면 표시, 없으면 추후 등록 안내 */
   function pfBoardBlock(m) {
     var leads = (D.leadDefs || []).filter(function (l) { return l.member === m.id; });
     var lags = (D.lagDefs || []).filter(function (g) { return g.member === m.id; });
-    if (!leads.length && !lags.length) return '<div class="bempty">개인 선행·후행지표는 추후 별도 등록합니다.</div>';
+    var form = edt(m.id) ? pfDefAddForm(m) : "";
+    if (!leads.length && !lags.length) return '<div class="bempty">개인 선행·후행지표는 추후 별도 등록합니다.</div>' + form;
     var o = pfBoardOpen[m.id] !== false;
     return '<button class="pf-h' + (o ? " on" : "") + '" data-pf-board="' + esc(m.id) + '" aria-expanded="' + o + '"><span class="chev" aria-hidden="true">▶</span><span class="k">개인 선행·후행지표 · ' + esc(pfMonth) + '</span><span class="c num">' + (leads.length + lags.length) + "</span></button>" +
       '<div class="pf-body' + (o ? " on" : "") + '"><div class="pfb-list">' +
-      '<div class="pfb-sep">개인 선행지표 ' + leads.length + "개</div>" + leads.map(function (l) { return pfBoardRow("lead", l); }).join("") +
-      '<div class="pfb-sep">개인 후행지표 ' + lags.length + "개 · 담당 업체·현장 기준</div>" + lags.map(function (g) { return pfBoardRow("lag", g); }).join("") +
-      "</div></div>";
+      '<div class="pfb-sep">개인 선행지표 ' + leads.length + "개</div>" + leads.map(pfBoardLead).join("") +
+      '<div class="pfb-sep">개인 후행지표 ' + lags.length + "개 · 담당 업체·현장 기준</div>" + lags.map(pfBoardLag).join("") +
+      "</div></div>" + form;
   }
 
   /* ---------- 상세 창 ---------- */
@@ -2232,7 +2432,7 @@ var PerfCalc = (function () {
         '<span class="sm">' + esc(pfKst(h.at)) + " · " + esc(h.by || "미입력") + (ch ? "<br>" + esc(ch) : "") + (h.note ? "<br>메모: " + esc(h.note) : "") + "</span></div>";
     }).join("");
   }
-  function pfMonthlyRows(ref) {
+  function pfMonthlyRows(ref, def) {
     var recs = (D.perfMonthly || []).filter(function (r) { return r.ref === ref; })
       .sort(function (a, b) { return a.month < b.month ? 1 : -1; });
     if (!recs.length) return '<div class="pf-empty">아직 저장된 월별 실적이 없습니다.</div>';
@@ -2240,7 +2440,7 @@ var PerfCalc = (function () {
       var r = PC.rate(x);
       return '<div class="pfr"><span class="nm num">' + esc(x.month) + '</span><span class="val num">' +
         (r.state === "ok" ? pf1(r.value) + "%" : r.state === "empty" ? "대상 없음" : "미측정") + "</span>" +
-        '<span class="sm">' + esc(pfCalcText(r)) + " · " + esc(x.updatedBy || "미입력") + " · " + esc(pfKst(x.updatedAt)) + "</span></div>";
+        '<span class="sm">' + esc(pfCalcText(r)) + (def && pfTasksOf(def).length ? " · 업무 진행률 " + Math.round(PC.workStats(pfTasksOf(def), x).value) + "%" : "") + " · " + esc(x.updatedBy || "미입력") + " · " + esc(pfKst(x.updatedAt)) + "</span></div>";
     }).join("");
   }
   function pfFieldNum(name, label, val, extra) {
@@ -2270,11 +2470,9 @@ var PerfCalc = (function () {
       html += '<div class="pf-sec"><h3>' + esc(x.n) + " — " + esc(x.rule) + '</h3><div class="pf-form">' +
         pfFieldNum("u." + x.k + ".den", "L2 영업활동 대상 수", v.den) + pfFieldNum("u." + x.k + ".num", "L3 도달 대상 수", v.num) + "</div></div>";
     });
-    if (def.tasks) {
-      var c = r.checks || {}, done = def.tasks.filter(function (t, i) { return c["t" + (i + 1)]; }).length;
-      html += '<div class="pf-sec"><h3>세부업무 체크리스트 (' + done + " / " + def.tasks.length + ')</h3><div class="pf-chk">' + def.tasks.map(function (t, i) {
-        return '<label><input type="checkbox" data-pf-chk="t' + (i + 1) + '"' + (c["t" + (i + 1)] ? " checked" : "") + "><span>" + (i + 1) + ". " + esc(t) + "</span></label>";
-      }).join("") + "</div></div>";
+    if (pfM.type === "lead") {
+      var ws = PC.workStats(pfTasksOf(def), rec);
+      html += '<div class="pf-sec"><h3>세부업무 — 업무 진행률 ' + (ws.value == null ? "—" : Math.round(ws.value) + "%") + " · 완료 " + ws.done + " / " + ws.total + '</h3><div class="pf-sub" style="margin-bottom:6px">상태와 진행률은 바꾸는 즉시 저장됩니다. 달성률에는 영향을 주지 않습니다.</div>' + pfSubRows(def, pfM.month, "m", false) + "</div>";
     }
     html += '<div class="pf-sec"><div class="pf-form">' +
       '<label class="pf-f w"><span>작업 메모 — 로그인 없이 읽히는 저장소이므로 업체명 대신 업체 식별번호를 적어 주세요</span><textarea rows="2" id="pfNote"></textarea></label>' +
@@ -2304,9 +2502,9 @@ var PerfCalc = (function () {
       '<div class="pf-rate">' + pfValHtml(r) + pfModeTag(r) + pfRateDelta(def.id, pfM.month) + "</div>" + pfMeter(r, def.target) + "</div>" +
       '<div class="pf-sec"><h3>실적 입력</h3>' + pfRecForm(def, rec) + "</div>" +
       '<div class="pf-sec"><h3>연결된 KPI · 가중치</h3>' + (links || '<div class="pf-empty">연결된 KPI가 없습니다.</div>') + "</div>" +
-      '<div class="pf-sec"><h3>월별 실적</h3>' + pfMonthlyRows(def.id) + "</div>" +
-      '<div class="pf-sec"><h3>최근 작업 이력</h3>' + pfHistRows(hist.filter(function (h) { return h.note || h.checks; }), "작업 메모가 아직 없습니다.") + "</div>" +
-      '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(hist.filter(function (h) { return (h.changes || []).length; }), "변경 이력이 아직 없습니다.") + "</div>";
+      '<div class="pf-sec"><h3>월별 실적</h3>' + pfMonthlyRows(def.id, def) + "</div>" +
+      '<div class="pf-sec"><h3>최근 작업 이력</h3>' + pfHistRows(hist.filter(function (h) { return h.note || h.checks || h.kind === "task"; }), "작업 이력이 아직 없습니다.") + "</div>" +
+      '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(hist.filter(function (h) { return (h.changes || []).length && h.kind !== "task"; }), "변경 이력이 아직 없습니다.") + "</div>";
   }
   function pfFormMember(k) { // 가중치 화면에서 볼 팀원
     var list = pfMembersOf(k);
@@ -2440,7 +2638,6 @@ var PerfCalc = (function () {
         out.units[a[1]][a[2]] = v;
       } else out[k] = v;
     });
-    $$("[data-pf-chk]", m).forEach(function (el) { if (el.checked) out.checks[el.getAttribute("data-pf-chk")] = true; });
     return out;
   }
   function pfPreview(def) {
@@ -2463,7 +2660,7 @@ var PerfCalc = (function () {
       };
     });
     $$("input,textarea,select", m).forEach(function (el) {
-      if (el.id === "pfmMonth") return;
+      if (el.id === "pfmMonth" || el.hasAttribute("data-sub-pct") || el.hasAttribute("data-add-for")) return;
       var mark = function () { if (el.id !== "pfActor") pfM.dirty = true; };
       el.addEventListener("input", mark); el.addEventListener("change", mark);
     });
@@ -2570,18 +2767,15 @@ var PerfCalc = (function () {
       cmp(x.n + " 대상", ((old.units || {})[x.k] || {}).den, (f.units[x.k] || {}).den);
       cmp(x.n + " 도달", ((old.units || {})[x.k] || {}).num, (f.units[x.k] || {}).num);
     });
-    var oc = Object.keys(old.checks || {}).length, nc = Object.keys(f.checks).length;
-    var chkChanged = JSON.stringify(Object.keys(old.checks || {}).sort()) !== JSON.stringify(Object.keys(f.checks).sort());
-    if (!changes.length && !chkChanged && !note) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
-    var rec = { id: id, ref: def.id, month: pfM.month, mode: f.mode, metrics: f.metrics, units: f.units, checks: f.checks,
+    if (!changes.length && !note) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
+    var rec = { id: id, ref: def.id, month: pfM.month, mode: f.mode, metrics: f.metrics, units: f.units, checks: old.checks || {}, prog: old.prog || {},
       updatedAt: new Date().toISOString(), updatedBy: by, rev: curRev + 1 };
     if (f.den != null) rec.den = f.den;
     if (f.num != null) rec.num = f.num;
     if (f.direct != null) rec.direct = f.direct;
     if (cur) D.perfMonthly[D.perfMonthly.indexOf(cur)] = rec; else D.perfMonthly.push(rec);
-    var hist = { ref: def.id, month: pfM.month, kind: "value", by: by, summary: changes.length ? "실적 변경" : chkChanged ? "세부업무 체크" : "작업 메모", changes: changes };
+    var hist = { ref: def.id, month: pfM.month, kind: "value", by: by, summary: changes.length ? "실적 변경" : "작업 메모", changes: changes };
     if (note) hist.note = note;
-    if (chkChanged) hist.checks = "세부업무 체크 " + oc + " → " + nc;
     pfPushHist(hist);
     pfCommit("저장했습니다 — 달성률과 KPI 선행점수를 다시 계산했습니다");
   }
@@ -2663,6 +2857,146 @@ var PerfCalc = (function () {
     pfCommit("저장했습니다");
   }
 
+  /* 세부업무: 누르는 즉시 저장. 항목(월별 기록) 하나만 보내고 달성률 입력값은 건드리지 않는다 */
+  function pfPersistNow() {
+    save();
+    clearTimeout(FB.pushTimer);
+    flushFbPatch();
+  }
+  function pfDrawKeep() { // 상세 창에서 입력 중인 값을 유지한 채 다시 그린다
+    var def = pfDef(pfM.type, pfM.id), m = $("#pfModal"), vals = [], mode = $("input[name=pfmode]:checked", m);
+    var modeV = mode ? mode.value : null;
+    $$("[data-pf],#pfNote,#pfActor", m).forEach(function (el) { vals.push([el.id || el.getAttribute("data-pf"), el.value, !!el.id]); });
+    pfDraw();
+    m = $("#pfModal");
+    if (modeV) { var r = $("input[name=pfmode][value=" + modeV + "]", m); if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event("change")); } }
+    vals.forEach(function (v) { var el = v[2] ? $("#" + v[0], m) : $('[data-pf="' + v[0] + '"]', m); if (el) el.value = v[1]; });
+    if ($("#pfPreview", m)) pfPreview(def);
+  }
+  function pfSubSet(id, month, i, pct) {
+    var def = pfFind("leadDefs", id); if (!def) return;
+    var by = pfActorOrAsk(); if (!by) return;
+    var name = pfTasksOf(def)[i]; if (name == null) return;
+    var cur = pfRec(id, month), oldRev = cur ? (cur.rev || 0) : 0, before = PC.taskPct(cur, i);
+    pct = Math.max(0, Math.min(100, Math.round(pct)));
+    if (pct === before) return;
+    var rec = cur ? clone(cur) : { id: id + "_" + month, ref: id, month: month, mode: "auto" };
+    rec.prog = rec.prog || {};
+    rec.prog["t" + (i + 1)] = pct;
+    if (rec.checks) delete rec.checks["t" + (i + 1)];
+    rec.updatedAt = new Date().toISOString(); rec.updatedBy = by; rec.rev = oldRev + 1;
+    if (cur) D.perfMonthly[D.perfMonthly.indexOf(cur)] = rec; else D.perfMonthly.push(rec);
+    pfPushHist({ ref: id, month: month, kind: "task", by: by, summary: "세부업무 진행률 변경", changes: [{ f: name, from: before + "%", to: pct + "%" }] });
+    pfPersistNow();
+    var keep = pfM && pfM.dirty;
+    if (pfM && pfM.id === id && pfM.month === month && pfM.baseRev === oldRev) pfM.baseRev = rec.rev;
+    repaint(true);
+    if (keep) pfDrawKeep();
+  }
+  function pfSubAdd(id, name) {
+    var def = pfFind("leadDefs", id); if (!def || !name) return;
+    var by = pfActorOrAsk(); if (!by) return;
+    def.tasks = def.tasks || [];
+    def.tasks.push(name); // 번호가 기록의 키이므로 뒤에만 붙인다
+    def.rev = (def.rev || 0) + 1; def.updatedAt = new Date().toISOString(); def.updatedBy = by;
+    pfPushHist({ ref: id, kind: "def", by: by, summary: "세부업무 추가", changes: [{ f: "세부업무", from: "없음", to: name }] });
+    pfPersistNow();
+    var keep = pfM && pfM.dirty;
+    if (pfM && pfM.id === id) pfM.baseDefRev = def.rev;
+    repaint(true);
+    if (keep) pfDrawKeep();
+    toast("세부업무를 추가했습니다");
+  }
+  function pfTouchProject(pj) {
+    pj.updatedAt = new Date().toISOString();
+    var by = pfActor(); if (by) pj.updatedBy = by;
+  }
+  function pfTaskSet(key, pct) {
+    var a = parseKey(key), pj = project(a.id); if (!pj || !pj.tasks || !pj.tasks[a.i]) return;
+    pct = Math.max(0, Math.min(100, Math.round(pct)));
+    if (Number(pj.tasks[a.i].p) === pct) return;
+    pj.tasks[a.i].p = pct;
+    pfTouchProject(pj);
+    pfPersistNow();
+    repaint(true);
+  }
+  function pfDefAdd(mid) {
+    var name = ($("#pfnd-name-" + mid).value || "").trim(), den = ($("#pfnd-den-" + mid).value || "").trim(), num = ($("#pfnd-num-" + mid).value || "").trim();
+    if (!name || !den || !num) { toast("지표명과 대상·완료 항목을 모두 적어 주세요"); return; }
+    var by = pfActorOrAsk(); if (!by) return;
+    var lag = $("#pfnd-type-" + mid).value === "lag", col = lag ? "lagDefs" : "leadDefs", pre = lag ? "LG" : "LI";
+    D[col] = D[col] || [];
+    var mine = D[col].filter(function (x) { return x.member === mid; }).length, n = mine + 1, id = pre + mid + n;
+    while (pfFind(col, id)) { n++; id = pre + mid + n; }
+    var def = { id: id, no: "①②③④⑤⑥⑦⑧⑨⑩".charAt(Math.min(mine, 9)), name: name, member: mid, owner: String(member(mid).name).trim() || "미지정", rev: 0, measure: den + " · " + num,
+      formula: num + " ÷ " + den + " × 100", denLabel: den, numLabel: num, src: "수동 관리", linkNote: "연동 대기" };
+    if (lag) def.scope = String(member(mid).name).trim() + " 담당";
+    else { def.cycle = "미설정"; def.tasks = []; def.purpose = ""; def.targetText = ""; }
+    D[col].push(def);
+    if (!lag) $$('[data-pfnd-kpi="' + mid + '"]').forEach(function (el) {
+      if (!el.checked) return;
+      var k = pfFind("mainKpis", el.value); if (!k) return;
+      k.links = (k.links || []).concat([{ li: id, rel: "core" }]); k.rev = (k.rev || 0) + 1;
+    });
+    pfPushHist({ ref: id, kind: "def", by: by, summary: "개인 지표 추가", changes: [{ f: "지표", from: "없음", to: name }] });
+    pfPersistNow();
+    repaint(true);
+    toast("개인 지표를 추가했습니다");
+  }
+  /* 다시 그려도 사라지지 않게 문서 전체에서 한 번만 받는다 */
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("[data-sub-cycle],[data-sub-add],[data-task-cycle],[data-task-add],[data-proj-add],[data-pfb-acc],[data-pf-card],[data-pf-member],[data-pf-stale-proj],[data-pfnd-add]") : null;
+    if (!t) return;
+    if (t.hasAttribute("data-sub-cycle")) {
+      var id = t.getAttribute("data-sub-cycle"), mo = t.getAttribute("data-month"), i = +t.getAttribute("data-i"), def = pfFind("leadDefs", id);
+      if (def) pfSubSet(id, mo, i, PC.nextStep(PC.taskPct(pfRec(id, mo), i)));
+    } else if (t.hasAttribute("data-sub-add")) {
+      var sid = t.getAttribute("data-sub-add"), inp = $("#pfs-add-" + t.getAttribute("data-scope") + "-" + sid), v = inp ? (inp.value || "").trim() : "";
+      if (v) pfSubAdd(sid, v);
+    } else if (t.hasAttribute("data-task-cycle")) {
+      var k = t.getAttribute("data-task-cycle"), a = parseKey(k), pj = project(a.id);
+      if (pj && pj.tasks && pj.tasks[a.i]) pfTaskSet(k, PC.nextStep(Number(pj.tasks[a.i].p) || 0));
+    } else if (t.hasAttribute("data-task-add")) {
+      var pid = t.getAttribute("data-task-add"), p2 = project(pid), box = $("#pfa-task-" + pid), name = box ? (box.value || "").trim() : "";
+      if (p2 && name) { p2.tasks = p2.tasks || []; p2.tasks.push({ t: name, p: 0, n: "", r: "" }); jOpen[pid] = true; pfTouchProject(p2); pfPersistNow(); repaint(true); toast("세부업무를 추가했습니다"); }
+    } else if (t.hasAttribute("data-proj-add")) {
+      var mid = t.getAttribute("data-proj-add"), pb = $("#pfa-proj-" + mid), pn = pb ? (pb.value || "").trim() : "";
+      if (pn) {
+        var nid = newId(mid.slice(0, 1).toUpperCase() + "X"), np = { id: nid, prog: D.programs[0] ? D.programs[0].id : "", owner: mid, name: pn, note: "", tasks: [] };
+        pfTouchProject(np); D.projects.push(np); jOpen[nid] = true; pfPersistNow(); repaint(true); toast("프로젝트를 추가했습니다");
+      }
+    } else if (t.hasAttribute("data-pfb-acc")) {
+      var ak = t.getAttribute("data-pfb-acc"); pfBoardAcc[ak] = !pfBoardAcc[ak]; repaint(true);
+    } else if (t.hasAttribute("data-pf-card")) {
+      var ck = t.getAttribute("data-pf-card"); pfCardOpen[ck] = !pfCardOpen[ck];
+      try { localStorage.setItem(KEY_CARDOPEN, JSON.stringify(pfCardOpen)); } catch (err) {}
+      repaint(true);
+    } else if (t.hasAttribute("data-pf-member")) {
+      pfMemberFilter = t.getAttribute("data-pf-member"); repaint(true);
+    } else if (t.hasAttribute("data-pf-stale-proj")) {
+      var sp = project(t.getAttribute("data-pf-stale-proj"));
+      if (sp) { jOpen[sp.id] = true; pfCardOpen[sp.owner] = true; pfMemberFilter = sp.owner; repaint(false); }
+    } else if (t.hasAttribute("data-pfnd-add")) {
+      pfDefAdd(t.getAttribute("data-pfnd-add"));
+    }
+  });
+  document.addEventListener("change", function (e) {
+    var t = e.target; if (!t || !t.getAttribute) return;
+    if (t.hasAttribute("data-sub-pct")) pfSubSet(t.getAttribute("data-sub-pct"), t.getAttribute("data-month"), +t.getAttribute("data-i"), Number(t.value) || 0);
+    else if (t.hasAttribute("data-task-pct")) pfTaskSet(t.getAttribute("data-task-pct"), Number(t.value) || 0);
+    else if (t.hasAttribute("data-pe-lead")) {
+      var pj = project(t.getAttribute("data-pe-lead")); if (!pj) return;
+      pj.leads = pj.leads || {};
+      if (t.checked) pj.leads[t.value] = true; else delete pj.leads[t.value];
+      pfTouchProject(pj); pfPersistNow(); repaint(true);
+    } else if (t.id === "pfActorBar") { try { localStorage.setItem(KEY_ACTOR, (t.value || "").trim()); } catch (err) {} }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" || !e.target || !e.target.nextElementSibling) return;
+    var el = e.target;
+    if (el.tagName === "INPUT" && el.parentElement && el.parentElement.classList.contains("pfa-row")) { e.preventDefault(); el.nextElementSibling.click(); }
+  });
+
   /* 복구·초기화가 월별 실적과 이력을 지우지 못하게 한다 */
   function pfKeep(next, prev, prevWins) {
     PF_COLS.forEach(function (col) {
@@ -2691,7 +3025,8 @@ var PerfCalc = (function () {
     function num(k, l) { return '<label class="pf-f"><span>' + esc(l) + '</span><input type="number" inputmode="numeric" min="0" step="1" data-pf-cfg="' + k + '" value="' + (PC.isNum(c[k]) ? esc(c[k]) : "") + '" placeholder="미설정"></label>'; }
     return '<div class="card"><div class="card-h"><h2>팀 KPI·개인 지표 설정</h2></div>' + rows +
       '<div class="pf-sec"><h3>미응답 재연락 기준 (선행지표 ② 안내용 · 메일 기록 연동 전까지 자동 분류하지 않습니다)</h3><div class="pf-form">' +
-      num("noReplyDays", "미응답 판정 기간(일)") + num("resendDays", "재발송 주기(일)") + num("longNoReplyDays", "장기 미응답 기준(일)") + "</div></div></div>";
+      num("noReplyDays", "미응답 판정 기간(일)") + num("resendDays", "재발송 주기(일)") + num("longNoReplyDays", "장기 미응답 기준(일)") + "</div></div>" +
+      '<div class="pf-sec"><h3>진행이 더딘 업무</h3><div class="pf-form">' + num("staleDays", "정체 판단 기간(일, 비우면 7일)") + "</div></div></div>";
   }
   function pfBind() {
     $$("[data-tt]").forEach(function (b) {
@@ -2722,6 +3057,12 @@ var PerfCalc = (function () {
   }
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && pfM) pfClose(false); });
 
+  function pfBoardMembers() {
+    if (pfMemberFilter === "all") return D.members;
+    var f = D.members.filter(function (m) { return m.id === pfMemberFilter; });
+    if (!f.length) { pfMemberFilter = "all"; return D.members; }
+    return f;
+  }
   function pageTasks() {
     if (taskTab !== "work") {
       var tabMid = taskTab.replace("kpi:", "");
@@ -2748,9 +3089,13 @@ var PerfCalc = (function () {
 
     var sts = [{ id: "all", n: "전체" }, { id: "todo", n: "미착수" }, { id: "prog", n: "진행중" }, { id: "done", n: "완료" }];
     var shown = view === "board"
-      ? D.members.reduce(function (a, m) { return a + applyFilter(all, m.id).length; }, 0) : rows.length;
+      ? pfBoardMembers().reduce(function (a, m) { return a + applyFilter(all, m.id).length; }, 0) : rows.length;
 
+    var memberBtns = [{ id: "all", name: "전체" }].concat(D.members).map(function (m) {
+      return '<button data-pf-member="' + esc(m.id) + '" aria-pressed="' + (pfMemberFilter === m.id) + '">' + esc(m.name) + "</button>";
+    }).join("");
     var filters = '<div class="filters">' +
+      '<div class="fg" role="group" aria-label="팀원 필터">' + memberBtns + "</div>" +
       '<div class="fg">' + sts.map(function (o) {
         return '<button data-f="st" data-v="' + esc(o.id) + '" aria-pressed="' + (flt.st === o.id) + '">' + esc(o.n) + "</button>";
       }).join("") + "</div>" +
@@ -2764,17 +3109,17 @@ var PerfCalc = (function () {
       '<div class="fg vtoggle">' +
       '<button data-view="board" aria-pressed="' + (view === "board") + '">사람별 보드</button>' +
       '<button data-view="list" aria-pressed="' + (view === "list") + '">전체 목록</button></div>' +
-      editMenu() + "</div>";
+      editMenu() + pfActorField() + "</div>";
 
     var body = view === "board"
-      ? '<div class="board">' + D.members.map(function (m) { return personCol(m, all); }).join("") + "</div>"
+      ? '<div class="board">' + pfBoardMembers().map(function (m) { return personCol(m, all); }).join("") + "</div>"
       : taskTable(rows);
 
     return '<div class="phead"><div><h1>팀 업무 현황</h1><div class="hs">' +
       (edit ? "편집 중 — 업무를 누르면 바로 고칠 수 있고, 루틴·프로젝트·하위업무를 추가하거나 지울 수 있습니다."
         : "담당자별 루틴 · 프로젝트 · 하위업무. 이름을 누르면 그 사람 업무가 모두 펼쳐집니다.") + "</div></div>" +
       '<div class="meta">기준일 <b class="num">' + esc(D.meta.baseDate) + "</b>" + printBtn() + "</div></div>" +
-      pfTabs() + pfTeamSection() + goalBanner() + strip + filters + body + LEGEND;
+      pfTabs() + pfTeamSection() + goalBanner() + strip + pfStaleSection() + filters + body + LEGEND;
   }
 
   /* ============================================================
@@ -3661,6 +4006,8 @@ var PerfCalc = (function () {
         var mid = b.getAttribute("data-person"), ps = projectsOf(mid);
         var all = ps.length > 0 && ps.every(function (p) { return jOpen[p.id]; });
         ps.forEach(function (p) { jOpen[p.id] = !all; });
+        pfCardOpen[mid] = true;
+        try { localStorage.setItem(KEY_CARDOPEN, JSON.stringify(pfCardOpen)); } catch (err) {}
         repaint(true);
       };
     });
@@ -3734,6 +4081,7 @@ var PerfCalc = (function () {
             }
           }
         }
+        pfTouchProject(pj);
         el.classList.add("dirty"); save();
       };
       el.oninput = handler;
