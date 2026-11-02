@@ -657,6 +657,108 @@ input.dirty,select.dirty{background:var(--peach);border-color:var(--brand)}
     -webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- KPI·선행지표 관리 ---------- */
+.pf-tabs{margin-bottom:18px;width:fit-content}
+.pf-tabs button{padding:8px 16px;font-size:13.5px}
+.pf-status{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--text-3);margin-bottom:22px}
+.pf-status b{color:var(--ink)}
+.pf-msel{min-height:38px;font-size:13px}
+.pf-h2{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:30px 0 12px}
+.pf-h2:first-of-type{margin-top:0}
+.pf-h2 h2{font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.pf-h2 span{font-size:12px;color:var(--text-3)}
+.pf-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.pf-grid.k3{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}
+.pf-card{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px 17px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pf-card.support{background:var(--surf)}
+.pf-card.k{border-top:3px solid var(--brand)}
+.pf-t{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.pf-t h3{font-size:14.5px;font-weight:800;letter-spacing:-.01em;line-height:1.4;min-width:0}
+.pf-t h3 .no{color:var(--brand-2);margin-right:4px}
+.pf-sub{font-size:12px;color:var(--text-3);line-height:1.55}
+.pf-sub b{color:var(--ink);font-weight:700}
+.pf-vals{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pf-v{border:1px solid var(--line-2);border-radius:8px;padding:10px 12px;min-width:0}
+.pf-v .l{display:block;font-size:11.5px;font-weight:700;color:var(--text-3);line-height:1.4}
+.pf-v .n{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+.pf-v .n small{font-size:12px;font-weight:700;margin-left:1px}
+.pf-v .n.txt{font-size:15px;line-height:1.7;color:var(--text-3)}
+.pf-v .s{display:block;font-size:11.5px;color:var(--text-3);line-height:1.5}
+.pf-rate{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pf-rate .n{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.pf-rate .n small{font-size:12px;font-weight:700;margin-left:1px}
+.pf-rate .n.txt{font-size:14.5px;color:var(--text-3)}
+.pf-d{font-size:12px;font-weight:700;white-space:nowrap}
+.pf-d.up{color:var(--ok)} .pf-d.down{color:var(--bad)} .pf-d.same,.pf-d.na{color:var(--text-2);font-weight:600}
+.pf-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:100px;background:var(--tint);color:var(--brand);white-space:nowrap}
+.pf-tag.direct{background:var(--peach);color:var(--warn)}
+.pf-tag.link{background:var(--surf);color:var(--text-3);border:1px solid var(--line);white-space:normal}
+.pf-tags{display:flex;flex-wrap:wrap;gap:4px}
+.pf-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:2px}
+.pf-acts .mini{min-height:36px;padding:6px 11px;font-size:12px}
+.pf-warn{font-size:12px;color:var(--warn);background:var(--warn-bg);border-radius:6px;padding:6px 9px;line-height:1.5}
+.pf-bad{font-size:12.5px;color:var(--bad);background:var(--bad-bg);border-radius:6px;padding:7px 10px;line-height:1.5;margin-top:10px}
+.pf-list{font-size:12.5px;line-height:1.7;margin:0;padding-left:18px;color:var(--text-3)}
+/* 상세 창 */
+#pfModal{display:none}
+#pfModal.on{display:flex;position:fixed;inset:0;z-index:90;background:rgba(33,42,62,.45);align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto}
+body.pf-lock{overflow:hidden}
+.pf-m{background:var(--bg);border-radius:12px;width:100%;max-width:760px;box-shadow:0 12px 40px -12px rgba(33,42,62,.5);min-width:0}
+.pf-m-h{position:sticky;top:-28px;background:var(--bg);border-bottom:1px solid var(--line);padding:15px 20px 0;border-radius:12px 12px 0 0;z-index:2}
+.pf-m-t{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.pf-m-t h2{font-size:16px;font-weight:800;line-height:1.4;min-width:0}
+.pf-x{flex:0 0 auto;width:40px;height:40px;border-radius:8px;text-align:center;font-size:18px;color:var(--text-3);border:1px solid var(--line)}
+.pf-x:hover{background:var(--surf)}
+.pf-vw{display:flex;gap:2px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.pf-vw button{padding:9px 13px;font-size:13px;font-weight:700;color:var(--text-3);border-bottom:3px solid transparent;white-space:nowrap}
+.pf-vw button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--brand)}
+.pf-m-b{padding:6px 20px 22px}
+.pf-sec{margin-top:18px}
+.pf-sec > h3{font-size:12.5px;font-weight:800;color:var(--brand);margin-bottom:8px}
+.pf-kv{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 12px;font-size:13px;line-height:1.6}
+.pf-kv dt{color:var(--text-3);font-weight:700;font-size:12px;padding-top:1px}
+.pf-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.pf-form[hidden]{display:none}
+.pf-f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pf-f.w{grid-column:1 / -1}
+.pf-f > span{font-size:12px;font-weight:700;color:var(--text-3);line-height:1.4}
+.pf-f input,.pf-f select,.pf-f textarea{width:100%;min-height:42px;font-size:14px;border:1px solid var(--line);border-radius:7px;padding:8px 10px;background:var(--bg)}
+.pf-f input[readonly]{background:var(--surf);color:var(--text-3)}
+.pf-f input:focus,.pf-f select:focus,.pf-f textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(57,72,103,.1)}
+.pf-mode{display:flex;gap:6px;flex-wrap:wrap}
+.pf-mode label{display:flex;align-items:center;gap:7px;min-height:42px;padding:8px 13px;border:1px solid var(--line);border-radius:7px;font-size:13px;font-weight:700;cursor:pointer}
+.pf-mode input{width:17px;height:17px;accent-color:var(--brand)}
+.pf-preview{background:var(--surf);border-radius:7px;padding:9px 12px;font-size:13px;line-height:1.55}
+.pf-preview b{font-size:15px}
+.pf-save{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pf-save .btn{min-height:42px;padding:9px 18px}
+.pf-chk{display:grid;gap:2px}
+.pf-chk label{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;padding:8px 6px;border-radius:6px;cursor:pointer}
+.pf-chk label:hover{background:var(--surf)}
+.pf-chk input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--brand)}
+.pf-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;padding:9px 0;border-top:1px solid var(--line-2);font-size:13px;align-items:center}
+.pf-row:first-child{border-top:0}
+.pf-row .nm{font-weight:700;min-width:0}
+.pf-row .sm{grid-column:1 / -1;font-size:12px;color:var(--text-3);line-height:1.5;word-break:break-word}
+.pf-row .val{text-align:right;font-weight:700;white-space:nowrap}
+.pf-wrow{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:4px 10px;padding:9px 0;border-top:1px solid var(--line-2);align-items:center}
+.pf-wrow:first-child{border-top:0}
+.pf-wrow .nm{font-size:13px;font-weight:700;min-width:0}
+.pf-wrow .sm{display:block;font-size:12px;font-weight:500;color:var(--text-3);line-height:1.5}
+.pf-wrow input{width:100%;min-height:42px;font-size:14px;text-align:right;border:1px solid var(--line);border-radius:7px;padding:8px 10px}
+.pf-empty{font-size:12.5px;color:var(--text-2);padding:8px 0}
+@media (max-width:640px){
+  .pf-vals{grid-template-columns:1fr}
+  #pfModal.on{padding:0;background:var(--bg)}
+  .pf-m{border-radius:0;box-shadow:none;max-width:none;min-height:100%}
+  .pf-m-h{top:0;border-radius:0;padding:12px 14px 0}
+  .pf-m-b{padding:4px 14px 28px}
+  .pf-form{grid-template-columns:minmax(0,1fr)}
+  .pf-f input,.pf-f select,.pf-f textarea,.pf-wrow input{font-size:16px}
+  .pf-kv{grid-template-columns:78px minmax(0,1fr)}
+}
+@media print{ #pfModal{display:none!important} }
 </style>
 </head>
 <body>
@@ -672,6 +774,7 @@ input.dirty,select.dirty{background:var(--peach);border-color:var(--brand)}
 </header>
 <main class="main" id="view"></main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="pfModal"></div>
 <script>/* ============================================================
    시드 데이터 — B2B운영팀
    출처: 그로스보드(최세혁, 26.08.21) / B2B 업무 마인드맵(신한솔)
@@ -1122,6 +1225,238 @@ const SEED = {
 };
 </script>
 <script>/* ============================================================
+   KPI·선행지표 정의와 계산 (화면·저장과 분리된 순수 계산)
+   - 실제 KPI·후행지표는 입력된 실적으로만 계산한다. 선행점수가 실적을 바꾸지 않는다.
+   - 자료 없음은 0이 아니라 '미측정', 분모 0은 '대상 없음'으로 구분한다.
+   ============================================================ */
+var PERF_SEED = {
+  perfConfig: { schema: 1, noReplyDays: null, resendDays: null, longNoReplyDays: null },
+  perfMonthly: [],
+  perfHistory: [],
+  mainKpis: [
+    { id: "MK1", no: "①", name: "신규업체 첫 서비스 이용률",
+      purpose: "신규 MOU 체결업체가 협약만 하고 끝나지 않고 실제 POUR 서비스를 이용하도록 관리",
+      formula: "첫 서비스 이용 신규업체 수 ÷ 측정 대상 신규 협약업체 수 × 100",
+      denLabel: "측정 대상 신규 협약업체 수", numLabel: "첫 서비스 이용 신규업체 수",
+      accept: ["기술자문 문의", "공법설명회 및 PT", "컨설팅 요청", "기존 L3 기준에 포함되는 기타 서비스"],
+      manage: ["신규 MOU 체결업체 확인", "협약 후 서비스 이용 여부 확인", "아직 이용하지 않은 업체 별도 관리", "담당자에게 연락 및 이용 안내", "첫 서비스 이용 시 이용일 기록"],
+      defNote: "확인 필요 — 명령서의 인정 활동에는 기술자문 문의가 있으나, 통합 KPI 대시보드의 현행 L3 기준(2026-10-30 확정)은 컨설팅·PT·기타문의·샘플·카탈로그이고 기술자문은 영업보고(L2)입니다. 기준이 확정될 때까지 입력 시 어느 기준으로 셌는지 메모에 남겨 주세요.",
+      src: "수동 관리", linkNote: "원천(고객관리카드·통합 KPI 대시보드) 자동 연동 대기",
+      links: [{ li: "LI01", rel: "core" }, { li: "LI02", rel: "core" }, { li: "LI03", rel: "core" }, { li: "LI04", rel: "core" }, { li: "LI06", rel: "core" }, { li: "LI05", rel: "ref" }, { li: "LI09", rel: "ref" }],
+      weights: { LI05: 0, LI09: 0 }, rev: 0 },
+    { id: "MK2", no: "②", name: "첫 이용 후 60일 내 다른 현장 재이용률",
+      purpose: "첫 서비스를 이용한 시공사가 다른 현장에서도 POUR 서비스를 다시 이용하도록 관리",
+      formula: "첫 이용 후 60일 이내 다른 현장에서 재이용한 업체 수 ÷ 60일 관찰이 완료된 첫 이용 업체 수 × 100",
+      denLabel: "60일 관찰이 완료된 첫 이용 업체 수", numLabel: "60일 이내 다른 현장 재이용 업체 수",
+      manage: ["업체별 첫 이용일 기록", "첫 이용 현장 확인", "60일 이내 다른 현장 이용 여부 확인", "재이용하지 않은 업체 후속관리", "재이용 발생 시 반영"],
+      defNote: "동일 현장의 추가 문의는 재이용으로 세지 않습니다. 60일이 지나지 않은 업체는 분모에 넣지 않고 '관찰 중'에만 적습니다. 기존 성과지표의 '60일 재문의율'(K6)은 별도 지표로 그대로 둡니다.",
+      metrics: [{ k: "observing", n: "관찰 중 업체 수(분모 제외)", u: "곳" }],
+      src: "수동 관리", linkNote: "원천(고객관리카드·통합 KPI 대시보드) 자동 연동 대기",
+      links: [{ li: "LI07", rel: "core" }, { li: "LI04", rel: "core" }, { li: "LI05", rel: "core" }, { li: "LI06", rel: "core" }],
+      weights: {}, rev: 0 },
+    { id: "MK3", no: "③", name: "현장·공종·시공사별 서비스 이용률",
+      purpose: "영업활동이 실제 서비스 이용으로 얼마나 연결되는지 확인",
+      formula: "L3 도달 대상 수 ÷ L2 영업활동 대상 수 × 100 (대표값: 시공사+현장+공종 1건 단위)",
+      denLabel: "L2 영업활동 대상 수 (시공사+현장+공종)", numLabel: "L3 도달 대상 수 (시공사+현장+공종)",
+      manage: ["L2 영업활동 확인", "L3 서비스 이용 여부 확인", "미전환 대상 파악", "공종별 전환 현황 분석", "시공사별 서비스 이용 현황 분석"],
+      defNote: "대표값은 시공사+현장+공종을 1건으로 세어 같은 대상을 두 번 세지 않습니다. 현장 단위(시공사+현장), 시공사 단위(시공사 1곳 1회)는 각각 따로 적습니다. 공종별·시공사별 상세 목록은 연동 대기입니다.",
+      units: [{ k: "site", n: "현장 단위", rule: "시공사+현장 1건" }, { k: "contractor", n: "시공사 단위", rule: "시공사 1곳 1회" }],
+      src: "수동 관리", linkNote: "원천(통합 KPI 대시보드) 자동 연동 대기",
+      links: [{ li: "LI01", rel: "core" }, { li: "LI02", rel: "core" }, { li: "LI04", rel: "core" }, { li: "LI05", rel: "core" }, { li: "LI06", rel: "core" }, { li: "LI08", rel: "ref" }, { li: "LI09", rel: "ref" }],
+      weights: { LI08: 0, LI09: 0 }, rev: 0 }
+  ],
+  leadDefs: [
+    { id: "LI01", no: "①", name: "1·2차 미팅 누락 방지", owner: "미지정", cycle: "매일", rev: 0,
+      purpose: "고객관리카드를 활용해 시공사 및 협력사의 미팅과 후속 업무 누락 방지",
+      reported: "고객관리카드 구축 후 1·2차 미팅 누락 0건 (명령서 기재)",
+      tasks: ["신규 시공사 및 협력사 미팅 접수", "1차 미팅 일정 등록", "1차 미팅 완료 여부 확인", "2차 미팅 필요 여부 확인", "2차 미팅 일정 등록", "미팅 전 담당자 안내", "미팅 후 진행현황 업데이트", "미완료 및 후속조치 대상 확인", "미팅 일정 누락 여부 점검"],
+      measure: "미팅 누락 건수 · 일정 등록률 · 예정 미팅 후속조치 완료율",
+      targetText: "미팅 누락 0건 · 일정 등록률 100% · 후속조치 완료율 100%", target: 100,
+      formula: "정상 관리 완료 미팅 ÷ 관리 대상 미팅 × 100",
+      denLabel: "관리 대상 미팅", numLabel: "정상 관리 완료 미팅",
+      metrics: [{ k: "missed", n: "미팅 누락 건수", u: "건" }, { k: "schedRate", n: "일정 등록률", u: "%" }, { k: "followRate", n: "후속조치 완료율", u: "%" }],
+      src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LI02", no: "②", name: "미응답 업체 재연락 관리", owner: "미지정", cycle: "매일", rev: 0,
+      purpose: "자료 발송이나 미팅 안내 후 연락이 없는 업체를 놓치지 않도록 관리",
+      tasks: ["최초 메일 발송일 기록", "회신 여부 확인", "미응답 업체 분류", "재연락 예정일 설정", "안내메일 재발송", "필요 시 전화 연락", "재연락 결과 기록", "회신 완료 시 관리 상태 변경", "장기 미응답 업체 별도 분류"],
+      measure: "재연락 대상 업체 수 · 재연락 완료 업체 수 · 재연락 완료율 · 재연락 후 회신율",
+      targetText: "", formula: "기한 내 재연락 완료 건수 ÷ 재연락 대상 건수 × 100",
+      denLabel: "재연락 대상 건수", numLabel: "기한 내 재연락 완료 건수",
+      metrics: [{ k: "targets", n: "재연락 대상 업체 수", u: "곳" }, { k: "contacted", n: "재연락 완료 업체 수", u: "곳" }, { k: "replied", n: "재연락 후 회신 업체 수", u: "곳" },
+        { k: "contactRate", n: "재연락 완료율", u: "%", from: ["contacted", "targets"], op: "ratio" }, { k: "replyRate", n: "재연락 후 회신율", u: "%", from: ["replied", "contacted"], op: "ratio" }],
+      src: "수동 관리", linkNote: "메일 발송 기록 연동 대기" },
+    { id: "LI03", no: "③", name: "신규업체 첫 이용 활성화", owner: "미지정", cycle: "매주 점검, 필요 시 상시", rev: 0,
+      purpose: "신규 MOU 업체의 첫 POUR 서비스 이용 유도",
+      tasks: ["신규 MOU 업체 확인", "협약일 기록", "첫 서비스 이용 여부 확인", "미이용 업체 목록 생성", "서비스 안내 및 자료 발송", "기술자문·PT·컨설팅 이용 안내", "후속 연락 일정 관리", "첫 이용 여부 정기 확인", "이용 시 고객관리카드 진행 상태 갱신"],
+      measure: "신규 협약업체 수 · 첫 이용 전 관리 대상 업체 수 · 후속관리 완료 건수 · 첫 이용 전환 업체 수",
+      targetText: "", formula: "후속관리 완료 업체 수 ÷ 후속관리 대상 업체 수 × 100",
+      denLabel: "후속관리 대상 업체 수", numLabel: "후속관리 완료 업체 수",
+      outcome: "실제 성과는 KPI ① 신규업체 첫 서비스 이용률로 별도 계산합니다.",
+      metrics: [{ k: "newMou", n: "신규 협약업체 수", u: "곳" }, { k: "preUse", n: "첫 이용 전 관리 대상 업체 수", u: "곳" }, { k: "converted", n: "첫 이용 전환 업체 수", u: "곳" }],
+      src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LI04", no: "④", name: "고객관리카드 최신화", owner: "미지정", cycle: "매일", rev: 0,
+      purpose: "고객별 활동과 진행 상태를 정확하게 관리해 업무 누락과 중복 방지",
+      tasks: ["신규업체 등록", "MOU 체결 여부 및 체결일 관리", "1·2차 미팅 이력 입력", "기술자문 및 PT 요청 현황 관리", "고객 문의사항 기록", "자료 및 메일 발송 이력 확인", "고객별 최근 활동일 갱신", "미진행 업무 및 후속조치 상태 확인", "업체명·현장명 중복 여부 검토", "고객별 실적 및 매출정보 연결", "누락 정보 및 오류 수정"],
+      measure: "업데이트 대상 건수 · 업데이트 완료 건수 · 정보 누락 건수",
+      targetText: "", formula: "기한 내 최신화 완료 건수 ÷ 업데이트 대상 건수 × 100",
+      denLabel: "업데이트 대상 건수", numLabel: "기한 내 최신화 완료 건수",
+      metrics: [{ k: "missing", n: "정보 누락 건수", u: "건" }],
+      src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LI05", no: "⑤", name: "월말 고객현황 관리", owner: "미지정", cycle: "매월 말", rev: 0,
+      purpose: "매월 고객 활동·진행·이용 현황을 정기 점검하고 다음 달 관리 대상을 선정",
+      tasks: ["월별 신규 협약업체 현황 확인", "기존 업체 활동 현황 확인", "1·2차 미팅 진행상태 점검", "서비스 이용 업체 현황 정리", "미이용 업체 현황 정리", "장기 미활동 업체 확인", "미응답 및 재연락 필요 업체 확인", "재이용 대상 업체 확인", "고객등급 변경 대상 확인", "월말 고객관리 결과 정리", "다음 달 후속관리 대상 확정"],
+      measure: "월말 점검 대상 수 · 점검 완료 수 · 미처리 고객 수",
+      targetText: "", formula: "월말 점검 완료 건수 ÷ 월말 점검 대상 건수 × 100",
+      denLabel: "월말 점검 대상 건수", numLabel: "월말 점검 완료 건수",
+      metrics: [{ k: "open", n: "미처리 고객 수", u: "곳" }],
+      src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LI06", no: "⑥", name: "고객등급 관리", owner: "미지정", cycle: "매월", rev: 0,
+      purpose: "업체별 중요도와 이용 상태를 구분하여 관리 우선순위 설정",
+      tasks: ["신규업체 및 기존업체 구분", "MOU 체결 상태 확인", "최근 활동 이력 확인", "서비스 이용 실적 확인", "다른 현장 재이용 여부 확인", "매출 및 구매 이력 확인", "고객별 등급 계산", "장기 미활동 업체 표시", "등급 상승·하락 이력 기록", "등급별 관리 우선순위 설정"],
+      measure: "등급 산출 대상 수 · 등급 산출 완료 수 · 등급 변동 업체 수",
+      targetText: "", formula: "등급 산출 완료 업체 수 ÷ 등급 산출 대상 업체 수 × 100",
+      denLabel: "등급 산출 대상 업체 수", numLabel: "등급 산출 완료 업체 수",
+      outcome: "고객등급은 기존 등급 기준을 우선 적용합니다. 별도 승인 없이 새로운 등급·점수 기준을 확정하지 않습니다.",
+      metrics: [{ k: "changed", n: "등급 변동 업체 수", u: "곳" }],
+      src: "수동 관리", linkNote: "등급 기준 확인 대기" },
+    { id: "LI07", no: "⑦", name: "기존업체 재이용 관리", owner: "미지정", cycle: "매주", rev: 0,
+      purpose: "서비스를 한 번 이용한 시공사의 다른 현장 재이용 촉진",
+      tasks: ["첫 서비스 이용업체 확인", "최초 이용일 기록", "최초 이용 현장 기록", "60일 재이용 관리기간 계산", "다른 현장 이용 여부 확인", "재이용하지 않은 업체 확인", "후속 안내 및 재연락", "필요 자료 발송", "이용 이력 업데이트", "60일 관찰 결과 기록"],
+      measure: "재이용 관리 대상 업체 수 · 후속관리 완료 업체 수 · 다른 현장 재이용 업체 수",
+      targetText: "", formula: "후속관리 완료 업체 수 ÷ 관리 대상 업체 수 × 100",
+      denLabel: "재이용 관리 대상 업체 수", numLabel: "후속관리 완료 업체 수",
+      outcome: "실제 성과는 KPI ② 60일 내 다른 현장 재이용률로 별도 계산합니다.",
+      metrics: [{ k: "reused", n: "다른 현장 재이용 업체 수", u: "곳" }],
+      src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LI08", no: "⑧", name: "월말실적 자동화 관리", owner: "미지정", cycle: "매월, 자료 요청 시 추가", rev: 0, support: true,
+      purpose: "월말실적 정리 업무를 자동화하고 시공사 자료 제공 대기시간 단축",
+      tasks: ["월말실적 자료 취합", "공고·낙찰·매출 데이터 확인", "업체명 및 현장명 매칭", "자동 집계 결과 확인", "누락 및 오류 검증", "월말실적 양식 생성", "자동화 결과 검토", "요청 자료 제공", "수작업 및 자동화 소요시간 비교", "자료 요청부터 제공까지의 대기시간 기록"],
+      measure: "월말 자동화 처리 대상 수 · 정상 자동처리 완료 수 · 오류 및 수동 수정 건수 · 시공사 자료 제공 평균 대기시간",
+      targetText: "", formula: "정상 자동처리 완료 건수 ÷ 자동처리 대상 건수 × 100",
+      denLabel: "자동처리 대상 건수", numLabel: "정상 자동처리 완료 건수",
+      outcome: "KPI ③에 간접 기여하는 운영 지원지표입니다. 서비스 이용률을 직접 높인다는 근거가 없어 가중치는 기본 0%이며, 효과 검증 후 설정합니다.",
+      metrics: [{ k: "errors", n: "오류 및 수동 수정 건수", u: "건" }, { k: "waitBefore", n: "자동화 전 평균 대기시간", u: "시간" }, { k: "waitAfter", n: "자동화 후 평균 대기시간", u: "시간" },
+        { k: "waitCut", n: "평균 대기시간 감소율", u: "%", from: ["waitBefore", "waitAfter"], op: "cut" }],
+      src: "수동 관리", linkNote: "월말실적 자동화 연동 대기" },
+    { id: "LI09", no: "⑨", name: "플랫폼 → 앱 전환 부담 최소화", owner: "미지정", cycle: "매일 및 매주", rev: 0, support: true,
+      purpose: "기존 플랫폼에서 POUR 파트너스 앱으로 전환하는 과정에서 시공사의 불편과 업무 부담 최소화",
+      tasks: ["기존 플랫폼 이용업체 확인", "앱 전환 대상 업체 확인", "앱 전환 안내메일 발송", "앱 이용 방법 안내", "앱 가이드북 제공", "앱 설치 및 로그인 관련 문의 대응", "앱 이용 불편사항 접수", "미접속 업체 사유 확인", "플랫폼 및 앱 접수 내역 이중 검토", "접수 누락 여부 점검", "앱 사용 관련 문제 해결 및 개선 요청", "전환 후 지속적인 이용 현황 관리"],
+      measure: "앱 전환 관리 대상 업체 수 · 안내 완료 업체 수 · 불편사항 접수 건수 · 불편사항 처리 완료 건수 · 플랫폼·앱 접수 누락 건수",
+      targetText: "", formula: "처리 완료 불편사항 ÷ 처리 대상 불편사항 × 100",
+      denLabel: "처리 대상 불편사항", numLabel: "처리 완료 불편사항",
+      outcome: "KPI ①·③에 간접 기여하는 운영 지원지표입니다. 실제 서비스 이용률에 대한 효과가 확인되기 전까지 가중치는 기본 0%입니다.",
+      metrics: [{ k: "targets", n: "앱 전환 관리 대상 업체 수", u: "곳" }, { k: "guided", n: "안내 완료 업체 수", u: "곳" }, { k: "guideRate", n: "안내 완료율", u: "%", from: ["guided", "targets"], op: "ratio" },
+        { k: "received", n: "불편사항 접수 건수", u: "건" }, { k: "missedIntake", n: "플랫폼·앱 접수 누락 건수", u: "건" }, { k: "appUse", n: "앱 실제 이용률", u: "%" }, { k: "postMissed", n: "앱 전환 후 접수 누락 건수", u: "건" }, { k: "noLogin", n: "미접속 업체 비율", u: "%" }],
+      src: "수동 관리", linkNote: "앱 이용 기록 연동 대기" }
+  ],
+  lagDefs: [
+    { id: "LG1", no: "①", name: "신규업체 첫 이용률", ref: "MK1", rev: 0, measure: "신규 MOU 체결업체 수 · 실제 첫 서비스 이용 업체 수 · 첫 이용 전환율" },
+    { id: "LG2", no: "②", name: "60일 내 재이용률", ref: "MK2", rev: 0, measure: "60일 관찰 완료 업체 수 · 다른 현장 재이용 업체 수 · 실제 재이용률" },
+    { id: "LG3", no: "③", name: "L2 → L3 전환율", ref: "MK3", rev: 0, measure: "영업활동 대상 수 · 서비스 이용 도달 대상 수 · 전환율 · 현장·공종·시공사별 분석" },
+    { id: "LG4", no: "④", name: "장기 미활동 업체 재활성화율", rev: 0, measure: "재활성화 관리 대상 업체 수 · 재활동 업체 수 · 재활성화율",
+      formula: "재활동 업체 수 ÷ 재활성화 관리 대상 업체 수 × 100", denLabel: "재활성화 관리 대상 업체 수", numLabel: "재활동 업체 수", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LG5", no: "⑤", name: "고객등급 상승률", rev: 0, measure: "등급 비교 가능 업체 수 · 등급 상승 업체 수 · 등급 상승률",
+      formula: "등급 상승 업체 수 ÷ 등급 비교 가능 업체 수 × 100", denLabel: "등급 비교 가능 업체 수", numLabel: "등급 상승 업체 수", src: "수동 관리", linkNote: "등급 기준 확인 대기" }
+  ]
+};
+Object.keys(PERF_SEED).forEach(function (k) { SEED[k] = PERF_SEED[k]; });
+
+var PerfCalc = (function () {
+  function isNum(v) { return typeof v === "number" && isFinite(v); }
+  function clamp(v) { return Math.max(0, Math.min(100, v)); }
+  function round1(v) { return Math.round(v * 10) / 10; }
+
+  /* 한 달 실적 → 달성률. none: 미측정 / empty: 대상 없음 / ok: 값 있음 */
+  function rate(rec) {
+    if (!rec) return { state: "none", mode: "auto" };
+    if (rec.mode === "direct") {
+      if (!isNum(rec.direct)) return { state: "none", mode: "direct" };
+      return { state: "ok", value: clamp(rec.direct), mode: "direct" };
+    }
+    if (!isNum(rec.den)) return { state: "none", mode: "auto" };
+    if (rec.den === 0) return { state: "empty", mode: "auto", den: 0, num: rec.num };
+    if (!isNum(rec.num)) return { state: "none", mode: "auto", den: rec.den };
+    return { state: "ok", value: clamp(rec.num / rec.den * 100), mode: "auto", den: rec.den, num: rec.num };
+  }
+
+  /* 가중치 설정 상태 — 비어 있는 칸은 0과 다르다 */
+  function weightStatus(kpi, draft) {
+    var w = draft || kpi.weights || {}, total = 0, unset = [];
+    (kpi.links || []).forEach(function (l) {
+      if (isNum(w[l.li])) total += w[l.li]; else unset.push(l.li);
+    });
+    total = Math.round(total * 100) / 100;
+    return { total: total, unset: unset, complete: unset.length === 0, sum100: Math.abs(total - 100) < 0.01 };
+  }
+
+  /* KPI 선행점수 = Σ(달성률 × 가중치). 미측정은 0으로 바꾸지 않고 산출 대기로 둔다.
+     대상 없음(분모 0)인 지표는 그 달 계산에서 빼고 남은 가중치로 비례 재배분한다. */
+  function score(kpi, month, getRec, draft) {
+    var ws = weightStatus(kpi, draft), w = draft || kpi.weights || {};
+    var rows = (kpi.links || []).map(function (l) {
+      var r = rate(getRec(l.li, month));
+      return { li: l.li, rel: l.rel, w: isNum(w[l.li]) ? w[l.li] : null, state: r.state, value: r.value, mode: r.mode };
+    });
+    var base = { rows: rows, total: ws.total, unset: ws.unset };
+    function wait(code, reason) { base.state = "wait"; base.code = code; base.reason = reason; return base; }
+    if (!ws.complete) return wait("unset", "가중치 미설정 " + ws.unset.length + "개");
+    if (!ws.sum100) return wait("sum", "가중치 합계 " + ws.total + "% (100%가 되어야 합니다)");
+    var active = rows.filter(function (r) { return r.w > 0; });
+    var none = active.filter(function (r) { return r.state === "none"; });
+    if (none.length) { base.missing = none.map(function (r) { return r.li; }); return wait("none", "미측정 지표 " + none.length + "개"); }
+    var usable = active.filter(function (r) { return r.state === "ok"; });
+    var usableW = usable.reduce(function (s, r) { return s + r.w; }, 0);
+    base.excluded = active.filter(function (r) { return r.state === "empty"; }).map(function (r) { return r.li; });
+    if (!usable.length) { base.state = "empty"; base.reason = "모든 연결 지표가 대상 없음"; return base; }
+    var sum = 0;
+    usable.forEach(function (r) { r.effective = r.w / usableW * 100; r.contrib = r.value * r.w / usableW; sum += r.contrib; });
+    base.state = "ok"; base.value = clamp(sum);
+    return base;
+  }
+
+  function delta(cur, prev) {
+    if (!isNum(cur) || !isNum(prev)) return null;
+    return round1(round1(cur) - round1(prev));
+  }
+
+  function prevMonth(m) {
+    var a = m.split("-"), y = +a[0], mo = +a[1] - 1;
+    if (mo === 0) { y--; mo = 12; }
+    return y + "-" + (mo < 10 ? "0" : "") + mo;
+  }
+  function monthsBack(m, n) {
+    var out = [m];
+    while (out.length < n) out.push(prevMonth(out[out.length - 1]));
+    return out;
+  }
+
+  /* 입력값에서 나오는 보조 수치 (직접 입력값과 구분) */
+  function derive(spec, metrics) {
+    var a = metrics && metrics[spec.from[0]], b = metrics && metrics[spec.from[1]];
+    if (!isNum(a) || !isNum(b)) return null;
+    if (spec.op === "ratio") return b === 0 ? null : round1(a / b * 100);
+    if (spec.op === "cut") return a === 0 ? null : round1((a - b) / a * 100);
+    return null;
+  }
+
+  /* 저장 전 검사 — 달성률이 0~100을 벗어나는 입력은 받지 않는다 */
+  function validate(rec) {
+    var errs = [];
+    function nonNeg(v, label) { if (v != null && (!isNum(v) || v < 0)) errs.push(label + "은(는) 0 이상의 숫자여야 합니다."); }
+    if (rec.mode === "direct") {
+      if (rec.direct != null && (!isNum(rec.direct) || rec.direct < 0 || rec.direct > 100)) errs.push("직접 입력 달성률은 0~100 사이여야 합니다.");
+    } else {
+      nonNeg(rec.den, "분모"); nonNeg(rec.num, "분자");
+      if (isNum(rec.den) && isNum(rec.num) && rec.num > rec.den) errs.push("분자가 분모보다 클 수 없습니다.");
+      if (isNum(rec.num) && rec.den == null) errs.push("분자만 입력할 수 없습니다. 분모도 입력해 주세요.");
+    }
+    return errs;
+  }
+
+  return { rate: rate, weightStatus: weightStatus, score: score, delta: delta, prevMonth: prevMonth, monthsBack: monthsBack, derive: derive, validate: validate, round1: round1, isNum: isNum };
+})();
+</script>
+<script>/* ============================================================
    B2B운영팀 업무 트래커 — 애플리케이션
    ============================================================ */
 (function () {
@@ -1146,6 +1481,7 @@ const SEED = {
           if (!o.routines) o.routines = clone(SEED.routines);
           if (!o.workKpis) o.workKpis = clone(SEED.workKpis);
           if (!o.automations) o.automations = clone(SEED.automations);
+          PF_COLS.concat("perfConfig").forEach(function (k) { if (!o[k]) o[k] = clone(SEED[k]); });
           return o;
         }
       }
@@ -1559,7 +1895,627 @@ const SEED = {
   /* ============================================================
      1. 업무 (메인)
      ============================================================ */
+  /* ============================================================
+     KPI·선행지표 관리 (팀 업무 화면 첫 탭)
+     - 메인 KPI 3 · 선행지표 9 · 후행지표 5. 값은 월별로 따로 보관한다.
+     - 저장은 항목 단위 PATCH. 같은 항목을 다른 사람이 먼저 고쳤으면 확인을 받는다.
+     ============================================================ */
+  var PC = window.PerfCalc || PerfCalc;
+  var KEY_TASKTAB = "netform.b2b.tracker.tasktab.v1";
+  var KEY_ACTOR = "netform.b2b.tracker.actor.v1";
+  var PF_COLS = ["mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory"];
+  var taskTab = "kpi";
+  try { taskTab = localStorage.getItem(KEY_TASKTAB) || "kpi"; } catch (e) {}
+  var pfMonth = pfThisMonth();
+  var pfM = null; // 열린 상세 창 { type, id, month, view, baseRev, dirty }
+
+  function pfThisMonth() {
+    var d = new Date(), m = d.getMonth() + 1;
+    return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m;
+  }
+  function pfActor() { try { return localStorage.getItem(KEY_ACTOR) || ""; } catch (e) { return ""; } }
+  function pfFind(col, id) {
+    var list = D[col] || [];
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+  function pfDef(type, id) { return pfFind(type === "kpi" ? "mainKpis" : type === "lead" ? "leadDefs" : "lagDefs", id); }
+  function pfRec(ref, month) { return pfFind("perfMonthly", ref + "_" + month); }
+  function pfRate(ref, month) { return PC.rate(pfRec(ref, month)); }
+  function pfScore(k, month, draft) { return PC.score(k, month, pfRec, draft); }
+  function pf1(v) { return fmt(PC.round1(v)); }
+  function pfKst(iso) {
+    var d = new Date(iso); if (isNaN(d)) return "—";
+    function z(n) { return (n < 10 ? "0" : "") + n; }
+    return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate()) + " " + z(d.getHours()) + ":" + z(d.getMinutes());
+  }
+  function pfMonths() {
+    var o = {}, cur = pfThisMonth();
+    PC.monthsBack(cur, 18).forEach(function (m) { o[m] = 1; });
+    (D.perfMonthly || []).forEach(function (r) { if (r.month) o[r.month] = 1; });
+    return Object.keys(o).sort().reverse();
+  }
+  function pfMonthOpts(sel) {
+    return pfMonths().map(function (m) {
+      return '<option value="' + esc(m) + '"' + (m === sel ? " selected" : "") + ">" + esc(m) + "</option>";
+    }).join("");
+  }
+  function pfValHtml(r, unit) {
+    if (r.state === "ok") return '<span class="n num">' + pf1(r.value) + "<small>" + (unit || "%") + "</small></span>";
+    return '<span class="n txt">' + (r.state === "empty" ? "대상 없음" : "미측정") + "</span>";
+  }
+  function pfDelta(cur, prev) {
+    var d = PC.delta(cur, prev);
+    if (d == null) return '<span class="pf-d na">전월 비교 불가</span>';
+    if (d === 0) return '<span class="pf-d same">전월과 같음</span>';
+    return '<span class="pf-d ' + (d > 0 ? "up" : "down") + '">' + (d > 0 ? "▲ +" : "▼ ") + fmt(d) + "%p</span>";
+  }
+  function pfRateDelta(ref, month) {
+    var a = pfRate(ref, month), b = pfRate(ref, PC.prevMonth(month));
+    return pfDelta(a.state === "ok" ? a.value : null, b.state === "ok" ? b.value : null);
+  }
+  function pfCalcText(r) {
+    if (r.state === "ok" && r.mode === "direct") return "직접 입력 " + pf1(r.value) + "%";
+    if (r.state === "ok") return fmt(r.num) + " ÷ " + fmt(r.den) + " × 100 = " + pf1(r.value) + "%";
+    if (r.state === "empty") return "분모 0 — 대상 없음";
+    return "자료 없음 — 미측정";
+  }
+  function pfModeTag(r) {
+    if (r.state !== "ok") return "";
+    return r.mode === "direct" ? '<span class="pf-tag direct">직접 입력</span>' : '<span class="pf-tag">자동 계산</span>';
+  }
+  function pfStatus(r, target) {
+    if (r.state === "empty") return '<span class="chip c-na">대상 없음</span>';
+    if (r.state !== "ok") return chip("na");
+    if (!PC.isNum(target)) return '<span class="chip c-na">목표 미설정</span>';
+    var q = target === 0 ? 1 : r.value / target;
+    return chip(q >= 1 ? "ok" : q >= 0.8 ? "warn" : "bad");
+  }
+  function pfFill(r) { return r.state === "ok" ? Math.max(r.value > 0 ? 3 : 0, Math.min(100, Math.round(r.value))) : 0; }
+  function pfMeter(r, target) {
+    var cls = "m-na";
+    if (r.state === "ok") {
+      if (!PC.isNum(target)) cls = "";
+      else { var q = target === 0 ? 1 : r.value / target; cls = q >= 1 ? "m-ok" : q >= 0.8 ? "m-warn" : "m-bad"; }
+    }
+    return '<div class="meter ' + cls + '" role="img" aria-label="달성률"><i style="width:' + pfFill(r) + '%"></i></div>';
+  }
+  function pfKpisOf(liId) {
+    return (D.mainKpis || []).filter(function (k) {
+      return (k.links || []).some(function (l) { return l.li === liId; });
+    });
+  }
+  function pfLinkTags(liId) {
+    return pfKpisOf(liId).map(function (k) {
+      var rel = (k.links || []).filter(function (l) { return l.li === liId; })[0].rel;
+      var w = (k.weights || {})[liId];
+      return '<span class="pf-tag">KPI ' + esc(k.no) + " · " + (PC.isNum(w) ? fmt(w) + "%" : "미설정") + (rel === "ref" ? " · 참고" : "") + "</span>";
+    }).join("");
+  }
+
+  /* ---------- 화면 ---------- */
+  function pfTabs() {
+    return '<div class="fg pf-tabs" role="group" aria-label="팀 업무 화면 구분">' +
+      '<button data-tt="kpi" aria-pressed="' + (taskTab === "kpi") + '">KPI·선행지표</button>' +
+      '<button data-tt="work" aria-pressed="' + (taskTab === "work") + '">팀 업무 현황</button></div>';
+  }
+  function pfKpiCard(k) {
+    var month = pfMonth, r = pfRate(k.id, month), s = pfScore(k, month);
+    var ps = pfScore(k, PC.prevMonth(month));
+    var pr = pfRate(k.id, PC.prevMonth(month));
+    var scoreHtml = s.state === "ok"
+      ? '<span class="n num">' + pf1(s.value) + "<small>%</small></span>"
+      : '<span class="n txt">' + (s.state === "empty" ? "대상 없음" : "산출 대기") + "</span>";
+    var excl = s.excluded && s.excluded.length ? "대상 없음 " + s.excluded.length + "개 제외 · " : "";
+    return '<article class="pf-card k">' +
+      '<div class="pf-t"><h3><span class="no">KPI ' + esc(k.no) + "</span>" + esc(k.name) + "</h3></div>" +
+      '<div class="pf-vals">' +
+      '<div class="pf-v"><span class="l">실제 KPI 달성률</span>' + pfValHtml(r) +
+      '<span class="s">' + esc(r.state === "ok" ? fmt(r.num) + " ÷ " + fmt(r.den) : k.src) + "</span>" +
+      pfDelta(r.state === "ok" ? r.value : null, pr.state === "ok" ? pr.value : null) +
+      (PC.isNum(k.target) ? '<span class="s">목표 ' + fmt(k.target) + "%</span>" : "") + "</div>" +
+      '<div class="pf-v"><span class="l">선행활동 점수</span>' + scoreHtml +
+      '<span class="s">' + esc(s.state === "ok" ? excl + "자동 계산" : s.reason) + "</span>" +
+      pfDelta(s.state === "ok" ? s.value : null, ps.state === "ok" ? ps.value : null) + "</div></div>" +
+      '<div class="pf-tags"><span class="pf-tag link">' + esc(k.src) + " · " + esc(k.linkNote) + "</span></div>" +
+      '<div class="pf-acts"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">연결 선행지표 보기</button>' +
+      '<button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="input">실적 입력</button></div></article>';
+  }
+  function pfLeadCard(l) {
+    var month = pfMonth, r = pfRate(l.id, month), rec = pfRec(l.id, month);
+    var nowVal = r.state === "ok" && r.mode === "auto" ? fmt(r.num) + " / " + fmt(r.den)
+      : r.state === "ok" ? "직접 입력" : r.state === "empty" ? "대상 0" : "—";
+    return '<article class="pf-card' + (l.support ? " support" : "") + '">' +
+      '<div class="pf-t"><h3><span class="no">' + esc(l.no) + "</span>" + esc(l.name) + "</h3>" + pfStatus(r, l.target) + "</div>" +
+      '<div class="pf-sub">담당 <b>' + esc(l.owner || "미지정") + "</b> · " + esc(l.cycle) + "<br>목표 <b>" + esc(l.targetText || (PC.isNum(l.target) ? fmt(l.target) + "%" : "미설정")) + "</b>" +
+      "<br>현재 실적 <b class=\"num\">" + esc(nowVal) + "</b></div>" +
+      '<div class="pf-rate">' + pfValHtml(r) + pfModeTag(r) + pfRateDelta(l.id, month) + "</div>" +
+      pfMeter(r, l.target) +
+      '<div class="pf-tags">' + pfLinkTags(l.id) + "</div>" +
+      '<div class="pf-sub">' + (rec && rec.updatedAt ? "최근 업데이트 " + esc(pfKst(rec.updatedAt)) : "이번 달 입력 없음") + "</div>" +
+      '<div class="pf-acts"><button class="mini" data-pf-open="lead" data-id="' + esc(l.id) + '" data-v="input">상세업무 보기 · 실적 입력</button>' +
+      '<button class="mini" data-pf-open="lead" data-id="' + esc(l.id) + '" data-v="edit">수정</button></div></article>';
+  }
+  function pfLagRef(g) { return g.ref || g.id; }
+  function pfLagTarget(g) {
+    if (g.ref) { var k = pfFind("mainKpis", g.ref); return k ? k.target : null; }
+    return g.target;
+  }
+  function pfLagCard(g) {
+    var ref = pfLagRef(g), month = pfMonth, r = pfRate(ref, month), t = pfLagTarget(g);
+    return '<article class="pf-card">' +
+      '<div class="pf-t"><h3><span class="no">' + esc(g.no) + "</span>" + esc(g.name) + "</h3>" + pfStatus(r, t) + "</div>" +
+      '<div class="pf-rate">' + pfValHtml(r) + pfRateDelta(ref, month) + "</div>" +
+      pfMeter(r, t) +
+      '<div class="pf-sub">' + (r.state === "ok" ? "실적 <b class=\"num\">" + fmt(r.num) + " / " + fmt(r.den) + "</b> · " : "") +
+      "목표 <b>" + (PC.isNum(t) ? fmt(t) + "%" : "미설정") + "</b></div>" +
+      '<div class="pf-sub">' + esc(g.measure) + "</div>" +
+      '<div class="pf-acts"><button class="mini" data-pf-open="' + (g.ref ? "kpi" : "lag") + '" data-id="' + esc(ref) + '" data-v="input">' + (g.ref ? "KPI " + esc(g.no) + " 실적 보기" : "실적 입력") + "</button></div></article>";
+  }
+  function pfMisses() {
+    var out = [];
+    (D.lagDefs || []).forEach(function (g) {
+      var r = pfRate(pfLagRef(g), pfMonth), t = pfLagTarget(g);
+      if (r.state === "ok" && PC.isNum(t) && r.value < t) out.push(esc(g.name) + " " + pf1(r.value) + "% (목표 " + fmt(t) + "%)");
+    });
+    return out;
+  }
+  function pfPage() {
+    var core = (D.leadDefs || []).filter(function (l) { return !l.support; });
+    var sup = (D.leadDefs || []).filter(function (l) { return l.support; });
+    var miss = pfMisses();
+    return '<div class="phead"><div><h1>KPI·선행지표 관리</h1><div class="hs">업무 실적을 입력하면 달성률과 KPI 선행점수가 다시 계산됩니다. 실제 KPI는 입력된 실적으로만 계산합니다.</div></div>' +
+      '<div class="meta"><label>기준 월 <select class="fsel pf-msel" id="pfMonthSel" aria-label="기준 월">' + pfMonthOpts(pfMonth) + "</select></label></div></div>" +
+      pfTabs() +
+      '<div class="pf-status"><span><b>수동 관리</b> · 고객관리카드·K-apt·이카운트는 자동으로 연결되어 있지 않아 담당자가 직접 입력합니다.</span></div>' +
+      '<div class="pf-h2"><h2>메인 KPI</h2></div><div class="pf-grid k3">' + (D.mainKpis || []).map(pfKpiCard).join("") + "</div>" +
+      '<div class="pf-h2"><h2>선행지표</h2><span>담당자가 수행하는 고객관리 업무</span></div><div class="pf-grid">' + core.map(pfLeadCard).join("") + "</div>" +
+      '<div class="pf-h2"><h2>운영 지원지표</h2><span>별도 표시 · KPI 계산 기본 가중치 0%</span></div><div class="pf-grid">' + sup.map(pfLeadCard).join("") + "</div>" +
+      '<div class="pf-h2"><h2>후행지표</h2><span>실제 이용·활동·등급 변동 자료로 계산 · 선행지표와 무관</span></div><div class="pf-grid">' + (D.lagDefs || []).map(pfLagCard).join("") + "</div>" +
+      '<div class="note" style="margin-top:14px"><b>주요 미달성 지표</b> — ' + (miss.length ? miss.join(" · ") : "목표 대비 미달로 판정된 후행지표가 없습니다. (목표 미설정·미측정 지표는 판정하지 않습니다)") + "</div>";
+  }
+
+  /* ---------- 상세 창 ---------- */
+  function pfOpen(type, id, view) {
+    pfM = { type: type, id: id, month: pfMonth, view: view || "input", dirty: false, err: "" };
+    pfSetBase();
+    pfDraw();
+  }
+  function pfSetBase() {
+    var r = pfRec(pfM.id, pfM.month), d = pfDef(pfM.type, pfM.id);
+    pfM.baseRev = r ? (r.rev || 0) : 0;
+    pfM.baseDefRev = d ? (d.rev || 0) : 0;
+  }
+  function pfClose(force) {
+    if (!pfM) return;
+    if (pfM.dirty && !force && !confirm("저장하지 않은 입력이 있습니다. 닫을까요?")) return;
+    pfM = null;
+    var el = $("#pfModal"); el.classList.remove("on"); el.innerHTML = "";
+    document.body.classList.remove("pf-lock");
+  }
+  function pfHistoryOf(ref) {
+    return (D.perfHistory || []).filter(function (h) { return h.ref === ref; })
+      .sort(function (a, b) { return a.at < b.at ? 1 : a.at > b.at ? -1 : 0; });
+  }
+  function pfHistRows(list, empty) {
+    if (!list.length) return '<div class="pf-empty">' + esc(empty) + "</div>";
+    return list.slice(0, 20).map(function (h) {
+      var ch = (h.changes || []).map(function (c) { return c.f + " " + c.from + " → " + c.to; }).join(" · ");
+      return '<div class="pf-row"><span class="nm">' + esc(h.summary || "") + '</span><span class="val" style="font-weight:600;color:var(--text-3)">' + esc(h.month || "") + "</span>" +
+        '<span class="sm">' + esc(pfKst(h.at)) + " · " + esc(h.by || "미입력") + (ch ? "<br>" + esc(ch) : "") + (h.note ? "<br>메모: " + esc(h.note) : "") + "</span></div>";
+    }).join("");
+  }
+  function pfMonthlyRows(ref) {
+    var recs = (D.perfMonthly || []).filter(function (r) { return r.ref === ref; })
+      .sort(function (a, b) { return a.month < b.month ? 1 : -1; });
+    if (!recs.length) return '<div class="pf-empty">아직 저장된 월별 실적이 없습니다.</div>';
+    return recs.map(function (x) {
+      var r = PC.rate(x);
+      return '<div class="pf-row"><span class="nm num">' + esc(x.month) + '</span><span class="val num">' +
+        (r.state === "ok" ? pf1(r.value) + "%" : r.state === "empty" ? "대상 없음" : "미측정") + "</span>" +
+        '<span class="sm">' + esc(pfCalcText(r)) + " · " + esc(x.updatedBy || "미입력") + " · " + esc(pfKst(x.updatedAt)) + "</span></div>";
+    }).join("");
+  }
+  function pfFieldNum(name, label, val, extra) {
+    return '<label class="pf-f"><span>' + esc(label) + '</span><input type="number" inputmode="decimal" min="0" step="any" data-pf="' + esc(name) + '" value="' + (val == null ? "" : esc(val)) + '" placeholder="미입력"' + (extra || "") + "></label>";
+  }
+  function pfRecForm(def, rec) {
+    var r = rec || {}, m = r.metrics || {}, u = r.units || {};
+    var direct = r.mode === "direct", canDirect = pfM.type === "lead";
+    var html = '<label class="pf-f w" style="margin-bottom:10px"><span>기준 월</span><select id="pfmMonth">' + pfMonthOpts(pfM.month) + "</select></label>";
+    if (canDirect) {
+      html += '<div class="pf-mode" role="radiogroup" aria-label="입력 방식" style="margin-bottom:10px">' +
+        '<label><input type="radio" name="pfmode" value="auto"' + (direct ? "" : " checked") + ">분자·분모로 자동 계산</label>" +
+        '<label><input type="radio" name="pfmode" value="direct"' + (direct ? " checked" : "") + ">달성률 직접 입력</label></div>";
+    }
+    html += '<div class="pf-form" id="pfAuto"' + (direct ? " hidden" : "") + ">" +
+      pfFieldNum("den", def.denLabel, r.den) + pfFieldNum("num", def.numLabel, r.num) + "</div>";
+    if (canDirect) html += '<div class="pf-form" id="pfDirect"' + (direct ? "" : " hidden") + ">" +
+      pfFieldNum("direct", "달성률 직접 입력(%)", r.direct, ' max="100"') + "</div>";
+    html += '<div class="pf-preview" id="pfPreview" style="margin-top:10px"></div>';
+    var metrics = (def.metrics || []).map(function (x) {
+      if (x.from) return '<label class="pf-f"><span>' + esc(x.n) + ' (자동)</span><input type="text" readonly data-pf-derive="' + esc(x.k) + '" value=""></label>';
+      return pfFieldNum("m." + x.k, x.n + " (" + x.u + ")", m[x.k]);
+    }).join("");
+    if (metrics) html += '<div class="pf-sec"><h3>측정 항목</h3><div class="pf-form">' + metrics + "</div></div>";
+    (def.units || []).forEach(function (x) {
+      var v = u[x.k] || {};
+      html += '<div class="pf-sec"><h3>' + esc(x.n) + " — " + esc(x.rule) + '</h3><div class="pf-form">' +
+        pfFieldNum("u." + x.k + ".den", "L2 영업활동 대상 수", v.den) + pfFieldNum("u." + x.k + ".num", "L3 도달 대상 수", v.num) + "</div></div>";
+    });
+    if (def.tasks) {
+      var c = r.checks || {}, done = def.tasks.filter(function (t, i) { return c["t" + (i + 1)]; }).length;
+      html += '<div class="pf-sec"><h3>세부업무 체크리스트 (' + done + " / " + def.tasks.length + ')</h3><div class="pf-chk">' + def.tasks.map(function (t, i) {
+        return '<label><input type="checkbox" data-pf-chk="t' + (i + 1) + '"' + (c["t" + (i + 1)] ? " checked" : "") + "><span>" + (i + 1) + ". " + esc(t) + "</span></label>";
+      }).join("") + "</div></div>";
+    }
+    html += '<div class="pf-sec"><div class="pf-form">' +
+      '<label class="pf-f w"><span>작업 메모 — 로그인 없이 읽히는 저장소이므로 업체명 대신 업체 식별번호를 적어 주세요</span><textarea rows="2" id="pfNote"></textarea></label>' +
+      '<label class="pf-f w"><span>입력자 (필수)</span><input type="text" id="pfActor" autocomplete="name" value="' + esc(pfActor()) + '"></label></div></div>' +
+      (pfM.err ? '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>" : "") +
+      '<div class="pf-save"><button class="btn" id="pfSaveRec">저장</button></div>';
+    return html;
+  }
+  function pfDefInfo(def) {
+    var kv = "";
+    function row(k, v) { if (v) kv += "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>"; }
+    row("관리 목적", def.purpose); row("담당자", def.owner); row("관리 주기", def.cycle); row("측정 대상", def.measure);
+    row("목표", def.targetText || (PC.isNum(def.target) ? fmt(def.target) + "%" : "미설정"));
+    row("계산식", def.formula); row("보고된 성과", def.reported); row("성과·유의", def.outcome);
+    row("데이터", def.src ? def.src + " · " + (def.linkNote || "") : "");
+    return '<dl class="pf-kv">' + kv + "</dl>";
+  }
+  function pfLeadBody(def) {
+    var rec = pfRec(def.id, pfM.month), r = PC.rate(rec);
+    var links = pfKpisOf(def.id).map(function (k) {
+      var rel = (k.links || []).filter(function (l) { return l.li === def.id; })[0].rel, w = (k.weights || {})[def.id];
+      return '<div class="pf-row"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + (rel === "ref" ? " (참고 연결)" : "") + '</span><span class="val num">' + (PC.isNum(w) ? fmt(w) + "%" : "미설정") + "</span></div>";
+    }).join("");
+    var hist = pfHistoryOf(def.id);
+    return '<div class="pf-sec"><h3>지표 설명</h3>' + pfDefInfo(def) + "</div>" +
+      '<div class="pf-sec"><h3>목표·현재 실적 — ' + esc(pfM.month) + "</h3>" +
+      '<div class="pf-rate">' + pfValHtml(r) + pfModeTag(r) + pfRateDelta(def.id, pfM.month) + "</div>" + pfMeter(r, def.target) + "</div>" +
+      '<div class="pf-sec"><h3>실적 입력</h3>' + pfRecForm(def, rec) + "</div>" +
+      '<div class="pf-sec"><h3>연결된 KPI · 가중치</h3>' + (links || '<div class="pf-empty">연결된 KPI가 없습니다.</div>') + "</div>" +
+      '<div class="pf-sec"><h3>월별 실적</h3>' + pfMonthlyRows(def.id) + "</div>" +
+      '<div class="pf-sec"><h3>최근 작업 이력</h3>' + pfHistRows(hist.filter(function (h) { return h.note || h.checks; }), "작업 메모가 아직 없습니다.") + "</div>" +
+      '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(hist.filter(function (h) { return (h.changes || []).length; }), "변경 이력이 아직 없습니다.") + "</div>";
+  }
+  function pfWeightRows(k, draft) {
+    var w = draft || k.weights || {}, s = pfScore(k, pfM.month, draft), byId = {};
+    (s.rows || []).forEach(function (x) { byId[x.li] = x; });
+    return (k.links || []).map(function (l) {
+      var def = pfFind("leadDefs", l.li) || { name: l.li, no: "" }, x = byId[l.li] || {};
+      var st = x.state === "ok" ? pf1(x.value) + "%" : x.state === "empty" ? "대상 없음" : "미측정";
+      return '<div class="pf-wrow"><span class="nm">' + esc(def.no) + " " + esc(def.name) + (l.rel === "ref" ? " · 참고 연결" : "") +
+        '<span class="sm">달성률 ' + st + (x.contrib != null ? " · 기여 " + pf1(x.contrib) + "점" : "") + "</span></span>" +
+        '<input type="number" inputmode="decimal" min="0" max="100" step="any" data-pf-w="' + esc(l.li) + '" value="' + (PC.isNum(w[l.li]) ? esc(w[l.li]) : "") + '" placeholder="미설정" aria-label="' + esc(def.name) + ' 가중치"></div>';
+    }).join("");
+  }
+  function pfScoreLine(k, draft) {
+    var s = pfScore(k, pfM.month, draft), ws = PC.weightStatus(k, draft);
+    var msg = ws.complete && !ws.sum100 ? '<div class="pf-warn">가중치 합계가 ' + ws.total + "%입니다. 100%가 되어야 선행점수를 계산합니다.</div>"
+      : !ws.complete ? '<div class="pf-warn">가중치 미설정 ' + ws.unset.length + "개 — 모두 설정해야 선행점수를 계산합니다. (현재 합계 " + ws.total + "%)</div>" : "";
+    var miss = s.code === "none" ? '<div class="pf-warn">미측정: ' + s.missing.map(function (id) { return esc((pfFind("leadDefs", id) || {}).name || id); }).join(", ") + "</div>" : "";
+    var ex = s.excluded && s.excluded.length ? '<div class="pf-sub">대상 없음으로 제외: ' + s.excluded.map(function (id) { return esc((pfFind("leadDefs", id) || {}).name || id); }).join(", ") + " — 남은 가중치로 비례 배분</div>" : "";
+    return msg + miss + ex + '<div class="pf-preview">선행활동 점수 <b class="num">' + (s.state === "ok" ? pf1(s.value) + "%" : s.state === "empty" ? "대상 없음" : "산출 대기") + "</b> · 가중치 합계 " + ws.total + "%</div>";
+  }
+  function pfKpiBody(k) {
+    if (pfM.view === "links") {
+      return '<div class="pf-sec"><h3>계산 근거 — ' + esc(pfM.month) + '</h3><div class="pf-sub" style="margin-bottom:8px">KPI 선행점수 = Σ(선행지표 달성률 × 가중치). 빈칸은 미설정, 0은 계산에서 제외입니다. 전월 점수도 현재 가중치로 계산합니다.</div>' +
+        '<label class="pf-f" style="margin-bottom:8px"><span>기준 월</span><select id="pfmMonth">' + pfMonthOpts(pfM.month) + "</select></label>" +
+        '<div id="pfScoreLine">' + pfScoreLine(k) + "</div></div>" +
+        '<div class="pf-sec"><h3>연결 선행지표 · 가중치</h3><div id="pfWeights">' + pfWeightRows(k) + "</div>" +
+        '<label class="pf-f" style="margin-top:10px"><span>입력자 (필수)</span><input type="text" id="pfActor" autocomplete="name" value="' + esc(pfActor()) + '"></label>' +
+        (pfM.err ? '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>" : "") +
+        '<div class="pf-save"><button class="btn" id="pfSaveW">가중치 저장</button></div></div>' +
+        '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(pfHistoryOf(k.id).filter(function (h) { return h.kind === "weight"; }), "가중치 변경 이력이 아직 없습니다.") + "</div>";
+    }
+    var accept = k.accept ? '<div class="pf-sec"><h3>인정 활동</h3><ul class="pf-list">' + k.accept.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" : "";
+    return '<div class="pf-sec"><h3>KPI 설명</h3>' + pfDefInfo(k) + (k.defNote ? '<div class="pf-warn" style="margin-top:8px">' + esc(k.defNote) + "</div>" : "") + "</div>" + accept +
+      '<div class="pf-sec"><h3>관리 내용</h3><ul class="pf-list">' + (k.manage || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" +
+      '<div class="pf-sec"><h3>실적 입력 — 원천 자료를 확인한 값</h3>' + pfRecForm(k, pfRec(k.id, pfM.month)) + "</div>" +
+      '<div class="pf-sec"><h3>월별 실적</h3>' + pfMonthlyRows(k.id) + "</div>" +
+      '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(pfHistoryOf(k.id).filter(function (h) { return h.kind !== "weight"; }), "변경 이력이 아직 없습니다.") + "</div>";
+  }
+  function pfLagBody(g) {
+    return '<div class="pf-sec"><h3>지표 설명</h3>' + pfDefInfo(g) + "</div>" +
+      '<div class="pf-sec"><h3>실적 입력</h3>' + pfRecForm(g, pfRec(g.id, pfM.month)) + "</div>" +
+      '<div class="pf-sec"><h3>월별 실적</h3>' + pfMonthlyRows(g.id) + "</div>" +
+      '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(pfHistoryOf(g.id), "변경 이력이 아직 없습니다.") + "</div>";
+  }
+  function pfEditBody(def) {
+    function txt(f, l, multi) {
+      return '<label class="pf-f w"><span>' + esc(l) + "</span>" + (multi
+        ? '<textarea rows="2" data-pf-def="' + f + '">' + esc(def[f] || "") + "</textarea>"
+        : '<input type="text" data-pf-def="' + f + '" value="' + esc(def[f] || "") + '">') + "</label>";
+    }
+    var fields = pfM.type === "lead"
+      ? txt("owner", "담당자") + txt("cycle", "관리 주기") + txt("purpose", "관리 목적", 1) + txt("measure", "측정 대상", 1) + txt("targetText", "목표 설명")
+      : txt("purpose", "목적", 1);
+    if (pfM.type === "lag") fields = txt("measure", "측정 항목", 1);
+    return '<div class="pf-sec"><div class="pf-form">' + fields +
+      '<label class="pf-f w"><span>목표 달성률(%) — 비우면 미설정</span><input type="number" inputmode="decimal" min="0" max="100" step="any" data-pf-def-num="target" value="' + (PC.isNum(def.target) ? esc(def.target) : "") + '" placeholder="미설정"></label>' +
+      '<label class="pf-f w"><span>입력자 (필수)</span><input type="text" id="pfActor" autocomplete="name" value="' + esc(pfActor()) + '"></label></div>' +
+      (pfM.err ? '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>" : "") +
+      '<div class="pf-save"><button class="btn" id="pfSaveDef">정의 저장</button></div></div>';
+  }
+  function pfDraw() {
+    var el = $("#pfModal"), def = pfDef(pfM.type, pfM.id);
+    if (!def) { pfClose(true); return; }
+    var views = pfM.type === "kpi"
+      ? [["links", "연결 선행지표·가중치"], ["input", "실적·설명"], ["edit", "수정"]]
+      : pfM.type === "lead" ? [["input", "상세·실적"], ["edit", "수정"]] : [["input", "실적"], ["edit", "수정"]];
+    var title = (pfM.type === "kpi" ? "KPI " : "") + def.no + " " + def.name;
+    var body = pfM.view === "edit" ? pfEditBody(def) : pfM.type === "kpi" ? pfKpiBody(def) : pfM.type === "lead" ? pfLeadBody(def) : pfLagBody(def);
+    var keepTop = el.scrollTop;
+    el.innerHTML = '<div class="pf-m" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="pf-m-h"><div class="pf-m-t"><h2>' + esc(title) + '</h2><button class="pf-x" id="pfClose" aria-label="닫기">×</button></div>' +
+      '<div class="pf-vw">' + views.map(function (v) { return '<button data-pf-view="' + v[0] + '" aria-pressed="' + (pfM.view === v[0]) + '">' + esc(v[1]) + "</button>"; }).join("") + "</div></div>" +
+      '<div class="pf-m-b">' + body + "</div></div>";
+    el.classList.add("on");
+    document.body.classList.add("pf-lock");
+    el.scrollTop = keepTop;
+    pfBindModal(def);
+  }
+  function pfNumOf(el) {
+    var s = (el.value || "").trim();
+    if (s === "") return null;
+    var n = Number(s);
+    return isFinite(n) ? n : NaN;
+  }
+  function pfCollect(def) {
+    var m = $("#pfModal"), mode = (($("input[name=pfmode]:checked", m) || {}).value) || "auto";
+    var out = { mode: mode, metrics: {}, units: {}, checks: {} };
+    $$("[data-pf]", m).forEach(function (el) {
+      var k = el.getAttribute("data-pf"), v = pfNumOf(el);
+      if (v == null) return;
+      if (k.indexOf("m.") === 0) out.metrics[k.slice(2)] = v;
+      else if (k.indexOf("u.") === 0) {
+        var a = k.split(".");
+        if (!out.units[a[1]]) out.units[a[1]] = {};
+        out.units[a[1]][a[2]] = v;
+      } else out[k] = v;
+    });
+    $$("[data-pf-chk]", m).forEach(function (el) { if (el.checked) out.checks[el.getAttribute("data-pf-chk")] = true; });
+    return out;
+  }
+  function pfPreview(def) {
+    var f = pfCollect(def), box = $("#pfPreview");
+    if (box) box.innerHTML = '달성률 <b class="num">' + esc(pfCalcText(PC.rate(f))) + "</b>";
+    $$("[data-pf-derive]", $("#pfModal")).forEach(function (el) {
+      var spec = (def.metrics || []).filter(function (x) { return x.k === el.getAttribute("data-pf-derive"); })[0];
+      var v = spec ? PC.derive(spec, f.metrics) : null;
+      el.value = v == null ? "계산 불가" : fmt(v) + "%";
+    });
+  }
+  function pfBindModal(def) {
+    var m = $("#pfModal");
+    $("#pfClose").onclick = function () { pfClose(false); };
+    m.onclick = function (e) { if (e.target === m) pfClose(false); };
+    $$("[data-pf-view]", m).forEach(function (b) {
+      b.onclick = function () {
+        if (pfM.dirty && !confirm("저장하지 않은 입력이 있습니다. 화면을 바꿀까요?")) return;
+        pfM.view = b.getAttribute("data-pf-view"); pfM.dirty = false; pfM.err = ""; pfSetBase(); pfDraw();
+      };
+    });
+    $$("input,textarea,select", m).forEach(function (el) {
+      if (el.id === "pfmMonth") return;
+      var mark = function () { if (el.id !== "pfActor") pfM.dirty = true; };
+      el.addEventListener("input", mark); el.addEventListener("change", mark);
+    });
+    var ms = $("#pfmMonth", m);
+    if (ms) ms.onchange = function () {
+      if (pfM.dirty && !confirm("저장하지 않은 입력이 있습니다. 기준 월을 바꿀까요?")) { ms.value = pfM.month; return; }
+      pfM.month = ms.value; pfM.dirty = false; pfM.err = ""; pfSetBase(); pfDraw();
+    };
+    $$("input[name=pfmode]", m).forEach(function (el) {
+      el.addEventListener("change", function () {
+        var d = el.value === "direct" && el.checked;
+        if (!el.checked) return;
+        $("#pfAuto", m).hidden = d; $("#pfDirect", m).hidden = !d;
+        pfPreview(def);
+      });
+    });
+    if ($("#pfPreview", m)) {
+      $$("[data-pf]", m).forEach(function (el) { el.addEventListener("input", function () { pfPreview(def); }); });
+      pfPreview(def);
+    }
+    var sr = $("#pfSaveRec", m); if (sr) sr.onclick = function () { pfSaveRec(def); };
+    var sd = $("#pfSaveDef", m); if (sd) sd.onclick = function () { pfSaveDef(def); };
+    var sw = $("#pfSaveW", m); if (sw) sw.onclick = function () { pfSaveWeights(def); };
+    $$("[data-pf-w]", m).forEach(function (el) {
+      el.addEventListener("input", function () {
+        var draft = pfWeightDraft(), line = $("#pfScoreLine", m);
+        if (line) line.innerHTML = pfScoreLine(def, draft);
+      });
+    });
+  }
+  function pfWeightDraft() {
+    var w = {};
+    $$("[data-pf-w]", $("#pfModal")).forEach(function (el) {
+      var v = pfNumOf(el);
+      if (v != null && !isNaN(v)) w[el.getAttribute("data-pf-w")] = v;
+    });
+    return w;
+  }
+
+  /* ---------- 저장 ---------- */
+  function pfNeedActor() {
+    var a = $("#pfActor"), v = a ? (a.value || "").trim() : "";
+    if (!v) { pfM.err = "입력자를 적어 주세요. 변경 이력에 남습니다."; return null; }
+    try { localStorage.setItem(KEY_ACTOR, v); } catch (e) {}
+    return v;
+  }
+  function pfConflictOk(by, at) {
+    return confirm((by || "다른 사용자") + "님이 " + pfKst(at) + "에 같은 항목을 먼저 저장했습니다.\n\n확인: 내 입력으로 덮어쓰기 (이전 값은 변경 이력에 남습니다)\n취소: 저장하지 않고 입력을 유지");
+  }
+  function pfHistId() { return "H" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function pfPushHist(h) {
+    h.id = pfHistId(); h.at = new Date().toISOString();
+    D.perfHistory = D.perfHistory || [];
+    D.perfHistory.push(h);
+  }
+  function pfCommit(msg) {
+    save();
+    clearTimeout(FB.pushTimer);
+    flushFbPatch(); // 원격 변경이 먼저 도착해 내 저장을 덮지 않도록 바로 보낸다
+    pfM.dirty = false; pfM.err = "";
+    pfSetBase();
+    repaint(true);
+    if (pfM) pfDraw();
+    toast(msg);
+  }
+  function pfShow(v) { return v == null ? "미입력" : String(v); }
+  function pfSaveRec(def) {
+    def = pfDef(pfM.type, pfM.id); // 입력 중 원격 변경이 왔을 수 있어 최신 정의를 다시 잡는다
+    var f = pfCollect(def), id = def.id + "_" + pfM.month;
+    var errs = PC.validate(f);
+    Object.keys(f.units).forEach(function (k) {
+      var u = f.units[k];
+      if (PC.isNum(u.den) && PC.isNum(u.num) && u.num > u.den) errs.push("단위별 입력에서 도달 수가 대상 수보다 클 수 없습니다.");
+    });
+    if (f.mode === "auto") { delete f.direct; } else { delete f.den; delete f.num; }
+    var neg = false;
+    $$("[data-pf]", $("#pfModal")).forEach(function (el) { var v = pfNumOf(el); if (v != null && (isNaN(v) || v < 0)) neg = true; });
+    if (neg) errs.push("입력값은 0 이상의 숫자여야 합니다.");
+    if (errs.length) { pfM.err = errs[0]; pfKeepDraw(def); return; }
+    var by = pfNeedActor();
+    if (!by) { pfKeepDraw(def); return; }
+    var cur = pfRec(def.id, pfM.month), curRev = cur ? (cur.rev || 0) : 0;
+    if (curRev !== pfM.baseRev && !pfConflictOk(cur && cur.updatedBy, cur && cur.updatedAt)) return;
+    var noteEl = $("#pfNote"), note = noteEl ? (noteEl.value || "").trim() : "";
+    var old = cur || {}, changes = [];
+    function cmp(label, a, b) { if ((a == null ? null : a) !== (b == null ? null : b)) changes.push({ f: label, from: pfShow(a), to: pfShow(b) }); }
+    var MODE = { auto: "자동 계산", direct: "직접 입력" };
+    if (cur) cmp("입력 방식", MODE[old.mode || "auto"], MODE[f.mode]);
+    cmp(def.denLabel, old.den, f.den); cmp(def.numLabel, old.num, f.num); cmp("직접 입력 달성률", old.direct, f.direct);
+    (def.metrics || []).forEach(function (x) { if (!x.from) cmp(x.n, (old.metrics || {})[x.k], f.metrics[x.k]); });
+    (def.units || []).forEach(function (x) {
+      cmp(x.n + " 대상", ((old.units || {})[x.k] || {}).den, (f.units[x.k] || {}).den);
+      cmp(x.n + " 도달", ((old.units || {})[x.k] || {}).num, (f.units[x.k] || {}).num);
+    });
+    var oc = Object.keys(old.checks || {}).length, nc = Object.keys(f.checks).length;
+    var chkChanged = JSON.stringify(Object.keys(old.checks || {}).sort()) !== JSON.stringify(Object.keys(f.checks).sort());
+    if (!changes.length && !chkChanged && !note) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
+    var rec = { id: id, ref: def.id, month: pfM.month, mode: f.mode, metrics: f.metrics, units: f.units, checks: f.checks,
+      updatedAt: new Date().toISOString(), updatedBy: by, rev: curRev + 1 };
+    if (f.den != null) rec.den = f.den;
+    if (f.num != null) rec.num = f.num;
+    if (f.direct != null) rec.direct = f.direct;
+    if (cur) D.perfMonthly[D.perfMonthly.indexOf(cur)] = rec; else D.perfMonthly.push(rec);
+    var hist = { ref: def.id, month: pfM.month, kind: "value", by: by, summary: changes.length ? "실적 변경" : chkChanged ? "세부업무 체크" : "작업 메모", changes: changes };
+    if (note) hist.note = note;
+    if (chkChanged) hist.checks = "세부업무 체크 " + oc + " → " + nc;
+    pfPushHist(hist);
+    pfCommit("저장했습니다 — 달성률과 KPI 선행점수를 다시 계산했습니다");
+  }
+  function pfKeepDraw(def) {
+    var box = $("#pfModal .pf-save"), old = $("#pfModal .pf-bad");
+    if (old) old.remove();
+    if (box) box.insertAdjacentHTML("beforebegin", '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>");
+    pfM.err = "";
+  }
+  function pfSaveWeights(k) {
+    k = pfDef(pfM.type, pfM.id);
+    var m = $("#pfModal"), next = {}, bad = false;
+    $$("[data-pf-w]", m).forEach(function (el) {
+      var v = pfNumOf(el);
+      if (v == null) return;
+      if (isNaN(v) || v < 0 || v > 100) bad = true; else next[el.getAttribute("data-pf-w")] = v;
+    });
+    if (bad) { pfM.err = "가중치는 0~100 사이여야 합니다."; pfKeepDraw(k); return; }
+    var by = pfNeedActor();
+    if (!by) { pfKeepDraw(k); return; }
+    if ((k.rev || 0) !== pfM.baseDefRev && !pfConflictOk(k.updatedBy, k.updatedAt)) return;
+    var old = k.weights || {}, changes = [];
+    (k.links || []).forEach(function (l) {
+      if ((PC.isNum(old[l.li]) ? old[l.li] : null) !== (PC.isNum(next[l.li]) ? next[l.li] : null)) {
+        changes.push({ f: ((pfFind("leadDefs", l.li) || {}).name || l.li), from: PC.isNum(old[l.li]) ? old[l.li] + "%" : "미설정", to: PC.isNum(next[l.li]) ? next[l.li] + "%" : "미설정" });
+      }
+    });
+    if (!changes.length) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
+    k.weights = next; k.rev = (k.rev || 0) + 1; k.updatedAt = new Date().toISOString(); k.updatedBy = by;
+    pfPushHist({ ref: k.id, kind: "weight", by: by, summary: "가중치 변경", changes: changes });
+    var ws = PC.weightStatus(k);
+    pfCommit(ws.complete && ws.sum100 ? "가중치를 저장했습니다" : "저장했습니다 — 합계가 100%가 되어야 점수가 계산됩니다");
+  }
+  function pfSaveDef(def) {
+    def = pfDef(pfM.type, pfM.id);
+    var m = $("#pfModal"), changes = [];
+    var LBL = { owner: "담당자", cycle: "관리 주기", purpose: "관리 목적", measure: "측정 대상", targetText: "목표 설명", target: "목표 달성률" };
+    var tgtEl = $("[data-pf-def-num=target]", m), tgt = tgtEl ? pfNumOf(tgtEl) : null;
+    if (tgt != null && (isNaN(tgt) || tgt < 0 || tgt > 100)) { pfM.err = "목표 달성률은 0~100 사이여야 합니다."; pfKeepDraw(def); return; }
+    var by = pfNeedActor();
+    if (!by) { pfKeepDraw(def); return; }
+    if ((def.rev || 0) !== pfM.baseDefRev && !pfConflictOk(def.updatedBy, def.updatedAt)) return;
+    $$("[data-pf-def]", m).forEach(function (el) {
+      var f = el.getAttribute("data-pf-def"), v = (el.value || "").trim();
+      if ((def[f] || "") !== v) { changes.push({ f: LBL[f] || f, from: def[f] || "없음", to: v || "없음" }); def[f] = v; }
+    });
+    if ((PC.isNum(def.target) ? def.target : null) !== tgt) {
+      changes.push({ f: LBL.target, from: PC.isNum(def.target) ? def.target + "%" : "미설정", to: tgt == null ? "미설정" : tgt + "%" });
+      if (tgt == null) delete def.target; else def.target = tgt;
+    }
+    if (!changes.length) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
+    def.rev = (def.rev || 0) + 1; def.updatedAt = new Date().toISOString(); def.updatedBy = by;
+    pfPushHist({ ref: def.id, kind: "def", by: by, summary: "정의 변경", changes: changes });
+    pfCommit("저장했습니다");
+  }
+
+  /* 복구·초기화가 월별 실적과 이력을 지우지 못하게 한다 */
+  function pfKeep(next, prev, prevWins) {
+    PF_COLS.forEach(function (col) {
+      var map = {};
+      if (!prevWins) (prev[col] || []).forEach(function (x) { map[x.id] = x; });
+      (next[col] || []).forEach(function (x) { map[x.id] = x; });
+      if (prevWins) (prev[col] || []).forEach(function (x) { map[x.id] = x; });
+      next[col] = Object.keys(map).sort().map(function (id) { return map[id]; });
+    });
+    if (prevWins || !next.perfConfig) next.perfConfig = prev.perfConfig || next.perfConfig;
+    return next;
+  }
+
+  /* 설정 화면 카드 */
+  function pfAdminCard() {
+    var c = D.perfConfig || {};
+    var rows = (D.mainKpis || []).map(function (k) {
+      var ws = PC.weightStatus(k);
+      return '<div class="pf-row"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + '</span><span class="val"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">가중치 설정</button></span>' +
+        '<span class="sm">' + (ws.complete ? "합계 " + ws.total + "%" + (ws.sum100 ? " · 계산 가능" : " · 100%가 아니어서 산출 대기") : "미설정 " + ws.unset.length + "개 · 산출 대기") + "</span></div>";
+    }).join("");
+    function num(k, l) { return '<label class="pf-f"><span>' + esc(l) + '</span><input type="number" inputmode="numeric" min="0" step="1" data-pf-cfg="' + k + '" value="' + (PC.isNum(c[k]) ? esc(c[k]) : "") + '" placeholder="미설정"></label>'; }
+    return '<div class="card"><div class="card-h"><h2>KPI·선행지표 설정</h2></div>' + rows +
+      '<div class="pf-sec"><h3>미응답 재연락 기준 (선행지표 ② 안내용 · 메일 기록 연동 전까지 자동 분류하지 않습니다)</h3><div class="pf-form">' +
+      num("noReplyDays", "미응답 판정 기간(일)") + num("resendDays", "재발송 주기(일)") + num("longNoReplyDays", "장기 미응답 기준(일)") + "</div></div></div>";
+  }
+  function pfBind() {
+    $$("[data-tt]").forEach(function (b) {
+      b.onclick = function () {
+        taskTab = b.getAttribute("data-tt");
+        try { localStorage.setItem(KEY_TASKTAB, taskTab); } catch (e) {}
+        repaint(false);
+      };
+    });
+    var ms = $("#pfMonthSel");
+    if (ms) ms.onchange = function () { pfMonth = ms.value; repaint(true); };
+    $$("[data-pf-open]").forEach(function (b) {
+      b.onclick = function () { pfOpen(b.getAttribute("data-pf-open"), b.getAttribute("data-id"), b.getAttribute("data-v")); };
+    });
+    $$("[data-pf-cfg]").forEach(function (el) {
+      el.onchange = function () {
+        var k = el.getAttribute("data-pf-cfg"), v = pfNumOf(el);
+        D.perfConfig = D.perfConfig || {};
+        if (v == null || isNaN(v) || v < 0) { delete D.perfConfig[k]; el.value = ""; } else D.perfConfig[k] = v;
+        save(); toast("저장했습니다");
+      };
+    });
+    /* 다른 사람의 변경이 도착했을 때 입력 중이 아니면 상세 창도 새 값으로 다시 그린다 */
+    if (pfM && !pfM.dirty) { pfSetBase(); pfDraw(); }
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && pfM) pfClose(false); });
+
   function pageTasks() {
+    if (taskTab !== "work") return pfPage();
     var all = allTasks();
     var rows = applyFilter(all);
     var doneN = all.filter(function (r) { return tkState(r.t.p) === "done"; }).length;
@@ -1606,7 +2562,7 @@ const SEED = {
       (edit ? "편집 중 — 업무를 누르면 바로 고칠 수 있고, 루틴·프로젝트·하위업무를 추가하거나 지울 수 있습니다."
         : "담당자별 루틴 · 프로젝트 · 하위업무. 이름을 누르면 그 사람 업무가 모두 펼쳐집니다.") + "</div></div>" +
       '<div class="meta">기준일 <b class="num">' + esc(D.meta.baseDate) + "</b>" + printBtn() + "</div></div>" +
-      goalBanner() + strip + filters + body + LEGEND;
+      pfTabs() + goalBanner() + strip + filters + body + LEGEND;
   }
 
   /* ============================================================
@@ -2357,6 +3313,7 @@ const SEED = {
       '<div class="note">현재값을 비우고 미측정으로 두면 [성과지표] 화면에서 빗금으로 표시되고, 판정에서 사각지대로 잡힙니다.</div></div>' +
       '<div class="card"><div class="card-h"><h2>화면 주소 빠른 수정</h2><span class="badge">추가·삭제는 [바로가기] 탭</span></div>' +
       '<div class="tblwrap"><table><tbody>' + lk + "</tbody></table></div></div>" +
+      pfAdminCard() +
       '<div class="card"><div class="card-h"><h2>데이터</h2></div>' +
       '<div class="btnrow" style="margin-top:0"><button class="btn" id="btnExp">JSON 내보내기</button>' +
       '<button class="btn ghost" id="btnImp">JSON 가져오기</button>' +
@@ -2382,7 +3339,7 @@ const SEED = {
 
   function render() {
     /* 포커스가 남은 채로 innerHTML을 갈면 blur 처리 중 노드가 사라져 오류가 난다 */
-    try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+    try { if (!pfM && document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
     $("#nav").innerHTML = PAGES.map(function (p) {
       return '<button data-go="' + p.id + '"' + (p.id === cur ? ' aria-current="page"' : "") +
         '><span class="ic" aria-hidden="true">' + p.ic + "</span>" + esc(p.n) + "</button>";
@@ -2412,6 +3369,7 @@ const SEED = {
       if (a) a.classList.remove("on");
       if (c2) c2.classList.remove("on");
     };
+    pfBind();
     $$("[data-go]").forEach(function (b) { b.onclick = function () { cur = b.getAttribute("data-go"); repaint(false); }; });
     $$("[data-mm]").forEach(function (b) { b.onclick = function () { mmFilter = b.getAttribute("data-mm"); repaint(true); }; });
     $$("[data-mmode]").forEach(function (b) { b.onclick = function () { mmMode = b.getAttribute("data-mmode"); repaint(true); }; });
@@ -2835,17 +3793,17 @@ const SEED = {
           if (!o.routines) o.routines = clone(SEED.routines);
           if (!o.workKpis) o.workKpis = clone(SEED.workKpis);
           if (!o.automations) o.automations = clone(SEED.automations);
-          D = o; save(); repaint(false); toast("가져왔습니다");
+          D = pfKeep(o, D, false); save(); repaint(false); toast("가져왔습니다");
         } catch (err) { toast("불러오지 못했습니다 — 이 트래커가 내보낸 JSON인지 확인해 주세요"); }
       };
       r.readAsText(f);
     };
     var e4 = $("#btnSeed"); if (e4) e4.onclick = function () {
-      if (!confirm("수정 내용을 버리고 기준선(" + SEED.meta.baseline + ") 상태로 되돌립니다. 계속할까요?")) return;
-      D = clone(SEED); open = {}; jOpen = {}; auOpen = {}; pjEdit = null; save(); repaint(false); toast("기준선으로 되돌렸습니다");
+      if (!confirm("수정 내용을 버리고 기준선(" + SEED.meta.baseline + ") 상태로 되돌립니다. KPI·선행지표의 월별 실적과 이력은 그대로 둡니다. 계속할까요?")) return;
+      D = pfKeep(clone(SEED), D, true); open = {}; jOpen = {}; auOpen = {}; pjEdit = null; save(); repaint(false); toast("기준선으로 되돌렸습니다");
     };
     var e5 = $("#btnWipe"); if (e5) e5.onclick = function () {
-      if (!confirm("구조와 지표 정의는 남기고 진행률·측정값·루틴 체크만 비웁니다. 계속할까요?")) return;
+      if (!confirm("구조와 지표 정의는 남기고 진행률·측정값·루틴 체크만 비웁니다. KPI·선행지표의 월별 실적과 이력은 그대로 둡니다. 계속할까요?")) return;
       D.projects.forEach(function (p) { (p.tasks || []).forEach(function (t) { t.p = 0; }); });
       D.kpis.forEach(function (k) { k.cur = null; k.measured = false; });
       Object.keys(D.routines).forEach(function (id) { D.routines[id].forEach(function (r) { r.done = false; }); });
@@ -2866,8 +3824,8 @@ const SEED = {
   var FB_PATH = "shared/b2bOpsTracker";
   var FB_SDK_VER = "10.12.5";
   var FB_POLL_MS = 2000;
-  var FB_SINGLE = ["meta", "bid"];                                  // 통째로 비교·저장하는 단일 객체
-  var FB_BY_ID = ["members", "programs", "projects", "workKpis", "kpis", "automations", "links"]; // id 있는 배열 → {id: item} 맵
+  var FB_SINGLE = ["meta", "bid", "perfConfig"];                                  // 통째로 비교·저장하는 단일 객체
+  var FB_BY_ID = ["members", "programs", "projects", "workKpis", "kpis", "automations", "links", "mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory"]; // id 있는 배열 → {id: item} 맵
   var FB_BY_MEMBER = ["routines", "personal"];                      // 이미 담당자 id로 묶인 맵
   var KEY_PENDING = "netform.b2b.tracker.pending.v1";
 
@@ -2877,7 +3835,9 @@ const SEED = {
     sdk: null, db: null, root: null,
     synced: null,        // 마지막으로 원격과 같다고 확인된 Firebase 모양 스냅샷
     pending: null,       // 아직 못 올려서 쌓인 변경분 (Firebase 모양 조각)
-    pushTimer: null, pollTimer: null, retryTimer: null
+    pushTimer: null, pollTimer: null, retryTimer: null,
+    dirty: false,        // 아직 전송을 시작하지 않은 내 변경이 있음
+    writing: 0, writeSeq: 0 // 전송 중인 요청 수 · 전송이 시작·끝날 때마다 올라가는 번호
   };
 
   function fbSetState(state) {
@@ -2904,6 +3864,7 @@ const SEED = {
   function fromRemoteShape(remote) {
     var d = clone(SEED); // 원격에 없는 최상위 키는 기본값으로 채워 화면이 깨지지 않게 한다
     if (!remote || typeof remote !== "object") return d;
+    remote = clone(remote); // 화면 데이터가 FB.synced와 같은 객체를 쓰면 수정이 변경으로 잡히지 않는다
     FB_SINGLE.forEach(function (k) { if (remote[k] != null) d[k] = remote[k]; });
     FB_BY_ID.forEach(function (k) {
       if (!remote[k]) return;
@@ -2943,8 +3904,27 @@ const SEED = {
     return target;
   }
 
+  /* ---- 보낼 변경은 항상 "컬렉션/항목" 경로로 둔다.
+         { projects: { A: … } } 처럼 묶어 보내면 서버가 컬렉션 전체를 A 하나로 교체한다. ---- */
+  function fbAddPending(pending, patch) {
+    var out = {};
+    Object.keys(pending || {}).forEach(function (k) { out[k] = pending[k]; });
+    Object.keys(patch).forEach(function (k) { out[k] = patch[k]; });
+    return out;
+  }
+  function fbFlatten(p) { // 이전 버전이 이 PC에 묶음 형태로 남겨 둔 변경을 경로 형태로 바꾼다
+    if (!p) return p;
+    var out = {}, cols = FB_BY_ID.concat(FB_BY_MEMBER);
+    Object.keys(p).forEach(function (k) {
+      if (cols.indexOf(k) >= 0 && p[k] && typeof p[k] === "object") {
+        Object.keys(p[k]).forEach(function (id) { out[k + "/" + id] = p[k][id]; });
+      } else out[k] = p[k];
+    });
+    return out;
+  }
+
   /* ---- 오프라인 큐 (연결 끊긴 동안의 변경분을 이 PC에 잠시 보관) ---- */
-  function loadPending() { try { return JSON.parse(localStorage.getItem(KEY_PENDING) || "null"); } catch (e) { return null; } }
+  function loadPending() { try { return fbFlatten(JSON.parse(localStorage.getItem(KEY_PENDING) || "null")); } catch (e) { return null; } }
   function savePending(p) { try { if (p) localStorage.setItem(KEY_PENDING, JSON.stringify(p)); else localStorage.removeItem(KEY_PENDING); } catch (e) {} }
 
   /* ---- 전송 ---- */
@@ -2969,22 +3949,27 @@ const SEED = {
   }
 
   function scheduleFbPush() {
+    FB.dirty = true;
     clearTimeout(FB.pushTimer);
     FB.pushTimer = setTimeout(flushFbPatch, 400);
   }
   function flushFbPatch() {
-    var shape = toRemoteShape(D);
+    FB.dirty = false;
+    var shape = clone(toRemoteShape(D));
     var patch = diffRemoteShape(FB.synced, shape);
-    if (patch) FB.pending = mergePatch(FB.pending, patch);
+    if (patch) FB.pending = fbAddPending(FB.pending, patch);
     if (!FB.pending) { fbSetState("synced"); return; }
     var sending = FB.pending;
     fbSetState("saving");
+    FB.writing++; FB.writeSeq++;
     fbWrite(sending).then(function () {
+      FB.writing--; FB.writeSeq++;
       FB.synced = mergePatch(FB.synced || {}, sending);
       if (FB.pending === sending) FB.pending = null;
       savePending(null);
       fbSetState("synced");
     }).catch(function () {
+      FB.writing--; FB.writeSeq++;
       savePending(FB.pending);
       fbSetState("error");
       clearTimeout(FB.retryTimer);
@@ -2992,21 +3977,40 @@ const SEED = {
     });
   }
 
+  /* ---- 서버는 키를 정렬하고 빈 값을 저장하지 않으므로, 같은 내용인지 그 기준으로 비교한다 ---- */
+  function fbCanon(v) {
+    function norm(x) {
+      if (x === null || x === undefined) return undefined;
+      if (Array.isArray(x)) { var a = x.map(norm).filter(function (y) { return y !== undefined; }); return a.length ? a : undefined; }
+      if (typeof x === "object") {
+        var o = {}, n = 0;
+        Object.keys(x).sort().forEach(function (k) { var y = norm(x[k]); if (y !== undefined) { o[k] = y; n++; } });
+        return n ? o : undefined;
+      }
+      return x;
+    }
+    return JSON.stringify(norm(v));
+  }
+
   /* ---- 다른 컴퓨터의 변경을 화면에 반영 ---- */
   function onRemoteShape(shape) {
     if (!shape) return;
-    if (FB.synced && JSON.stringify(shape) === JSON.stringify(FB.synced)) return; // 내가 방금 올린 것의 메아리
+    if (FB.synced && fbCanon(shape) === fbCanon(FB.synced)) return; // 내가 방금 올린 것의 메아리
+    var mine = FB.dirty ? diffRemoteShape(FB.synced, toRemoteShape(D)) : null; // 아직 안 보낸 내 변경은 잃지 않는다
     FB.synced = shape;
-    D = fromRemoteShape(shape);
+    D = fromRemoteShape(mine ? mergePatch(clone(shape), mine) : shape);
     try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {}
+    if (mine) { clearTimeout(FB.pushTimer); flushFbPatch(); }
     repaint(true);
   }
 
   /* ---- SDK 를 못 쓸 때: 2초 주기 REST 폴링 ---- */
   function fbPollTick() {
+    if (FB.writing) return;
+    var seq = FB.writeSeq;
     fbRead().then(function (raw) {
       if (FB.state === "error" || FB.state === "offline") fbSetState(FB.pending ? "saving" : "synced");
-      if (FB.pending) return; // 올릴 게 남아 있으면 이번 폴은 건너뛴다 (내 변경을 덮어쓰지 않기 위해)
+      if (FB.pending || FB.dirty || FB.writing || seq !== FB.writeSeq) return; // 저장 전에 읽은 옛 값으로 내 변경을 덮어쓰지 않는다
       onRemoteShape(raw);
     }).catch(function () {
       fbSetState(FB.pending ? "error" : "offline");
@@ -3028,7 +4032,7 @@ const SEED = {
     } else {
       // Firebase 가 완전히 비어 있을 때만 이 HTML 의 기본 데이터를 최초 1회 등록한다
       D = clone(SEED);
-      FB.synced = toRemoteShape(D);
+      FB.synced = clone(toRemoteShape(D));
       fbFullWrite(FB.synced).catch(function () {});
     }
     try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {}
