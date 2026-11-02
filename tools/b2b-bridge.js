@@ -293,10 +293,7 @@ function b2bAuto(ref, month) { return (B2B.shape.perfAuto || {})[ref + "_" + mon
 function b2bView(ref, month) { return b2bAuto(ref, month) || b2bRec(ref, month); }
 function b2bRate(ref, month) { return PC.rate(b2bView(ref, month)); }
 function b2bDef(ref) { const s = B2B.shape; return s.mainKpis[ref] || s.leadDefs[ref] || s.lagDefs[ref] || null; }
-function b2bLis(mid) { const o = {}; Object.values(B2B.shape.leadDefs).forEach(l => { if (l.member === mid) o[l.id] = 1; }); return li => !!o[li]; }
 function b2bMembersOf(k) { const out = []; (k.links || []).forEach(l => { const d = B2B.shape.leadDefs[l.li]; if (d && d.member && !out.includes(d.member)) out.push(d.member); }); return out; }
-function b2bMemberScore(k, mid, month, draft) { return PC.score(k, month, b2bView, draft, b2bLis(mid)); }
-function b2bTeamScore(k, month, draft) { return PC.teamScore(k, b2bMembersOf(k), mid => b2bMemberScore(k, mid, month), draft); }
 function b2bHist(h) { const id = "H" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); h.id = id; h.at = new Date().toISOString(); B2B.shape.perfHistory[id] = h; }
 function b2bPct(v) { return PC.round1(v); }
 function b2bMemberName(id) { const m = B2B.shape.members[id]; return m ? String(m.name || "").trim() : id; }
@@ -381,14 +378,37 @@ function b2bKpiMember() {
   return UI.kpiMember;
 }
 function b2bSetKpiMember(id) { UI.kpiMember = id; try { localStorage.setItem(KEY_KPI_MEMBER, id); } catch (e) {} renderKpiPage(); }
+/* 팀 KPI 중심 구성(2026-11-02 사용자 지시) — 팀 KPI 3개가 최상위 목표이고, 그 아래에 KPI 를 높이는 팀원 활동과
+   활동 뒤 고객 변화를 연결해 보여 준다. 팀 KPI 실적은 실제 고객 이용(대시보드 자동값·직접 입력)으로만 계산하고
+   개인 활동 달성률·고객 변화 지표와 섞거나 서로 대신 쓰지 않는다. 실행/운영 지원 구분은 화면 표시용이라 저장하지 않는다. */
+const B2B_LEAD_KIND = { LI01: "exec", LI02: "exec", LI03: "exec", LI07: "exec", LI04: "support", LI05: "support", LI06: "support", LI08: "support", LI09: "support" };
+const B2B_LAG_KPI = { LG1: "MK1", LG2: "MK2", LG3: "MK3" };
+function b2bKindTag(id) { const exec = B2B_LEAD_KIND[id] === "exec"; return `<span class="kt-kind ${exec ? "exec" : "support"}">${exec ? "실행" : "운영 지원"}</span>`; }
+function b2bRatePill(id) { const r = b2bRate(id, b2bMonth()), ok = r.state === "ok", v = ok ? b2bPct(r.value) : 0; return `<span class="kt-rate ${!ok ? "s-todo" : v >= 100 ? "s-done" : "s-doing"}">${b2bRateLabel(r)}</span>`; }
+function b2bKpiTree(k) {
+  const s = B2B.shape, byMember = {};
+  (k.links || []).filter(l => s.leadDefs[l.li]).sort((a, b) => (a.rel === "ref") - (b.rel === "ref") || (a.li < b.li ? -1 : 1)).forEach(l => {
+    const d = s.leadDefs[l.li]; (byMember[d.member] = byMember[d.member] || []).push({ d, ref: l.rel === "ref" });
+  });
+  const members = Object.values(s.members).sort((a, b) => a.id < b.id ? -1 : 1), without = members.filter(m => !byMember[m.id]);
+  const act = x => `<button class="kt-act" data-act="${x.d.id}" onclick="b2bOpenInd('${x.d.id}')"><span class="kt-no">${escapeHtml(x.d.no || "")}</span><span class="kt-name">${escapeHtml(x.d.name)}</span>${b2bKindTag(x.d.id)}${x.ref ? '<span class="kt-kind ref">참고</span>' : ""}${b2bRatePill(x.d.id)}</button>`;
+  const lags = Object.values(s.lagDefs).filter(g => B2B_LAG_KPI[g.id] === k.id).sort((a, b) => a.id < b.id ? -1 : 1);
+  return `<div class="kt-tree">
+    <div class="kt-sub">이 KPI를 높이는 팀원 활동 <span>활동 달성률은 팀 KPI 실적에 더하지 않아요</span></div>
+    ${members.filter(m => byMember[m.id]).map(m => `<div class="kt-member"><div class="kt-who"><span class="chip-dot" style="background:${m.color || "#1B5E6E"};"></span>${escapeHtml(b2bMemberName(m.id))} <span>${byMember[m.id].length}개</span></div>${byMember[m.id].map(act).join("")}</div>`).join("") || '<div class="kt-none">연결된 활동이 아직 없어요.</div>'}
+    ${without.length ? `<div class="kt-none">${without.map(m => escapeHtml(b2bMemberName(m.id))).join(" · ")}: 아직 연결된 활동 없음</div>` : ""}
+    ${lags.length ? `<div class="kt-sub">관리 후 고객 변화 <span>관리한 업체에서 생긴 변화 · 개인 점수 아님</span></div>${lags.map(g => `<button class="kt-act lag" data-act="${g.id}" onclick="b2bOpenInd('${g.id}')"><span class="kt-no">${escapeHtml(b2bMemberName(g.member))}</span><span class="kt-name">${escapeHtml(g.name)}</span>${b2bRatePill(g.id)}</button>`).join("")}` : ""}
+  </div>`;
+}
 function b2bMemberSection(mid) {
   const s = B2B.shape, byId = (a, b) => a.id < b.id ? -1 : 1;
   const leads = Object.values(s.leadDefs).filter(l => l.member === mid).sort(byId), lags = Object.values(s.lagDefs).filter(g => g.member === mid).sort(byId);
   if (!leads.length && !lags.length) return `<div class="ks-empty">아직 ${escapeHtml(b2bMemberName(mid))}님의 지표가 없어요.</div>`;
-  const group = (cls, tag, title, help, list) => `<div class="ks-sec ${cls}"><div class="ks-sec-head"><span class="ks-tag">${tag}</span><b>${title}</b><span class="ks-help">${help}</span></div>
-    <div class="ks-list">${list.length ? list.map(d => b2bIndRow(d)).join("") : '<div class="ks-empty">등록된 지표가 없어요.</div>'}</div></div>`;
-  return group("lead", "선행지표", "내가 하는 일", "좋은 결과를 만들려고 이번 달 내가 직접 하는 일이에요.", leads) +
-    group("lag", "후행지표", "실제 성과", "내가 한 일로 실제로 생긴 결과예요. 직접 세어서 넣어요.", lags);
+  const group = (cls, tag, title, help, list) => list.length ? `<div class="ks-sec ${cls}"><div class="ks-sec-head"><span class="ks-tag">${tag}</span><b>${title}</b><span class="ks-help">${help}</span></div>
+    <div class="ks-list">${list.map(d => b2bIndRow(d)).join("")}</div></div>` : "";
+  return group("lead", "선행 · 실행", "고객을 직접 움직이는 일", "미팅·연락처럼 고객의 서비스 이용에 직접 닿는 일이에요.", leads.filter(l => B2B_LEAD_KIND[l.id] === "exec")) +
+    group("lead support", "선행 · 운영 지원", "실행을 받쳐 주는 일", "고객관리카드 정리·등급·자동화처럼 실행업무를 돕는 일이에요.", leads.filter(l => B2B_LEAD_KIND[l.id] !== "exec")) +
+    group("lag", "관리 후 고객 변화", "관리한 업체에서 생긴 변화", "개인 평가 점수가 아니에요. 팀 KPI 실적과 따로 보고, 선행 활동 값으로 채우지 않아요.", lags);
 }
 renderKpiPage = function () {
   const root = $("kpi-root"); if (!root || !B2B.shape) return;
@@ -401,9 +421,9 @@ renderKpiPage = function () {
     const n = Object.values(s.leadDefs).concat(Object.values(s.lagDefs)).filter(d => d.member === m.id).length;
     return `<button class="member-chip ${m.id === mid ? "on" : ""}" data-kpi-member="${m.id}" onclick="b2bSetKpiMember('${m.id}')"><span class="chip-dot" style="background:${m.color || "#1B5E6E"};"></span>${escapeHtml(String(m.name || "").trim())}<span class="chip-count">${n}</span></button>`;
   }).join("");
-  root.innerHTML = `<div class="ks-h">👥 우리 팀 목표 <span>팀 전체가 함께 채우는 KPI ${kpis.length}개</span></div>
-    <div class="ks-team">${kpis.map(k => b2bIndRow(k, true)).join("")}</div>
-    <div class="ks-h">🙋 팀원 선택 <span>이름을 누르면 그 사람의 지표만 보여요</span></div>
+  root.innerHTML = `<div class="ks-h">🎯 팀 KPI ${kpis.length}개 <span>최상위 목표 · 실적은 전체 업체의 실제 이용으로만 계산해요</span></div>
+    <div class="ks-team">${kpis.map(k => `<div class="kt-block">${b2bIndRow(k, true)}${b2bKpiTree(k)}</div>`).join("")}</div>
+    <div class="ks-h">🙋 팀원별로 보기 <span>이름을 누르면 그 사람의 활동과 관리 후 고객 변화를 보고 값을 넣어요</span></div>
     <div class="member-pick ks-pick">${chips}</div>
     <div id="kpi-member-view">${mid ? b2bMemberSection(mid) : ""}</div>`;
 };
@@ -427,22 +447,20 @@ function b2bDrawInd() {
     .concat(Object.values(s.perfMonthly).filter(x => x.ref === ref).map(x => Object.assign({ _old: !!b2bAuto(ref, x.month) }, x)));
   const rows = monthRecs.sort((a, b) => a.month < b.month ? 1 : a.month > b.month ? -1 : a._auto ? -1 : 1).map(x => { const y = PC.rate(x), ws = isLead ? PC.workStats(tasks, x) : null; return `<tr><td>${x.month}</td><td>${PC.isNum(x.num) && PC.isNum(x.den) ? x.num + " / " + x.den : x.mode === "direct" ? "직접 입력" : "—"}</td><td>${y.state === "ok" ? b2bPct(y.value) + "%" : y.state === "empty" ? "대상 없음" : "미측정"}</td>${isLead ? `<td>${Math.round(ws.value || 0)}%</td>` : ""}<td>${x._auto ? b2bAutoLabel(x) : escapeHtml(x.updatedBy || "") + (x._old ? " · 직접 입력(이전)" : "")}</td></tr>`; }).join("");
   const hist = Object.values(s.perfHistory).filter(h => h.ref === ref).sort((a, b) => a.at < b.at ? 1 : -1).slice(0, 20).map(h => `<div class="b2b-kv"><span>${escapeHtml((h.at || "").slice(0, 16).replace("T", " "))}</span><b>${escapeHtml(h.by || "")} · ${escapeHtml(h.summary || "")} ${escapeHtml((h.changes || []).map(c => c.f + " " + c.from + "→" + c.to).join(", "))}</b></div>`).join("");
-  const team = s.mainKpis[ref] ? b2bTeamScore(def, month) : null;
-  const teamScore = !team ? "" : team.state === "ok" ? b2bPct(team.value) + "%" : team.state === "empty" ? "대상 없음" : team.state === "wait" && (team.code === "unset" || team.code === "sum") ? "미확정" : "산출 대기";
-  const memberScores = team ? b2bMembersOf(def).map(mid => { const v = b2bMemberScore(def, mid, month); return b2bMemberName(mid) + " " + (v.state === "ok" ? b2bPct(v.value) + "%" : v.state === "empty" ? "대상 없음" : "산출 대기"); }).join(" · ") : "";
+  const linked = s.mainKpis[ref] ? (def.links || []).map(l => s.leadDefs[l.li]).filter(Boolean) : [];
   el.innerHTML = `${b2bIndRow(def)}
     ${autoBox}
     <div class="ks-what"><div class="ks-what-t">무엇을 세나요?</div><div class="b2b-kv"><span>목표</span><b>${escapeHtml(def.denLabel || "대상 수")}</b></div><div class="b2b-kv"><span>현재 실적</span><b>${escapeHtml(def.numLabel || "완료 수")}</b></div><div class="b2b-kv"><span>달성률</span><b>현재 실적 ÷ 목표 × 100</b></div></div>
     ${isLead ? `<div class="b2b-kv" style="margin-top:8px;"><span>업무 진행률</span><b>${tasks.length ? Math.round(w.value) + "% · 완료 " + w.done + " / " + w.total : "세부업무 없음"} (달성률과 별개)</b></div>` : ""}
     <details style="margin-top:12px;"><summary class="b2b-sum">기준·계산식·설명</summary>
       <div class="b2b-kv"><span>기준 달성률(%) · 선택</span><input type="number" min="0" max="100" id="b2b-target" value="${PC.isNum(def.target) ? def.target : ""}" placeholder="미설정" onchange="b2bSetTarget('${ref}',this)" style="width:100px;"></div>
-      ${team ? kv("팀 선행활동 점수", teamScore + (team.reason && team.state !== "ok" ? " · " + team.reason : "") + (memberScores ? " · " + memberScores + " (참고)" : "")) : ""}${kv("계산식", def.formula)}${kv("집계 범위", def.scope)}${kv("관리 목적", def.purpose)}${kv("측정 항목", def.measure)}${kv("목표 설명", def.targetText)}${kv("연결 팀 KPI", kl)}${kv("연결 프로젝트", projs ? projs + " (진행률 합산 안 함)" : "")}${kv("참고", def.outcome || def.defNote)}${kv("데이터", (def.src || "") + (def.linkNote ? " · " + def.linkNote : ""))}</details>
+      ${linked.length ? kv("연결된 팀원 활동", linked.map(d => b2bMemberName(d.member) + " " + (d.no || "") + " " + d.name).join(", ") + " (달성률은 이 KPI 실적에 더하지 않음)") : ""}${kv("계산식", def.formula)}${kv("집계 범위", def.scope)}${kv("관리 목적", def.purpose)}${kv("측정 항목", def.measure)}${kv("목표 설명", def.targetText)}${kv("연결 팀 KPI", kl)}${kv("연결 프로젝트", projs ? projs + " (진행률 합산 안 함)" : "")}${kv("참고", def.outcome || def.defNote)}${kv("데이터", (def.src || "") + (def.linkNote ? " · " + def.linkNote : ""))}</details>
     ${isLead ? `<div class="subtask-container" style="margin-top:12px;"><div class="subtask-head"><span>📎 세부업무</span><span style="font-family:var(--num); font-weight:800;">${w.done}/${w.total}</span></div><div class="subtask-list">${subs}</div><div class="subtask-add"><input type="text" id="b2b-sub-add" placeholder="세부업무 추가" onkeydown="if(event.key==='Enter')b2bSubAdd('${ref}')"><button onclick="b2bSubAdd('${ref}')">+ 추가</button></div></div>` : ""}
     <details style="margin-top:12px;"><summary class="b2b-sum">월별 실적</summary>${rows ? `<table class="table"><thead><tr><th>월</th><th>실적</th><th>달성률</th>${isLead ? "<th>업무 진행률</th>" : ""}<th>입력</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="empty-small">아직 저장된 실적이 없습니다.</div>'}</details>
     <details style="margin-top:8px;"><summary class="b2b-sum">변경 이력</summary>${hist || '<div class="empty-small">변경 이력이 없습니다.</div>'}</details>`;
 }
 const _closeModal = closeModal;
-closeModal = function () { UI.b2bInd = null; _closeModal(); };
+closeModal = function () { UI.b2bInd = null; _closeModal(); const b = $("modal-kpi-body"); if (b) b.innerHTML = ""; }; // 닫힌 창에 지표 입력칸이 남아 겹치지 않게 비운다
 
 /* ---------- 앱·도구 모음: 업무 자동화 목록도 함께 표시 ---------- */
 const _renderAutomationPage = renderAutomationPage;

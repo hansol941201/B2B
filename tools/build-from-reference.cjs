@@ -163,6 +163,29 @@ once('</style>\n</head>', `
   .ks-empty { padding: 18px; text-align: center; color: var(--muted); font-size: 14px; background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; grid-column: 1 / -1; }
   .ks-what { margin-top: 12px; padding: 10px 12px; background: var(--line-2); border-radius: 10px; }
   .ks-what-t { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+  /* 팀 KPI 아래 연결된 팀원 활동·관리 후 고객 변화 */
+  .kt-block { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .kt-tree { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .kt-sub { font-size: 13px; font-weight: 800; margin: 6px 0 2px; display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+  .kt-sub span { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .kt-member { display: flex; flex-direction: column; }
+  .kt-who { font-size: 12.5px; font-weight: 800; display: flex; align-items: center; gap: 6px; padding: 4px 0; }
+  .kt-who span:last-child { color: var(--muted); font-weight: 600; }
+  .kt-act { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; width: 100%; min-height: 44px; padding: 6px 4px; background: none; border: 0; border-top: 1px solid var(--line-2); text-align: left; cursor: pointer; font: inherit; color: var(--ink); }
+  .kt-act:hover { background: var(--line-2); }
+  .kt-no { color: var(--accent); font-weight: 700; flex: 0 0 auto; }
+  .kt-act.lag .kt-no { color: var(--warn); font-size: 12px; }
+  .kt-name { flex: 1 1 140px; min-width: 0; font-size: 13.5px; font-weight: 600; overflow-wrap: anywhere; }
+  .kt-kind { font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 99px; white-space: nowrap; }
+  .kt-kind.exec { background: var(--accent-soft); color: var(--accent); }
+  .kt-kind.support { background: var(--line-2); color: var(--muted); }
+  .kt-kind.ref { background: var(--warn-soft); color: var(--warn); }
+  .kt-rate { font-family: var(--num); font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
+  .kt-rate.s-todo { background: var(--line-2); color: var(--muted); }
+  .kt-rate.s-doing { background: var(--accent-soft); color: var(--accent); }
+  .kt-rate.s-done { background: var(--success-soft); color: var(--success); }
+  .kt-none { font-size: 12.5px; color: var(--muted); padding: 6px 0; }
+  .ks-sec.lead.support .ks-tag { background: var(--line-2); color: var(--muted); }
   @media (max-width: 900px) { .ks-team { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .ks-list { grid-template-columns: 1fr; } .ks-month { margin-left: 0; } .ks-item .ks-field .kmv { font-size: 18px; } }
 </style>

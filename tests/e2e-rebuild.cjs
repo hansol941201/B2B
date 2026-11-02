@@ -145,17 +145,35 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       await tab(p, 'kpi');
       assert.equal(await p.locator('.ks-team .ks-teamcard').count(), 3);
       const first = await p.locator('#kpi-root > *').first().innerText();
-      assert.ok(/우리 팀 목표/.test(first), '팀 KPI가 맨 위');
+      assert.ok(/팀 KPI 3개/.test(first) && /최상위 목표/.test(first), '팀 KPI가 맨 위');
       assert.deepStrictEqual((await p.locator('#kpi-root .member-chip').allInnerTexts()).map(x => x.replace(/\d+/g, '').trim()), ['박희선', '조재연', '신한솔']);
       await pick('신한솔');
       assert.equal(await p.locator('#kpi-member-view .kpi-ind').count(), 14);
       const v = await p.locator('#kpi-member-view').innerText();
-      assert.ok(/내가 하는 일/.test(v) && /실제 성과/.test(v), '쉬운 설명');
+      assert.ok(/고객을 직접 움직이는 일/.test(v) && /실행을 받쳐 주는 일/.test(v) && /관리 후 고객 변화/.test(v) && /개인 평가 점수가 아니에요/.test(v), '실행·운영 지원·고객 변화 구분');
+      assert.ok(!/실제 성과/.test(v), '개인 성과 표현 없음');
       assert.ok(/미응답 업체 재연락 관리/.test(v) && /고객등급 상승률/.test(v));
       await pick('박희선');
       assert.equal(await p.locator('#kpi-member-view .kpi-ind').count(), 0);
       assert.ok(/아직 박희선님의 지표가 없어요/.test(await p.locator('#kpi-member-view').innerText()));
       await pick('신한솔');
+    });
+    await t('팀 KPI 아래 연결된 팀원 활동(실행·운영 지원)과 관리 후 고객 변화가 한눈에', async () => {
+      const blocks = p.locator('.ks-team .kt-block');
+      assert.equal(await blocks.count(), 3);
+      const acts = async i => (await blocks.nth(i).locator('.kt-act').evaluateAll(a => a.map(e => e.dataset.act))).join(',');
+      assert.equal(await acts(0), 'LI01,LI02,LI03,LI04,LI06,LI05,LI09,LG1', 'KPI ① 연결(핵심 먼저, 참고 뒤, 고객 변화 끝)');
+      assert.equal(await acts(1), 'LI04,LI05,LI06,LI07,LG2');
+      assert.equal(await acts(2), 'LI01,LI02,LI04,LI05,LI06,LI08,LI09,LG3');
+      const t0 = await blocks.nth(0).locator('.kt-tree').innerText();
+      assert.ok(/이 KPI를 높이는 팀원 활동/.test(t0) && /신한솔/.test(t0) && /실행/.test(t0) && /운영 지원/.test(t0) && /참고/.test(t0), t0.slice(0, 200));
+      assert.ok(/박희선 · 조재연: 아직 연결된 활동 없음/.test(t0));
+      assert.ok(/관리 후 고객 변화/.test(t0) && /개인 점수 아님/.test(t0));
+      assert.ok(!/LG4|장기 미활동|고객등급 상승률/.test(await p.locator('.ks-team').innerText()), '팀 KPI 에 직접 연결 안 된 고객 변화 지표는 팀원별 보기에만');
+      await blocks.nth(0).locator('.kt-act[data-act="LI03"]').click();
+      await p.waitForSelector('#modal-kpi.open');
+      assert.ok(/신규업체 첫 이용 활성화/.test(await p.locator('#modal-kpi-title').innerText()));
+      await p.evaluate(() => closeModal());
     });
     await t('평소 화면: 지표명·목표·현재 실적·달성률만 (기준값·계산식은 상세보기 안)', async () => {
       const v = await p.locator('#kpi-root').innerText();
@@ -207,13 +225,24 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       const x = await until(async () => { const v = await db(); return v.perfMonthly['LG1_' + MONTH] && v.perfMonthly['LG1_' + MONTH].num === 3 ? v : false; });
       assert.equal(x.perfMonthly['MK1_' + MONTH].num, 17);
     });
-    await t('팀 선행점수는 가중치 확정 전 미확정 (상세보기 안)', async () => {
+    await t('팀 KPI 상세에 개인 활동 점수를 섞지 않음 · 가중치 미설정 유지', async () => {
       await p.locator('.kpi-ind[data-ind="MK1"] .ks-more').click();
       await p.locator('#modal-kpi summary:has-text("기준·계산식·설명")').click();
-      assert.ok(/팀 선행활동 점수\s*미확정/.test(await p.locator('#modal-kpi-body').innerText()));
+      const b = await p.locator('#modal-kpi-body').innerText();
+      assert.ok(!/선행활동 점수|개인 점수/.test(b), '팀 선행점수 표시 없음');
+      assert.ok(/연결된 팀원 활동/.test(b) && /이 KPI 실적에 더하지 않음/.test(b));
       await p.evaluate(() => closeModal());
       const x = await db();
       Object.values(x.mainKpis).forEach(k => assert.equal(k.memberWeights, undefined));
+    });
+    await t('개인 활동 달성률이 올라도 팀 KPI 실적은 그대로', async () => {
+      const before = await p.locator('.kpi-ind[data-ind="MK1"] .kstatus').first().innerText();
+      await p.fill('.kpi-ind[data-ind="LI05"] .kmv.tgt', '4'); await p.press('.kpi-ind[data-ind="LI05"] .kmv.tgt', 'Tab');
+      await p.fill('.kpi-ind[data-ind="LI05"] .kmv:not(.tgt)', '4'); await p.press('.kpi-ind[data-ind="LI05"] .kmv:not(.tgt)', 'Tab');
+      await until(async () => /100%/.test(await indText(p, 'LI05')));
+      assert.equal(await p.locator('.kpi-ind[data-ind="MK1"] .kstatus').first().innerText(), before);
+      assert.ok(/100%/.test(await p.locator('.kt-act[data-act="LI05"]').first().innerText()), '트리의 활동 달성률은 갱신');
+      assert.equal((await db()).perfMonthly['MK1_' + MONTH].num, 17, '팀 KPI 기록 그대로');
     });
     await t('월별 실적 분리: 전월 입력해도 이번 달 유지', async () => {
       await p.selectOption('#kpi-month', PREV);
