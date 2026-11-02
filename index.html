@@ -788,6 +788,57 @@ body.pf-lock{overflow:hidden}
 .pf-actor input{width:104px;min-height:32px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;font-size:12.5px;font-weight:500;background:var(--bg)}
 .pf-link-pick{display:grid;gap:2px;margin-top:4px}
 .pf-link-pick label{display:flex;gap:7px;align-items:center;font-size:12.5px;min-height:30px}
+.sp{display:grid;gap:18px;max-width:880px;margin:0 auto}
+.sp-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sp-top h1{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.sp-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px}
+.sp-kpi{display:grid;gap:1px;width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 13px;background:var(--bg);min-height:44px}
+.sp-kpi:hover{background:var(--surf)}
+.sp-kpi .nm{font-size:12.5px;font-weight:700;color:var(--text-3);line-height:1.4}
+.sp-kpi .big{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+.sp-kpi .big small{font-size:12px;margin-left:1px}
+.sp-kpi .big.txt{font-size:14px;line-height:2;color:var(--text-3)}
+.sp-kpi .s{font-size:11.5px;color:var(--text-3);line-height:1.4}
+.sp-who{display:flex;flex-wrap:wrap;gap:6px}
+.sp-who button{min-height:44px;padding:8px 18px;border:1px solid var(--line);border-radius:100px;font-size:14.5px;font-weight:700;color:var(--text-3);background:var(--bg)}
+.sp-who button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.sp-sec{display:grid;gap:0}
+.sp-sec > h2{font-size:14px;font-weight:800;padding:6px 0;display:flex;gap:8px;align-items:baseline}
+.sp-sec > h2 span{font-size:12px;font-weight:600;color:var(--text-3)}
+.sp-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line-2)}
+.sp-st{min-height:40px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:12.5px;font-weight:700;color:var(--text-3);text-align:center;white-space:nowrap}
+.sp-st.prog{background:var(--tint);color:var(--brand);border-color:var(--brand-2)}
+.sp-st.done{background:var(--ok-bg);color:var(--ok);border-color:#CFE0D7}
+.sp-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;width:100%;min-height:44px;align-items:center;padding:2px 4px;border-radius:6px}
+.sp-main:hover{background:var(--surf)}
+.sp-main .nm{font-size:14px;font-weight:700;min-width:0;line-height:1.4}
+.sp-main .val{font-size:14px;font-weight:800;text-align:right;white-space:nowrap}
+.sp-main .val.txt{font-size:12.5px;font-weight:600;color:var(--text-3)}
+.sp-main .meter{grid-column:1 / -1}
+.sp-open{padding:2px 0 12px 12px;display:grid;gap:4px;border-left:2px solid var(--line-2);margin-left:6px}
+.sp-sub{display:grid;grid-template-columns:96px minmax(0,1fr) 62px 44px;gap:6px 8px;align-items:center;font-size:13px;padding:2px 0}
+.sp-sub .t{min-width:0;line-height:1.4}
+.sp-sub .tb{display:grid;gap:3px;min-width:0}
+.sp-sub.done .t{color:var(--text-2);text-decoration:line-through}
+.sp-sub .more{min-height:38px;font-size:12px;font-weight:700;color:var(--brand);text-align:center}
+.sp-sub .btk-d{grid-column:1 / -1;border-radius:7px}
+.sp-tools{display:flex;gap:6px;flex-wrap:wrap;padding-top:4px}
+.sp-empty{font-size:13px;color:var(--text-3);padding:12px 0}
+.sp-ind{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;width:100%;min-height:46px;align-items:center;padding:7px 4px;border-top:1px solid var(--line-2)}
+.sp-ind:hover{background:var(--surf)}
+.sp-ind .nm{font-size:13.5px;font-weight:600;min-width:0;line-height:1.4}
+.sp-ind .val{font-size:14px;font-weight:800;white-space:nowrap}
+.sp-ind .val.txt{font-size:12.5px;font-weight:600;color:var(--text-3)}
+.sp-ind .meter{grid-column:1 / -1}
+.sp-all{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;width:100%;min-height:52px;padding:9px 6px;align-items:center;border-top:1px solid var(--line-2)}
+.sp-all:hover{background:var(--surf)}
+.sp-all b{font-size:14.5px}.sp-all .val{font-weight:800}
+.sp-all .meter{grid-column:1 / -1}
+.sp-foot{display:flex;gap:6px 14px;flex-wrap:wrap;justify-content:center;padding-top:8px;border-top:1px solid var(--line-2)}
+.sp-foot button{min-height:38px;padding:4px 8px;font-size:12.5px;font-weight:600;color:var(--text-3)}
+.sp-foot button:hover{color:var(--brand)}
+.sp-big{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.tabs button.nav-more{color:#96A3BC;font-size:13px}
 .pf-empty{font-size:12.5px;color:var(--text-2);padding:8px 0}
 @media (max-width:640px){
   .pf-vals{grid-template-columns:1fr}
@@ -799,6 +850,11 @@ body.pf-lock{overflow:hidden}
   .pf-f input,.pf-f select,.pf-f textarea,.pf-wrow input{font-size:16px}
   .pf-kv{grid-template-columns:78px minmax(0,1fr)}
   .pf-actor input{font-size:16px}
+  .sp-row{grid-template-columns:84px minmax(0,1fr)}
+  .sp-sub{grid-template-columns:84px minmax(0,1fr);}
+  .sp-sub .pct-w{grid-column:1 / 2}
+  .sp-sub .more{grid-column:2 / 3;text-align:left}
+  .sp-open{padding-left:8px;margin-left:2px}
   .pfs-pct,.pf-task-pct,.pfa-row input{font-size:16px}
 }
 @media print{ #pfModal{display:none!important} }
@@ -840,8 +896,7 @@ const SEED = {
   members: [
     { id:"jjy", name:"조재연", role:"리드매니저", color:"#2E6FBF", focus:"프로그램 총괄 · 주간 병목 판정 · 기준 확정",
       scope:"팀 전체 지표를 읽고 이번 주에 손댈 지점 하나를 지정한다." },
-    { id:"csh", name:"최세혁", role:"매니저", color:"#1E8A6B", focus:"시장·공고·고객여정 데이터 측정",
-      scope:"수치를 만들어내는 쪽. 지표가 계산되게 만들고 근거를 확정한다." },
+    { id:"m1", name:"박희선", role:"매니저", color:"#1E8A6B", focus:"", scope:"" },
     { id:"shs", name:"신한솔", role:"매니저", color:"#8A4E9E", focus:"플랫폼 운영 · 업무 자동화 · 협력사 접점",
       scope:"수치를 움직이는 쪽. 협력사가 실제로 쓰는 화면과 자료를 만든다." }
   ],
@@ -2022,11 +2077,15 @@ var PerfCalc = (function () {
      - 저장은 항목 단위 PATCH. 같은 항목을 다른 사람이 먼저 고쳤으면 확인을 받는다.
      ============================================================ */
   var PC = window.PerfCalc || PerfCalc;
-  var KEY_TASKTAB = "netform.b2b.tracker.tasktab.v1";
+  var KEY_TASKTAB = "netform.b2b.tracker.tasktab.v2";
+  var KEY_SELMEMBER = "netform.b2b.tracker.member.v1";
   var KEY_ACTOR = "netform.b2b.tracker.actor.v1";
   var PF_COLS = ["mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory"];
-  var taskTab = "work";
-  try { taskTab = localStorage.getItem(KEY_TASKTAB) || "work"; } catch (e) {}
+  var taskTab = "simple"; // simple: 기본 화면 · work: 전체 보기 · kpi:<팀원>: 개인 지표
+  try { taskTab = localStorage.getItem(KEY_TASKTAB) || "simple"; } catch (e) {}
+  var pfSel = "";
+  try { pfSel = localStorage.getItem(KEY_SELMEMBER) || ""; } catch (e) {}
+  var pfNavMore = false;
   if (taskTab === "kpi") taskTab = "kpi:shs";
   var pfBoardOpen = {}; // 담당자 카드의 개인 지표 접기
   var pfBoardAcc = {};  // 담당자 카드의 지표별 펼침
@@ -2042,7 +2101,22 @@ var PerfCalc = (function () {
     var d = new Date(), m = d.getMonth() + 1;
     return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m;
   }
-  function pfActor() { try { return localStorage.getItem(KEY_ACTOR) || ""; } catch (e) { return ""; } }
+  /* 입력자를 따로 적지 않으면 지금 고른 팀원 이름으로 남긴다 */
+  function pfActor() {
+    var v = "";
+    try { v = localStorage.getItem(KEY_ACTOR) || ""; } catch (e) {}
+    if (v) return v;
+    var s = pfSelected();
+    return s && s !== "all" ? String(member(s).name).trim() : "";
+  }
+  function pfSelected() {
+    if (pfSel === "all") return "all";
+    if (D.members.some(function (m) { return m.id === pfSel; })) return pfSel;
+    var withWork = D.members.filter(function (m) {
+      return projectsOf(m.id).length || (D.routines[m.id] || []).length || (D.leadDefs || []).some(function (l) { return l.member === m.id; });
+    })[0];
+    return withWork ? withWork.id : (D.members[0] ? D.members[0].id : "all");
+  }
   function pfFind(col, id) {
     var list = D[col] || [];
     for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
@@ -2197,7 +2271,8 @@ var PerfCalc = (function () {
   /* ---------- 화면 ---------- */
   function pfTabs() {
     return '<div class="fg pf-tabs" role="group" aria-label="팀 업무 화면 구분">' +
-      '<button data-tt="work" aria-pressed="' + (taskTab === "work") + '">팀 업무 현황</button>' +
+      '<button data-tt="simple" aria-pressed="' + (taskTab === "simple") + '">기본 화면</button>' +
+      '<button data-tt="work" aria-pressed="' + (taskTab === "work") + '">전체 보기</button>' +
       pfMembersAll().map(function (mid) {
         return '<button data-tt="kpi:' + esc(mid) + '" aria-pressed="' + (taskTab === "kpi:" + mid) + '">' + esc(member(mid).name) + " 개인 지표</button>";
       }).join("") + "</div>";
@@ -2402,9 +2477,120 @@ var PerfCalc = (function () {
       "</div></div>" + form;
   }
 
+  /* ---------- 기본 화면: 이름 선택 → 업무 확인 → 진행률 입력 ---------- */
+  function pfStatusLabel(k) { return PF_ICON[k] + " " + PF_ST[k]; }
+  function pfSimpleKpi(k) {
+    var r = pfRate(k.id, pfMonth), pr = pfRate(k.id, PC.prevMonth(pfMonth)), s = pfTeamScore(k, pfMonth);
+    return '<button class="sp-kpi" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="input" data-simple="1"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + "</span>" +
+      (r.state === "ok" ? '<span class="big num">' + pf1(r.value) + "<small>%</small></span>" : '<span class="big txt">' + (r.state === "empty" ? "대상 없음" : "미측정") + "</span>") +
+      '<span class="s">팀 선행점수 ' + (s.state === "ok" ? pf1(s.value) + "%" : s.state === "empty" ? "대상 없음" : s.code === "unset" || s.code === "sum" ? "미확정" : "산출 대기") + " · " +
+      (r.state === "ok" && pr.state === "ok" ? "전월 " + (PC.delta(r.value, pr.value) >= 0 ? "+" : "") + fmt(PC.delta(r.value, pr.value)) + "%p" : "전월 비교 없음") + "</span></button>";
+  }
+  function pfSimpleSub(r) {
+    var v = Number(r.t.p) || 0, k = tkState(v);
+    return '<div class="sp-sub ' + k + '"><button class="sp-st ' + k + '" data-task-cycle="' + esc(r.key) + '" aria-label="' + esc(r.t.t || "이름 없는 업무") + " 상태 변경, 현재 " + PF_ST[k] + '">' + pfStatusLabel(k) + "</button>" +
+      '<span class="tb"><span class="t">' + esc(r.t.t || "(이름 없음)") + "</span>" + mb(v, barCls(k)) + "</span>" +
+      '<span class="pct-w"><input class="pf-task-pct num" id="sp-pct-' + esc(r.key.replace(":", "-")) + '" type="number" inputmode="numeric" min="0" max="100" step="10" value="' + v + '" data-task-pct="' + esc(r.key) + '" aria-label="' + esc(r.t.t) + ' 진행률"></span>' +
+      '<button class="more" data-tk="' + esc(r.key) + '" aria-expanded="' + !!open[r.key] + '">상세</button>' + taskDetail(r, "btk-d", true) + "</div>";
+  }
+  function pfSimpleProject(p, all) {
+    var v = pctOfProject(p), k = tkState(v), tasks = p.tasks || [], o = !!jOpen[p.id];
+    var st = '<button class="sp-st ' + k + '" ' + (tasks.length >= 2 ? 'data-proj="' + esc(p.id) + '"' : tasks.length === 1 ? 'data-task-cycle="' + esc(p.id) + ':0"' : 'data-proj-cycle="' + esc(p.id) + '"') + ' aria-label="' + esc(p.name) + " 상태, 현재 " + PF_ST[k] + '">' + pfStatusLabel(k) + "</button>";
+    var stale = pfProjStale(p);
+    var row = '<div class="sp-row">' + st + '<button class="sp-main" data-proj="' + esc(p.id) + '" aria-expanded="' + o + '"><span class="nm">' + esc(p.name) + (stale && !stale.none ? pfStaleTag(stale) : "") + '</span><span class="val num">' + v + "%</span>" + mb(v, barCls(k)) + "</button></div>";
+    if (!o) return row;
+    var subs = all.filter(function (r) { return r.pj.id === p.id; }).map(pfSimpleSub).join("");
+    return row + '<div class="sp-open">' + pfProjLinks(p) + (subs || '<div class="sp-empty">세부업무가 없습니다. 아래에서 추가해 주세요.</div>') +
+      '<div class="pfa-row"><input type="text" id="pfa-task-' + esc(p.id) + '" placeholder="세부업무 추가" aria-label="' + esc(p.name) + ' 세부업무 추가"><button data-task-add="' + esc(p.id) + '">+ 추가</button></div>' +
+      '<div class="sp-tools"><button class="mini" data-pjedit="' + esc(p.id) + '">업무 정보 수정</button></div>' + (pjEdit === p.id ? projEditForm(p) : "") + "</div>";
+  }
+  function pfSimpleIndicator(type, x) {
+    var r = pfRate(x.id, pfMonth);
+    return '<button class="sp-ind" data-pf-open="' + type + '" data-id="' + esc(x.id) + '" data-v="input" data-simple="1"><span class="nm">' + esc(x.name) + "</span>" +
+      (r.state === "ok" ? '<span class="val num">' + pf1(r.value) + "%</span>" : '<span class="val txt">' + (r.state === "empty" ? "대상 없음" : "미측정") + "</span>") + pfMeter(r, x.target) + "</button>";
+  }
+  function pfSimpleMember(m, all) {
+    var ps = projectsOf(m.id), leads = (D.leadDefs || []).filter(function (l) { return l.member === m.id; }), lags = (D.lagDefs || []).filter(function (g) { return g.member === m.id; });
+    var indicators = leads.length || lags.length
+      ? (leads.length ? '<section class="sp-sec"><h2>선행지표 <span>' + leads.length + "개 · 실제 관리 실적</span></h2>" + leads.map(function (l) { return pfSimpleIndicator("lead", l); }).join("") + "</section>" : "") +
+        (lags.length ? '<section class="sp-sec"><h2>후행지표 <span>' + lags.length + "개 · 실제 성과</span></h2>" + lags.map(function (g) { return pfSimpleIndicator("lag", g); }).join("") + "</section>" : "")
+      : '<section class="sp-sec"><h2>개인 지표</h2><div class="sp-empty">아직 등록된 개인 지표가 없습니다.</div></section>';
+    return '<section class="sp-sec"><h2>업무 <span>' + ps.length + "건</span></h2>" +
+      (ps.map(function (p) { return pfSimpleProject(p, all); }).join("") || '<div class="sp-empty">등록된 업무가 없습니다.</div>') +
+      '<div class="pfa-row"><input type="text" id="pfa-proj-' + esc(m.id) + '" placeholder="업무 추가" aria-label="' + esc(m.name) + ' 업무 추가"><button data-proj-add="' + esc(m.id) + '">+ 추가</button></div></section>' +
+      ((D.routines[m.id] || []).length ? routineBlock(m) : "") + indicators;
+  }
+  function pfSimplePage() {
+    var sel = pfSelected(), all = allTasks();
+    var who = D.members.map(function (m) { return '<button data-pf-sel="' + esc(m.id) + '" aria-pressed="' + (sel === m.id) + '">' + esc(m.name) + "</button>"; }).join("") +
+      '<button data-pf-sel="all" aria-pressed="' + (sel === "all") + '">전체</button>';
+    var body = sel === "all"
+      ? '<section class="sp-sec">' + D.members.map(function (m) {
+          var ps = projectsOf(m.id), v = pctOfSet(ps);
+          return '<button class="sp-all" data-pf-sel="' + esc(m.id) + '"><b>' + esc(m.name) + '</b><span class="val num">' + v + "%</span>" + mb(v) + "</button>";
+        }).join("") + "</section>"
+      : pfSimpleMember(member(sel), all);
+    var more = pfMembersAll().map(function (mid) { return '<button data-tt="kpi:' + esc(mid) + '">' + esc(member(mid).name) + " 지표 자세히</button>"; }).join("");
+    return '<div class="sp"><div class="sp-top"><h1>팀 업무</h1>' + pfMonthField() + "</div>" +
+      '<div class="sp-kpis" aria-label="팀 공통 KPI">' + (D.mainKpis || []).map(pfSimpleKpi).join("") + "</div>" +
+      '<div class="sp-who" role="group" aria-label="팀원 선택">' + who + "</div>" + body +
+      '<div class="sp-foot"><button data-tt="work">전체 보기</button>' + more + '<button data-go="admin">설정</button></div></div>';
+  }
+  /* 지표 상세(기본 화면): 대상 수와 완료 수만 넣으면 달성률은 자동 계산 */
+  function pfSimpleBody(def) {
+    var rec = pfRec(def.id, pfM.month), r = rec || {}, ws = def.tasks ? PC.workStats(def.tasks, rec) : null;
+    return '<div class="pf-sec"><label class="pf-f" style="margin-bottom:10px"><span>기준 월</span><select id="pfmMonth">' + pfMonthOpts(pfM.month) + "</select></label>" +
+      (r.mode === "direct" && PC.isNum(r.direct) ? '<div class="pf-warn" style="margin-bottom:8px">지금 값은 직접 입력한 ' + fmt(r.direct) + "%입니다. 대상 수와 완료 수를 저장하면 계산값으로 바뀝니다.</div>" : "") +
+      '<div class="pf-form">' + pfFieldNum("den", "대상 수 — " + (def.denLabel || "대상"), r.den) + pfFieldNum("num", "완료 수 — " + (def.numLabel || "완료"), r.num) + "</div>" +
+      '<div class="pf-preview" id="pfPreview" style="margin-top:10px"></div>' +
+      (pfM.err ? '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>" : "") +
+      '<div class="pf-save"><button class="btn" id="pfSaveSimple">저장</button></div></div>' +
+      (def.tasks ? '<details class="disc" data-pf-sub-det' + (pfM.subOpen ? " open" : "") + '><summary>세부업무 ' + ws.done + " / " + ws.total + " 완료 · 달성률과 별개</summary><div class=\"body\">" + pfSubRows(def, pfM.month, "m", false) + "</div></details>" : "") +
+      '<details class="disc"><summary>목표·계산식 보기</summary><div class="body"><label class="pf-f" style="margin-bottom:10px"><span>목표 달성률(%) — 비우면 미설정</span><input type="number" inputmode="decimal" min="0" max="100" step="any" id="pfSimpleTarget" value="' + (PC.isNum(def.target) ? esc(def.target) : "") + '" placeholder="미설정"></label>' + pfDefInfo(def) +
+      (def.defNote ? '<div class="pf-warn" style="margin-top:8px">' + esc(def.defNote) + "</div>" : "") + "</div></details>" +
+      '<div class="sp-tools" style="padding-top:12px"><button class="mini" id="pfSimpleFull">전체 상세 보기</button></div>';
+  }
+  function pfSaveSimple(def) {
+    def = pfDef(pfM.type, pfM.id);
+    var m = $("#pfModal"), den = pfNumOf($('[data-pf="den"]', m)), num = pfNumOf($('[data-pf="num"]', m)), tEl = $("#pfSimpleTarget", m), tgt = tEl ? pfNumOf(tEl) : null;
+    var errs = PC.validate({ mode: "auto", den: den, num: num });
+    if (tgt != null && (isNaN(tgt) || tgt < 0 || tgt > 100)) errs.push("목표 달성률은 0~100 사이여야 합니다.");
+    if (errs.length) { pfM.err = errs[0]; pfKeepDraw(def); return; }
+    var by = pfActorOrAsk(); if (!by) return;
+    var cur = pfRec(def.id, pfM.month), curRev = cur ? (cur.rev || 0) : 0;
+    if (curRev !== pfM.baseRev && !pfConflictOk(cur && cur.updatedBy, cur && cur.updatedAt)) return;
+    var old = cur || {}, changes = [], direct = old.mode === "direct";
+    function cmp(l, a, b) { if ((a == null ? null : a) !== (b == null ? null : b)) changes.push({ f: l, from: pfShow(a), to: pfShow(b) }); }
+    var keepDirect = direct && den == null && num == null;
+    if (!keepDirect) {
+      cmp(def.denLabel || "대상 수", old.den, den); cmp(def.numLabel || "완료 수", old.num, num);
+      if (direct) changes.push({ f: "입력 방식", from: "직접 입력", to: "자동 계산" });
+    }
+    var tChanged = (PC.isNum(def.target) ? def.target : null) !== tgt;
+    if (!changes.length && !tChanged) { pfClose(true); toast("바뀐 내용이 없습니다"); return; }
+    if (changes.length) {
+      var rec = cur ? clone(cur) : { id: def.id + "_" + pfM.month, ref: def.id, month: pfM.month };
+      rec.mode = "auto"; delete rec.direct; delete rec.den; delete rec.num;
+      if (den != null) rec.den = den;
+      if (num != null) rec.num = num;
+      rec.updatedAt = new Date().toISOString(); rec.updatedBy = by; rec.rev = curRev + 1;
+      if (cur) D.perfMonthly[D.perfMonthly.indexOf(cur)] = rec; else D.perfMonthly.push(rec);
+      pfPushHist({ ref: def.id, month: pfM.month, kind: "value", by: by, summary: "실적 변경", changes: changes });
+    }
+    if (tChanged) {
+      pfPushHist({ ref: def.id, kind: "def", by: by, summary: "정의 변경", changes: [{ f: "목표 달성률", from: PC.isNum(def.target) ? def.target + "%" : "미설정", to: tgt == null ? "미설정" : tgt + "%" }] });
+      if (tgt == null) delete def.target; else def.target = tgt;
+      def.rev = (def.rev || 0) + 1; def.updatedAt = new Date().toISOString(); def.updatedBy = by;
+    }
+    pfPersistNow();
+    pfClose(true);
+    repaint(true);
+    toast("저장했습니다");
+  }
+
   /* ---------- 상세 창 ---------- */
-  function pfOpen(type, id, view, mem) {
-    pfM = { type: type, id: id, month: pfMonth, view: view || "input", dirty: false, err: "", member: mem || "" };
+  function pfOpen(type, id, view, mem, simple) {
+    pfM = { type: type, id: id, month: pfMonth, view: view || "input", dirty: false, err: "", member: mem || "", simple: !!simple };
     pfSetBase();
     pfDraw();
   }
@@ -2605,11 +2791,11 @@ var PerfCalc = (function () {
   function pfDraw() {
     var el = $("#pfModal"), def = pfDef(pfM.type, pfM.id);
     if (!def) { pfClose(true); return; }
-    var views = pfM.type === "kpi"
+    var views = pfM.simple ? [] : pfM.type === "kpi"
       ? [["links", "팀 선행점수"], ["weights", "개인 지표 가중치"], ["input", "실적·설명"], ["edit", "수정"]]
       : pfM.type === "lead" ? [["input", "상세·실적"], ["edit", "수정"]] : [["input", "실적"], ["edit", "수정"]];
     var title = (pfM.type === "kpi" ? "KPI " : "") + def.no + " " + def.name;
-    var body = pfM.view === "edit" ? pfEditBody(def) : pfM.type === "kpi" ? pfKpiBody(def) : pfM.type === "lead" ? pfLeadBody(def) : pfLagBody(def);
+    var body = pfM.simple ? pfSimpleBody(def) : pfM.view === "edit" ? pfEditBody(def) : pfM.type === "kpi" ? pfKpiBody(def) : pfM.type === "lead" ? pfLeadBody(def) : pfLagBody(def);
     var keepTop = el.scrollTop;
     el.innerHTML = '<div class="pf-m" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="pf-m-h"><div class="pf-m-t"><h2>' + esc(title) + '</h2><button class="pf-x" id="pfClose" aria-label="닫기">×</button></div>' +
       '<div class="pf-vw">' + views.map(function (v) { return '<button data-pf-view="' + v[0] + '" aria-pressed="' + (pfM.view === v[0]) + '">' + esc(v[1]) + "</button>"; }).join("") + "</div></div>" +
@@ -2684,6 +2870,14 @@ var PerfCalc = (function () {
     var sr = $("#pfSaveRec", m); if (sr) sr.onclick = function () { pfSaveRec(def); };
     var sd = $("#pfSaveDef", m); if (sd) sd.onclick = function () { pfSaveDef(def); };
     var sw = $("#pfSaveW", m); if (sw) sw.onclick = function () { pfSaveWeights(def); };
+    var ssv = $("#pfSaveSimple", m); if (ssv) ssv.onclick = function () { pfSaveSimple(def); };
+    var sfl = $("#pfSimpleFull", m);
+    if (sfl) sfl.onclick = function () {
+      if (pfM.dirty && !confirm("저장하지 않은 입력이 있습니다. 화면을 바꿀까요?")) return;
+      pfM.simple = false; pfM.view = "input"; pfM.dirty = false; pfM.err = ""; pfSetBase(); pfDraw();
+    };
+    var sdt = $("[data-pf-sub-det]", m);
+    if (sdt) sdt.addEventListener("toggle", function () { if (pfM) pfM.subOpen = sdt.open; });
     var smw = $("#pfSaveMW", m); if (smw) smw.onclick = function () { pfSaveMemberWeights(def); };
     var mm = $("#pfmMember", m);
     if (mm) mm.onchange = function () {
@@ -2866,7 +3060,7 @@ var PerfCalc = (function () {
   function pfDrawKeep() { // 상세 창에서 입력 중인 값을 유지한 채 다시 그린다
     var def = pfDef(pfM.type, pfM.id), m = $("#pfModal"), vals = [], mode = $("input[name=pfmode]:checked", m);
     var modeV = mode ? mode.value : null;
-    $$("[data-pf],#pfNote,#pfActor", m).forEach(function (el) { vals.push([el.id || el.getAttribute("data-pf"), el.value, !!el.id]); });
+    $$("[data-pf],#pfNote,#pfActor,#pfSimpleTarget", m).forEach(function (el) { vals.push([el.id || el.getAttribute("data-pf"), el.value, !!el.id]); });
     pfDraw();
     m = $("#pfModal");
     if (modeV) { var r = $("input[name=pfmode][value=" + modeV + "]", m); if (r && !r.checked) { r.checked = true; r.dispatchEvent(new Event("change")); } }
@@ -2945,7 +3139,7 @@ var PerfCalc = (function () {
   }
   /* 다시 그려도 사라지지 않게 문서 전체에서 한 번만 받는다 */
   document.addEventListener("click", function (e) {
-    var t = e.target.closest ? e.target.closest("[data-sub-cycle],[data-sub-add],[data-task-cycle],[data-task-add],[data-proj-add],[data-pfb-acc],[data-pf-card],[data-pf-member],[data-pf-stale-proj],[data-pfnd-add]") : null;
+    var t = e.target.closest ? e.target.closest("[data-sub-cycle],[data-sub-add],[data-task-cycle],[data-task-add],[data-proj-add],[data-proj-cycle],[data-pf-sel],[data-nav-more],[data-pf-backup],[data-pfb-acc],[data-pf-card],[data-pf-member],[data-pf-stale-proj],[data-pfnd-add]") : null;
     if (!t) return;
     if (t.hasAttribute("data-sub-cycle")) {
       var id = t.getAttribute("data-sub-cycle"), mo = t.getAttribute("data-month"), i = +t.getAttribute("data-i"), def = pfFind("leadDefs", id);
@@ -2965,6 +3159,17 @@ var PerfCalc = (function () {
         var nid = newId(mid.slice(0, 1).toUpperCase() + "X"), np = { id: nid, prog: D.programs[0] ? D.programs[0].id : "", owner: mid, name: pn, note: "", tasks: [] };
         pfTouchProject(np); D.projects.push(np); jOpen[nid] = true; pfPersistNow(); repaint(true); toast("프로젝트를 추가했습니다");
       }
+    } else if (t.hasAttribute("data-proj-cycle")) {
+      var cp = project(t.getAttribute("data-proj-cycle"));
+      if (cp) { cp.tasks = cp.tasks || []; if (!cp.tasks.length) cp.tasks.push({ t: cp.name, p: 50, n: "", r: "" }); pfTouchProject(cp); pfPersistNow(); repaint(true); }
+    } else if (t.hasAttribute("data-pf-sel")) {
+      pfSel = t.getAttribute("data-pf-sel");
+      try { localStorage.setItem(KEY_SELMEMBER, pfSel); } catch (err) {}
+      repaint(false);
+    } else if (t.hasAttribute("data-nav-more")) {
+      pfNavMore = !pfNavMore; repaint(true);
+    } else if (t.hasAttribute("data-pf-backup")) {
+      pfShowBackup();
     } else if (t.hasAttribute("data-pfb-acc")) {
       var ak = t.getAttribute("data-pfb-acc"); pfBoardAcc[ak] = !pfBoardAcc[ak]; repaint(true);
     } else if (t.hasAttribute("data-pf-card")) {
@@ -3011,6 +3216,37 @@ var PerfCalc = (function () {
   }
 
   /* 설정 화면 카드 */
+  function pfHistAll() {
+    var names = {};
+    ["mainKpis", "leadDefs", "lagDefs"].forEach(function (c) { (D[c] || []).forEach(function (x) { names[x.id] = x.name; }); });
+    var list = (D.perfHistory || []).slice().sort(function (a, b) { return a.at < b.at ? 1 : -1; }).map(function (h) {
+      var c = clone(h); c.summary = (names[h.ref] || h.ref) + " · " + (h.summary || ""); return c;
+    });
+    return pfHistRows(list, "변경 이력이 아직 없습니다.");
+  }
+  /* 담당자가 현재 팀원 목록에 없는 항목. 자동으로 다른 사람에게 옮기지 않고 여기서만 보여 준다 */
+  function pfOrphans() {
+    var act = {}, out = [];
+    D.members.forEach(function (m) { act[m.id] = 1; });
+    D.projects.forEach(function (p) { if (!act[p.owner]) out.push("프로젝트 " + p.name + " (담당 ID " + p.owner + ")"); });
+    Object.keys(D.routines || {}).forEach(function (k) { if (!act[k] && (D.routines[k] || []).length) out.push("루틴 " + D.routines[k].length + "개 (담당 ID " + k + ")"); });
+    return out;
+  }
+  function pfShowBackup() {
+    var box = $("#pfBackupBox"); if (!box) return;
+    box.textContent = "불러오는 중…";
+    fetch(FB_URL + "/shared/b2bOpsTrackerBackups.json", { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(); return r.json(); }).then(function (all) {
+      var keys = Object.keys(all || {}).sort(), last = keys.length ? all[keys[keys.length - 1]] : null;
+      if (!last) { box.textContent = "백업이 없습니다."; return; }
+      var act = {}, LABEL = { csh: "최세혁", jjy: "조재연 (이전 ID)" };
+      D.members.forEach(function (m) { act[m.id] = 1; });
+      var ps = last.projects || {}, list = (Array.isArray(ps) ? ps : Object.keys(ps).map(function (k) { return ps[k]; })).filter(function (p) { return p && !act[p.owner]; });
+      box.innerHTML = '<div class="pf-sub" style="margin-bottom:6px">' + esc(keys[keys.length - 1].slice(0, 10)) + " 백업 기준 · 읽기 전용 · 복구되지 않습니다</div>" + (list.map(function (p) {
+        var ts = p.tasks || [], pct = ts.length ? Math.round(ts.reduce(function (s, t) { return s + (Number(t.p) || 0); }, 0) / ts.length) : 0;
+        return '<div class="pfr"><span class="nm">' + esc(p.name) + '</span><span class="val num">' + pct + '%</span><span class="sm">' + esc(LABEL[p.owner] || p.owner) + " · 하위업무 " + ts.length + "개</span></div>";
+      }).join("") || '<div class="pf-empty">확인할 항목이 없습니다.</div>');
+    }).catch(function () { box.textContent = "백업을 불러오지 못했습니다."; });
+  }
   function pfAdminCard() {
     var c = D.perfConfig || {};
     var rows = (D.mainKpis || []).map(function (k) {
@@ -3026,7 +3262,11 @@ var PerfCalc = (function () {
     return '<div class="card"><div class="card-h"><h2>팀 KPI·개인 지표 설정</h2></div>' + rows +
       '<div class="pf-sec"><h3>미응답 재연락 기준 (선행지표 ② 안내용 · 메일 기록 연동 전까지 자동 분류하지 않습니다)</h3><div class="pf-form">' +
       num("noReplyDays", "미응답 판정 기간(일)") + num("resendDays", "재발송 주기(일)") + num("longNoReplyDays", "장기 미응답 기준(일)") + "</div></div>" +
-      '<div class="pf-sec"><h3>진행이 더딘 업무</h3><div class="pf-form">' + num("staleDays", "정체 판단 기간(일, 비우면 7일)") + "</div></div></div>";
+      '<div class="pf-sec"><h3>진행이 더딘 업무</h3><div class="pf-form">' + num("staleDays", "정체 판단 기간(일, 비우면 7일)") + "</div></div>" +
+      '<details class="disc"><summary>담당자 확인이 필요한 업무</summary><div class="body"><div class="pf-sub" style="margin-bottom:6px">담당자가 팀원 목록에 없는 업무입니다. 다른 사람에게 자동으로 옮기지 않습니다.</div>' +
+      (pfOrphans().map(function (x) { return '<div class="pfr"><span class="nm">' + esc(x) + "</span></div>"; }).join("") || '<div class="pf-empty">현재 데이터에는 없습니다.</div>') +
+      '<div class="sp-tools"><button class="mini" data-pf-backup>백업에 있는 이전 담당 업무 보기</button></div><div id="pfBackupBox" style="margin-top:8px"></div></div></details>' +
+      '<details class="disc"><summary>변경 이력</summary><div class="body">' + pfHistAll() + "</div></details></div>";
   }
   function pfBind() {
     $$("[data-tt]").forEach(function (b) {
@@ -3042,7 +3282,7 @@ var PerfCalc = (function () {
     var ms = $("#pfMonthSel");
     if (ms) ms.onchange = function () { pfMonth = ms.value; repaint(true); };
     $$("[data-pf-open]").forEach(function (b) {
-      b.onclick = function () { pfOpen(b.getAttribute("data-pf-open"), b.getAttribute("data-id"), b.getAttribute("data-v"), b.getAttribute("data-mem")); };
+      b.onclick = function () { pfOpen(b.getAttribute("data-pf-open"), b.getAttribute("data-id"), b.getAttribute("data-v"), b.getAttribute("data-mem"), b.hasAttribute("data-simple")); };
     });
     $$("[data-pf-cfg]").forEach(function (el) {
       el.onchange = function () {
@@ -3064,6 +3304,7 @@ var PerfCalc = (function () {
     return f;
   }
   function pageTasks() {
+    if (taskTab === "simple") return pfSimplePage();
     if (taskTab !== "work") {
       var tabMid = taskTab.replace("kpi:", "");
       if (pfMembersAll().indexOf(tabMid) >= 0) return pfPage(tabMid);
@@ -3897,10 +4138,10 @@ var PerfCalc = (function () {
   function render() {
     /* 포커스가 남은 채로 innerHTML을 갈면 blur 처리 중 노드가 사라져 오류가 난다 */
     try { if (!pfM && document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
-    $("#nav").innerHTML = PAGES.map(function (p) {
+    $("#nav").innerHTML = PAGES.filter(function (p) { return p.id === "tasks" || p.id === "admin" || pfNavMore || p.id === cur; }).map(function (p) {
       return '<button data-go="' + p.id + '"' + (p.id === cur ? ' aria-current="page"' : "") +
         '><span class="ic" aria-hidden="true">' + p.ic + "</span>" + esc(p.n) + "</button>";
-    }).join("");
+    }).join("") + '<button class="nav-more" data-nav-more aria-expanded="' + pfNavMore + '">' + (pfNavMore ? "접기" : "더보기") + "</button>";
     edit = editScope === "all";
     var pg = PAGES.filter(function (p) { return p.id === cur; })[0] || PAGES[0];
     $("#view").innerHTML = '<div class="wrap">' + pg.f() + "</div>";

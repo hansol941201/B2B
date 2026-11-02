@@ -29,8 +29,8 @@ function sameOld(d) {
 
 async function newPage(browser, opts, fresh) {
   const ctx = await browser.newContext(opts || { viewport: { width: 1320, height: 900 } });
-  // 시험은 신한솔 개인 지표 탭에서 시작한다. 처음 접속 기본 탭은 별도 시험에서 확인.
-  if (!fresh) await ctx.addInitScript(() => { if (!localStorage.getItem('netform.b2b.tracker.tasktab.v1')) localStorage.setItem('netform.b2b.tracker.tasktab.v1', 'kpi:shs'); });
+  // 기존 시험은 신한솔 개인 지표 탭에서 시작한다. 처음 접속 화면은 별도 시험에서 확인.
+  if (!fresh) await ctx.addInitScript(() => { if (!localStorage.getItem('netform.b2b.tracker.tasktab.v2')) localStorage.setItem('netform.b2b.tracker.tasktab.v2', 'kpi:shs'); });
   const p = await ctx.newPage();
   p.on('console', m => { if (m.type() === 'error' && !/__nosdk|ERR_|404|Failed to load/.test(m.text())) consoleErrors.push(m.text()); });
   p.on('pageerror', e => consoleErrors.push(String(e)));
@@ -119,17 +119,17 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
   const p = await newPage(browser);
   try {
     // 로컬 호환 서버는 연결이 끊기면 다른 연결의 쓰기를 놓칠 수 있어, 다른 화면을 열기 전에 시험한다
-    await t('처음 접속하면 팀 업무 현황과 공통 KPI가 먼저 보이고 개인 지표는 신한솔 탭에 있음', async () => {
+    await t('처음 접속하면 기본 화면: 이름 선택·공통 KPI·업무만 표시', async () => {
       const f = await newPage(browser, null, true);
       await open(f);
-      assert.ok(/팀 업무 현황/.test(await f.locator('.phead h1').innerText()));
-      assert.equal(await f.locator('article.k').count(), 3);
-      assert.ok(/B2B팀 공통 KPI/.test(await f.locator('#view .wrap').innerText()));
-      await f.click('[data-tt="kpi:shs"]');
-      assert.ok(/신한솔 개인 지표/.test(await f.locator('.phead h1').innerText()));
-      assert.equal(await f.locator('article.k').count(), 0, '개인 화면에 팀 KPI 카드 없음');
+      assert.ok(/팀 업무/.test(await f.locator('.sp-top h1').innerText()));
+      assert.equal(await f.locator('.sp-kpi').count(), 3);
+      const names = await f.locator('.sp-who button').allInnerTexts();
+      assert.deepStrictEqual(names, ['박희선', '조재연', '신한솔', '전체']);
+      assert.equal(await f.locator('[data-pf-sel="shs"]').getAttribute('aria-pressed'), 'true', '업무가 있는 팀원을 먼저 표시');
+      await f.click('[data-pf-sel="m2"]');
       await f.reload(); await f.waitForFunction(() => document.querySelector('#view .wrap'));
-      assert.ok(/신한솔 개인 지표/.test(await f.locator('.phead h1').innerText()), '선택한 탭 기억');
+      assert.equal(await f.locator('[data-pf-sel="m2"]').getAttribute('aria-pressed'), 'true', '고른 팀원 기억');
       await f.context().close();
     });
     await t('처음 열어도 저장 없음 — 기존 데이터 그대로', async () => {
@@ -182,7 +182,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       assert.equal(await p.locator('.bcol').count(), 1);
       assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14);
       await p.click('[data-pf-member="all"]');
-      assert.equal(await p.locator('.bcol').count(), 2);
+      assert.equal(await p.locator('.bcol').count(), 3);
     });
     await t('갱신 날짜가 없는 기존 프로젝트는 정체로 단정하지 않음', async () => {
       await tab(p, 'work');
@@ -377,7 +377,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
     });
     await t('기존 멤버·업무·프로젝트 유지, 신한솔 멤버만 추가', async () => {
       const d = await db();
-      assert.deepStrictEqual(Object.keys(d.members).sort(), ['m1', 'shs']);
+      assert.deepStrictEqual(Object.keys(d.members).sort(), ['m1', 'm2', 'shs']);
       assert.equal(d.members.shs.name, '신한솔');
       assert.deepStrictEqual(d.projects, baseline.projects);
       assert.deepStrictEqual(d.routines, baseline.routines);
@@ -541,18 +541,20 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       assert.equal(r.prog.t1, 50, '세부업무 진행률 유지'); assert.equal(r.num, 5);
       await p.click('#pfClose');
     });
-    await t('입력자가 없으면 세부업무를 저장하지 않고 안내', async () => {
-      await p.evaluate(() => localStorage.removeItem('netform.b2b.tracker.actor.v1'));
+    await t('입력자를 적지 않으면 고른 팀원 이름으로 기록, 전체 선택이면 안내', async () => {
+      await p.evaluate(() => { localStorage.removeItem('netform.b2b.tracker.actor.v1'); localStorage.setItem('netform.b2b.tracker.member.v1', 'all'); });
       await reload(p); await openCard(p, 'shs'); await openRow(p, 'LI09');
       const before = (await db()).perfMonthly['LI09_' + MONTH].rev;
       await p.click('[data-sub-cycle="LI09"][data-i="3"]');
       await new Promise(r => setTimeout(r, 500));
       assert.equal((await db()).perfMonthly['LI09_' + MONTH].rev, before);
       assert.ok(/입력자/.test(await p.locator('#toast').innerText()));
-      await p.fill('#pfActorBar', '시험자'); await p.press('#pfActorBar', 'Tab');
+      await p.evaluate(() => localStorage.setItem('netform.b2b.tracker.member.v1', 'shs'));
+      await reload(p); await openCard(p, 'shs'); await openRow(p, 'LI09');
       await p.click('[data-sub-cycle="LI09"][data-i="3"]');
       const r = await until(async () => { const x = (await db()).perfMonthly['LI09_' + MONTH]; return x.rev > before ? x : false; });
-      assert.equal(r.updatedBy, '시험자');
+      assert.equal(r.updatedBy, '신한솔');
+      await p.fill('#pfActorBar', '시험자'); await p.press('#pfActorBar', 'Tab');
     });
     await t('프로젝트 세부업무: 상태 변경 · 평균 자동 · 추가 · 프로젝트 추가 · 갱신일 기록', async () => {
       await openCard(p, 'shs');
@@ -757,18 +759,212 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await reset();
     });
 
+    /* 기본 화면 */
+    const simple = async () => { await open(p); if (!await p.locator('.sp').count()) await p.click('[data-tt="simple"]'); await p.click('[data-pf-sel="shs"]'); };
+    await t('기본 화면에는 꼭 필요한 것만 표시', async () => {
+      await simple();
+      const txt = await p.locator('#view').innerText();
+      assert.equal(await p.locator('.filters').count(), 0);
+      assert.equal(await p.locator('.goal').count(), 0);
+      assert.equal(await p.locator('#btnEditMenu').count(), 0, '편집 모드 단추 없음');
+      ['가중치', '변경 이력', '계산식', '달성률 계산', '÷'].forEach(w => assert.ok(!txt.includes(w), '기본 화면에 표시됨: ' + w));
+      assert.equal(await p.locator('.sp-ind').count(), 14);
+      await p.screenshot({ path: path.join(outDir, '10_기본화면_PC.png'), fullPage: true });
+    });
+    await t('세 단계: 이름 선택 → 업무 펼치기 → 진행률 입력으로 저장', async () => {
+      await simple();
+      await p.click('.sp-main[data-proj="SX1"]');
+      await p.fill('#pfa-task-SX1', '시안 검토'); await p.click('[data-task-add="SX1"]');
+      await p.fill('#sp-pct-SX1-1', '60'); await p.press('#sp-pct-SX1-1', 'Tab');
+      const d = await until(async () => { const x = await db(); return x.projects.SX1.tasks[1] && x.projects.SX1.tasks[1].p === 60 ? x : false; });
+      assert.equal(d.projects.SX1.tasks[1].t, '시안 검토');
+      assert.ok(/30%/.test(await p.locator('.sp-main[data-proj="SX1"]').innerText()), '평균 자동');
+      await reload(p);
+      assert.ok(/30%/.test(await p.locator('.sp-main[data-proj="SX1"]').innerText()), '새로고침 유지');
+    });
+    await t('상태 단추 하나로 미착수 → 진행 중 → 완료 → 미착수', async () => {
+      await simple();
+      if ((await p.locator('.sp-main[data-proj="SX1"]').getAttribute('aria-expanded')) !== 'true') await p.click('.sp-main[data-proj="SX1"]');
+      const b = '.sp-sub [data-task-cycle="SX1:0"]';
+      assert.ok(/미착수/.test(await p.locator(b).innerText()));
+      await p.click(b); assert.ok(/진행 중/.test(await p.locator(b).innerText()));
+      await p.click(b); assert.ok(/완료/.test(await p.locator(b).innerText()));
+      await p.click(b); assert.ok(/미착수/.test(await p.locator(b).innerText()));
+      await p.click(b); await p.click(b);
+      await until(async () => (await db()).projects.SX1.tasks[0].p === 100);
+    });
+    await t('세부 내용은 상세 안에 숨김: 눌러야 보이고 바로 수정됨', async () => {
+      await simple();
+      await p.click('.sp-main[data-proj="SX1"]');
+      const more = '.sp-sub [data-tk="SX1:1"]';
+      assert.equal(await p.locator('.sp-sub .btk-d.on').count(), 0);
+      await p.click(more);
+      await p.fill('.sp-sub .btk-d.on [data-te="SX1:1"][data-f="n"]', '진행 메모');
+      await until(async () => (await db()).projects.SX1.tasks[1].n === '진행 메모');
+      await p.click(more);
+      assert.equal(await p.locator('.sp-sub .btk-d.on').count(), 0);
+    });
+    await t('팀원을 고르면 그 팀원 업무만 · 지표 없는 팀원은 빈 상태', async () => {
+      await simple();
+      await p.click('[data-pf-sel="m2"]');
+      const txt = await p.locator('.sp').innerText();
+      assert.ok(/등록된 업무가 없습니다/.test(txt) && /아직 등록된 개인 지표가 없습니다/.test(txt), txt);
+      assert.equal(await p.locator('.sp-ind').count(), 0);
+      assert.ok(!/협약서 PDF/.test(txt), '다른 팀원 업무 표시 안 됨');
+      await p.click('[data-pf-sel="all"]');
+      assert.equal(await p.locator('.sp-all').count(), 3);
+      await p.click('.sp-all[data-pf-sel="shs"]');
+      assert.equal(await p.locator('.sp-ind').count(), 14);
+    });
+    await t('지표 상세: 대상 수·완료 수만 입력, 퍼센트 자동, 저장 즉시 반영', async () => {
+      await p.evaluate(() => localStorage.removeItem('netform.b2b.tracker.actor.v1'));
+      await simple();
+      await p.click('.sp-ind[data-id="LI02"]');
+      await p.waitForSelector('#pfModal.on');
+      assert.equal(await p.locator('#pfModal [data-pf]:visible').count(), 2, '보이는 숫자 입력은 2칸');
+      assert.equal(await p.locator('#pfActor').count(), 0, '입력자 칸 없음');
+      assert.equal(await p.locator('#pfModal input[name=pfmode]').count(), 0);
+      await p.fill('[data-pf="den"]', '20'); await p.fill('[data-pf="num"]', '15');
+      assert.ok(/75%/.test(await p.locator('#pfPreview').innerText()));
+      await p.click('#pfSaveSimple');
+      assert.equal(await p.locator('#pfModal.on').count(), 0, '저장 후 닫힘');
+      assert.ok(/75%/.test(await p.locator('.sp-ind[data-id="LI02"]').innerText()));
+      const r = await until(async () => { const x = await db(); const v = x.perfMonthly['LI02_' + MONTH]; return v && v.den === 20 ? v : false; });
+      assert.equal(r.num, 15); assert.equal(r.mode, 'auto'); assert.equal(r.updatedBy, '신한솔');
+    });
+    await t('입력 오류 안내: 완료 수가 대상 수보다 크면 저장 안 됨', async () => {
+      await simple();
+      await p.click('.sp-ind[data-id="LI02"]');
+      await p.fill('[data-pf="num"]', '30');
+      await p.click('#pfSaveSimple');
+      assert.ok(/분자가 분모보다/.test(await p.locator('#pfModal .pf-bad').innerText()));
+      assert.equal((await db()).perfMonthly['LI02_' + MONTH].num, 15);
+      await p.click('#pfClose');
+    });
+    await t('목표·계산식은 상세 안에서 확인·수정', async () => {
+      await simple();
+      await p.click('.sp-ind[data-id="LI02"]');
+      assert.equal(await p.locator('#pfSimpleTarget').isVisible(), false, '평소에는 접힘');
+      await p.locator('#pfModal details:has(#pfSimpleTarget) summary').click();
+      const body = await p.locator('#pfModal').innerText();
+      assert.ok(/기한 내 재연락 완료 건수 ÷ 재연락 대상 건수 × 100/.test(body), '기존 계산식 그대로');
+      await p.fill('#pfSimpleTarget', '90');
+      await p.click('#pfSaveSimple');
+      const d = await until(async () => { const x = await db(); return x.leadDefs.LI02.target === 90 ? x : false; });
+      assert.equal(d.perfMonthly['LI02_' + MONTH].num, 15, '실적 유지');
+    });
+    await t('간단 저장이 측정 항목·세부업무 진행률을 지우지 않음', async () => {
+      const d0 = await db(), key = 'LI01_' + MONTH;
+      await patchDb({ ['perfMonthly/' + key]: Object.assign({}, d0.perfMonthly[key], { id: key, ref: 'LI01', month: MONTH, mode: 'auto', den: 10, num: 8, metrics: { missed: 0, schedRate: 90 }, prog: { t1: 100, t2: 50 }, rev: 7 }) });
+      await simple(); await p.click('.sp-ind[data-id="LI01"]');
+      assert.equal(await p.inputValue('[data-pf="den"]'), '10');
+      await p.fill('[data-pf="num"]', '9'); await p.click('#pfSaveSimple');
+      const r = await until(async () => { const x = (await db()).perfMonthly[key]; return x.num === 9 ? x : false; });
+      assert.equal(r.metrics.missed, 0); assert.equal(r.metrics.schedRate, 90); assert.equal(r.prog.t2, 50); assert.equal(r.rev, 8);
+    });
+    await t('직접 입력 값은 안내 후 유지, 대상·완료를 넣을 때만 바뀜', async () => {
+      const key = 'LI03_' + MONTH;
+      await patchDb({ ['perfMonthly/' + key]: { id: key, ref: 'LI03', month: MONTH, mode: 'direct', direct: 55, rev: 1 } });
+      await simple(); await p.click('.sp-ind[data-id="LI03"]');
+      assert.ok(/직접 입력한 55%/.test(await p.locator('#pfModal').innerText()));
+      await p.click('#pfSaveSimple');
+      await new Promise(r => setTimeout(r, 400));
+      assert.equal((await db()).perfMonthly[key].direct, 55, '빈칸 저장으로 지워지면 안 됨');
+      await p.click('.sp-ind[data-id="LI03"]');
+      await p.fill('[data-pf="den"]', '4'); await p.fill('[data-pf="num"]', '1'); await p.click('#pfSaveSimple');
+      const r = await until(async () => { const x = (await db()).perfMonthly[key]; return x.den === 4 ? x : false; });
+      assert.equal(r.direct, undefined); assert.equal(r.mode, 'auto');
+    });
+    await t('업무 진행률과 실제 성과 구분: 업무를 바꿔도 지표·KPI 불변', async () => {
+      await simple();
+      await p.click('.sp-kpi[data-id="MK1"]'); await p.fill('[data-pf="den"]', '51'); await p.fill('[data-pf="num"]', '17'); await p.click('#pfSaveSimple');
+      await p.click('.sp-ind[data-id="LG1"]'); await p.fill('[data-pf="den"]', '8'); await p.fill('[data-pf="num"]', '3'); await p.click('#pfSaveSimple');
+      assert.ok(/33\.3/.test(await p.locator('.sp-kpi[data-id="MK1"]').innerText()));
+      const before = await p.locator('.sp-ind').allInnerTexts(), kpi = await p.locator('.sp-kpi').allInnerTexts();
+      if ((await p.locator('.sp-main[data-proj="SX1"]').getAttribute('aria-expanded')) !== 'true') await p.click('.sp-main[data-proj="SX1"]');
+      await p.fill('#sp-pct-SX1-1', '90'); await p.press('#sp-pct-SX1-1', 'Tab');
+      await until(async () => (await db()).projects.SX1.tasks[1].p === 90);
+      assert.deepStrictEqual(await p.locator('.sp-ind').allInnerTexts(), before);
+      assert.deepStrictEqual(await p.locator('.sp-kpi').allInnerTexts(), kpi);
+      const d = await db();
+      assert.equal(d.perfMonthly['MK1_' + MONTH].num, 17); assert.equal(d.perfMonthly['LG1_' + MONTH].num, 3);
+      assert.notDeepStrictEqual(d.perfMonthly['MK1_' + MONTH], d.perfMonthly['LG1_' + MONTH], '팀 KPI와 개인 후행지표 분리');
+    });
+    await t('팀 선행점수는 가중치 없이는 미확정', async () => {
+      await simple();
+      assert.ok(/미확정/.test(await p.locator('.sp-kpi[data-id="MK1"]').innerText()));
+      const d = await db();
+      Object.values(d.mainKpis).forEach(k => assert.equal(k.memberWeights, undefined));
+    });
+    await t('고급 설정·가중치·변경 이력은 설정 화면에 있음', async () => {
+      await open(p, 'admin');
+      const txt = await p.locator('#view').innerText();
+      assert.ok(/가중치 설정/.test(txt) && /변경 이력/.test(txt) && /담당자 확인이 필요한 업무/.test(txt), '설정 항목');
+      await p.locator('details:has(#pfBackupBox) ~ details summary').first().click().catch(() => {});
+      const hist = await p.locator('details.disc:has-text("실적 변경")').count();
+      assert.ok(hist >= 1, '변경 이력 표시');
+      await p.click('[data-pf-open="kpi"][data-id="MK1"][data-v="links"]');
+      assert.ok(await p.locator('[data-pf-mw="shs"]').count(), '팀원 가중치 칸');
+      await p.click('[data-pf-view="weights"]');
+      assert.ok(await p.locator('[data-pf-w="LI01"]').count(), '지표 가중치 칸');
+      await p.click('#pfClose');
+    });
+    await t('이전 담당자 업무: 자동 이전 없이 설정에서만 확인', async () => {
+      const before = await db();
+      await patchDb({ 'projects/C9': { id: 'C9', prog: 'P1', owner: 'csh', name: '이전 담당 시험 업무', note: '', tasks: [{ t: 'a', p: 10, n: '', r: '' }] } });
+      await open(p, 'admin');
+      await p.locator('details:has(#pfBackupBox) summary').click();
+      assert.ok(/이전 담당 시험 업무/.test(await p.locator('details:has(#pfBackupBox)').innerText()));
+      const d = await db();
+      assert.equal(d.projects.C9.owner, 'csh', '담당 그대로');
+      await simple();
+      await p.click('[data-pf-sel="m1"]');
+      assert.ok(!/이전 담당 시험 업무/.test(await p.locator('.sp').innerText()), '박희선에게 표시되지 않음');
+      if (process.env.BACKUPS_FILE && !process.env.FBS_DIR) {
+        await open(p, 'admin');
+        await p.locator('details:has(#pfBackupBox) summary').click();
+        await p.click('[data-pf-backup]');
+        await until(async () => /아파트 유지관리 정보 수집/.test(await p.locator('#pfBackupBox').innerText()));
+        const box = await p.locator('#pfBackupBox').innerText();
+        assert.ok(/최세혁/.test(box) && /복구되지 않습니다/.test(box), box.slice(0, 200));
+        assert.deepStrictEqual(Object.keys((await db()).projects).sort(), ['C9', 'SX1'], '백업 보기로 복구되지 않음');
+      }
+      await patchDb({ 'projects/C9': null });
+      assert.deepStrictEqual((await db()).members, before.members, '팀원 변화 없음');
+    });
+    await t('전체 보기에서 기존 기능 그대로 사용', async () => {
+      await simple();
+      await p.click('.sp-foot [data-tt="work"]');
+      assert.ok(await p.locator('.filters').count() && await p.locator('#btnEditMenu').count() && await p.locator('.goal').count());
+      assert.equal(await p.locator('.bcol').count(), 3);
+      await p.click('[data-tt="simple"]');
+      assert.ok(await p.locator('.sp').count());
+    });
+    await t('기본 화면 조작 뒤에도 기존 멤버·루틴·지표 보존', async () => {
+      const d = await db();
+      Object.keys(baseline.members).forEach(id => assert.deepStrictEqual(d.members[id], baseline.members[id]));
+      ['routines', 'kpis', 'workKpis', 'automations', 'links', 'personal', 'programs', 'bid', 'meta'].forEach(k => assert.deepStrictEqual(d[k], baseline[k], k));
+      assert.equal(d.projects.SX1.name, baseline.projects.SX1.name);
+      assert.equal(Object.keys(d.leadDefs).length, 9); assert.equal(Object.keys(d.lagDefs).length, 5);
+      assert.ok(Object.keys(d.perfHistory).length >= 5);
+    });
+    await reset();
+
     /* 기존 화면 */
     await t('기존 메뉴 7개 전부 정상 표시 · 팀 업무 현황 탭 유지', async () => {
       await p.goto(BASE + '/#tasks'); await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
       await tab(p, 'work');
       assert.ok(/팀 업무 현황/.test(await p.locator('.phead h1').innerText()));
       assert.ok(await p.locator('.filters').count());
+      assert.equal(await p.locator('[data-go="programs"]').count(), 0, '평소에는 더보기 안');
+      await p.click('[data-nav-more]');
       for (const id of ['programs', 'metrics', 'auto', 'map', 'hub', 'admin', 'tasks']) {
         await p.click(`[data-go="${id}"]`);
         await p.waitForTimeout(150);
         assert.ok((await p.locator('#view .wrap').innerText()).length > 50, id);
       }
       assert.ok(/팀 업무 현황/.test(await p.locator('.phead h1').innerText()), '탭 기억');
+      await p.click('[data-nav-more]');
     });
 
     /* 모바일 */
@@ -781,6 +977,22 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
           if (r.width && r.right > vw + 1 && !e.closest('.tabs,.pf-vw,.tblwrap') && getComputedStyle(e).position !== 'fixed') bad.push(e.className || e.tagName);
         });
         return { scroll: document.documentElement.scrollWidth - vw, bad: bad.slice(0, 5) };
+      });
+      await t(`모바일 ${w}px: 기본 화면 넘침 없음 · 터치 영역 38px 이상`, async () => {
+        await open(m);
+        await m.tap('[data-tt="simple"]');
+        await m.tap('[data-pf-sel="shs"]');
+        await m.tap('.sp-main[data-proj="SX1"]');
+        const o = await over(); assert.ok(o.scroll <= 0 && !o.bad.length, JSON.stringify(o));
+        const min = await m.evaluate(() => Math.min(...[...document.querySelectorAll('.sp-who button,.sp-st,.sp-main,.sp-ind,.sp-kpi,.pf-task-pct')].map(e => e.offsetHeight)));
+        assert.ok(min >= 38, '최소 높이 ' + min);
+        await m.screenshot({ path: path.join(outDir, `11_모바일${w}_기본화면.png`), fullPage: true });
+        await m.tap('.sp-ind[data-id="LI01"]');
+        await m.waitForSelector('#pfModal.on');
+        const o2 = await over(); assert.ok(!o2.bad.length, JSON.stringify(o2));
+        await m.screenshot({ path: path.join(outDir, `12_모바일${w}_지표상세.png`) });
+        await m.tap('#pfClose');
+        await m.tap('.sp-foot [data-tt="kpi:shs"]');
       });
       await t(`모바일 ${w}px: 개인 지표 화면 가로 넘침 없음`, async () => {
         await open(m);

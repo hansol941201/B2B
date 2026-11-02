@@ -52,6 +52,7 @@ http.createServer((q, s) => {
   if (url === '/__db') { if (fbs) return fbsVal().then(v => send(200, JSON.stringify(v))); return send(200, JSON.stringify(db)); }
   if (url === '/__reset') { if (fbs) { fbsRoot().set(baseline()); return setTimeout(() => send(200, '{"ok":true}'), 150); } db = baseline(); return send(200, '{"ok":true}'); }
   if (url === '/__wipe') { db = {}; return send(200, '{"ok":true}'); }
+  if (url === '/__rtdb/shared/b2bOpsTrackerBackups.json' && process.env.BACKUPS_FILE) return send(200, fs.readFileSync(process.env.BACKUPS_FILE, 'utf8'));
   if (url === `/__rtdb/${ROOT}.json`) {
     if (q.method === 'GET') return send(200, JSON.stringify(prune(db) || null));
     let body = '';
