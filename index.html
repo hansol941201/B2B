@@ -737,16 +737,25 @@ body.pf-lock{overflow:hidden}
 .pf-chk label{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;padding:8px 6px;border-radius:6px;cursor:pointer}
 .pf-chk label:hover{background:var(--surf)}
 .pf-chk input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--brand)}
-.pf-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;padding:9px 0;border-top:1px solid var(--line-2);font-size:13px;align-items:center}
-.pf-row:first-child{border-top:0}
-.pf-row .nm{font-weight:700;min-width:0}
-.pf-row .sm{grid-column:1 / -1;font-size:12px;color:var(--text-3);line-height:1.5;word-break:break-word}
-.pf-row .val{text-align:right;font-weight:700;white-space:nowrap}
+.pfr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;padding:9px 0;border-top:1px solid var(--line-2);font-size:13px;align-items:center}
+.pfr:first-child{border-top:0}
+.pfr .nm{font-weight:700;min-width:0}
+.pfr .sm{grid-column:1 / -1;font-size:12px;color:var(--text-3);line-height:1.5;word-break:break-word}
+.pfr .val{text-align:right;font-weight:700;white-space:nowrap}
 .pf-wrow{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:4px 10px;padding:9px 0;border-top:1px solid var(--line-2);align-items:center}
 .pf-wrow:first-child{border-top:0}
 .pf-wrow .nm{font-size:13px;font-weight:700;min-width:0}
 .pf-wrow .sm{display:block;font-size:12px;font-weight:500;color:var(--text-3);line-height:1.5}
 .pf-wrow input{width:100%;min-height:42px;font-size:14px;text-align:right;border:1px solid var(--line);border-radius:7px;padding:8px 10px}
+.pfb-list{display:grid}
+.pfb-sep{font-size:11.5px;font-weight:800;color:var(--brand);padding:9px 0 3px}
+.pfb-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;width:100%;min-height:44px;padding:8px 2px;border-top:1px solid var(--line-2);font-size:12.5px;align-items:center}
+.pfb-row:hover{background:var(--surf)}
+.pfb-row .nm{font-weight:700;min-width:0;line-height:1.4}
+.pfb-row .val{font-weight:800;white-space:nowrap;text-align:right}
+.pfb-row .val.txt{font-weight:600;color:var(--text-3);font-size:11.5px}
+.pfb-row .sm{grid-column:1 / -1;font-size:11.5px;color:var(--text-3);line-height:1.45}
+.pfb-row .meter{grid-column:1 / -1;margin-top:3px}
 .pf-empty{font-size:12.5px;color:var(--text-2);padding:8px 0}
 @media (max-width:640px){
   .pf-vals{grid-template-columns:1fr}
@@ -1226,11 +1235,13 @@ const SEED = {
 </script>
 <script>/* ============================================================
    KPI·선행지표 정의와 계산 (화면·저장과 분리된 순수 계산)
+   - 메인 KPI는 팀 공통, 선행·후행지표는 팀원 개인 것이다 (member). 팀원이 늘면 member만 다른 지표를 추가한다.
+   - 팀 선행점수 = Σ(팀원 개인 선행점수 × 팀원 반영 가중치). 개인 점수를 그대로 쓰지 않는다.
    - 실제 KPI·후행지표는 입력된 실적으로만 계산한다. 선행점수가 실적을 바꾸지 않는다.
    - 자료 없음은 0이 아니라 '미측정', 분모 0은 '대상 없음'으로 구분한다.
    ============================================================ */
 var PERF_SEED = {
-  perfConfig: { schema: 1, noReplyDays: null, resendDays: null, longNoReplyDays: null },
+  perfConfig: { schema: 2, noReplyDays: null, resendDays: null, longNoReplyDays: null },
   perfMonthly: [],
   perfHistory: [],
   mainKpis: [
@@ -1266,7 +1277,7 @@ var PERF_SEED = {
       weights: { LI08: 0, LI09: 0 }, rev: 0 }
   ],
   leadDefs: [
-    { id: "LI01", no: "①", name: "1·2차 미팅 누락 방지", owner: "신한솔", cycle: "매일", rev: 0,
+    { id: "LI01", no: "①", name: "1·2차 미팅 누락 방지", member: "shs", owner: "신한솔", cycle: "매일", rev: 0,
       purpose: "고객관리카드를 활용해 시공사 및 협력사의 미팅과 후속 업무 누락 방지",
       reported: "고객관리카드 구축 후 1·2차 미팅 누락 0건 (명령서 기재)",
       tasks: ["신규 시공사 및 협력사 미팅 접수", "1차 미팅 일정 등록", "1차 미팅 완료 여부 확인", "2차 미팅 필요 여부 확인", "2차 미팅 일정 등록", "미팅 전 담당자 안내", "미팅 후 진행현황 업데이트", "미완료 및 후속조치 대상 확인", "미팅 일정 누락 여부 점검"],
@@ -1276,7 +1287,7 @@ var PERF_SEED = {
       denLabel: "관리 대상 미팅", numLabel: "정상 관리 완료 미팅",
       metrics: [{ k: "missed", n: "미팅 누락 건수", u: "건" }, { k: "schedRate", n: "일정 등록률", u: "%" }, { k: "followRate", n: "후속조치 완료율", u: "%" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI02", no: "②", name: "미응답 업체 재연락 관리", owner: "신한솔", cycle: "매일", rev: 0,
+    { id: "LI02", no: "②", name: "미응답 업체 재연락 관리", member: "shs", owner: "신한솔", cycle: "매일", rev: 0,
       purpose: "자료 발송이나 미팅 안내 후 연락이 없는 업체를 놓치지 않도록 관리",
       tasks: ["최초 메일 발송일 기록", "회신 여부 확인", "미응답 업체 분류", "재연락 예정일 설정", "안내메일 재발송", "필요 시 전화 연락", "재연락 결과 기록", "회신 완료 시 관리 상태 변경", "장기 미응답 업체 별도 분류"],
       measure: "재연락 대상 업체 수 · 재연락 완료 업체 수 · 재연락 완료율 · 재연락 후 회신율",
@@ -1285,7 +1296,7 @@ var PERF_SEED = {
       metrics: [{ k: "targets", n: "재연락 대상 업체 수", u: "곳" }, { k: "contacted", n: "재연락 완료 업체 수", u: "곳" }, { k: "replied", n: "재연락 후 회신 업체 수", u: "곳" },
         { k: "contactRate", n: "재연락 완료율", u: "%", from: ["contacted", "targets"], op: "ratio" }, { k: "replyRate", n: "재연락 후 회신율", u: "%", from: ["replied", "contacted"], op: "ratio" }],
       src: "수동 관리", linkNote: "메일 발송 기록 연동 대기" },
-    { id: "LI03", no: "③", name: "신규업체 첫 이용 활성화", owner: "신한솔", cycle: "매주 점검, 필요 시 상시", rev: 0,
+    { id: "LI03", no: "③", name: "신규업체 첫 이용 활성화", member: "shs", owner: "신한솔", cycle: "매주 점검, 필요 시 상시", rev: 0,
       purpose: "신규 MOU 업체의 첫 POUR 서비스 이용 유도",
       tasks: ["신규 MOU 업체 확인", "협약일 기록", "첫 서비스 이용 여부 확인", "미이용 업체 목록 생성", "서비스 안내 및 자료 발송", "기술자문·PT·컨설팅 이용 안내", "후속 연락 일정 관리", "첫 이용 여부 정기 확인", "이용 시 고객관리카드 진행 상태 갱신"],
       measure: "신규 협약업체 수 · 첫 이용 전 관리 대상 업체 수 · 후속관리 완료 건수 · 첫 이용 전환 업체 수",
@@ -1294,7 +1305,7 @@ var PERF_SEED = {
       outcome: "실제 성과는 KPI ① 신규업체 첫 서비스 이용률로 별도 계산합니다.",
       metrics: [{ k: "newMou", n: "신규 협약업체 수", u: "곳" }, { k: "preUse", n: "첫 이용 전 관리 대상 업체 수", u: "곳" }, { k: "converted", n: "첫 이용 전환 업체 수", u: "곳" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI04", no: "④", name: "고객관리카드 최신화", owner: "신한솔", cycle: "매일", rev: 0,
+    { id: "LI04", no: "④", name: "고객관리카드 최신화", member: "shs", owner: "신한솔", cycle: "매일", rev: 0,
       purpose: "고객별 활동과 진행 상태를 정확하게 관리해 업무 누락과 중복 방지",
       tasks: ["신규업체 등록", "MOU 체결 여부 및 체결일 관리", "1·2차 미팅 이력 입력", "기술자문 및 PT 요청 현황 관리", "고객 문의사항 기록", "자료 및 메일 발송 이력 확인", "고객별 최근 활동일 갱신", "미진행 업무 및 후속조치 상태 확인", "업체명·현장명 중복 여부 검토", "고객별 실적 및 매출정보 연결", "누락 정보 및 오류 수정"],
       measure: "업데이트 대상 건수 · 업데이트 완료 건수 · 정보 누락 건수",
@@ -1302,7 +1313,7 @@ var PERF_SEED = {
       denLabel: "업데이트 대상 건수", numLabel: "기한 내 최신화 완료 건수",
       metrics: [{ k: "missing", n: "정보 누락 건수", u: "건" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI05", no: "⑤", name: "월말 고객현황 관리", owner: "신한솔", cycle: "매월 말", rev: 0,
+    { id: "LI05", no: "⑤", name: "월말 고객현황 관리", member: "shs", owner: "신한솔", cycle: "매월 말", rev: 0,
       purpose: "매월 고객 활동·진행·이용 현황을 정기 점검하고 다음 달 관리 대상을 선정",
       tasks: ["월별 신규 협약업체 현황 확인", "기존 업체 활동 현황 확인", "1·2차 미팅 진행상태 점검", "서비스 이용 업체 현황 정리", "미이용 업체 현황 정리", "장기 미활동 업체 확인", "미응답 및 재연락 필요 업체 확인", "재이용 대상 업체 확인", "고객등급 변경 대상 확인", "월말 고객관리 결과 정리", "다음 달 후속관리 대상 확정"],
       measure: "월말 점검 대상 수 · 점검 완료 수 · 미처리 고객 수",
@@ -1310,7 +1321,7 @@ var PERF_SEED = {
       denLabel: "월말 점검 대상 건수", numLabel: "월말 점검 완료 건수",
       metrics: [{ k: "open", n: "미처리 고객 수", u: "곳" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI06", no: "⑥", name: "고객등급 관리", owner: "신한솔", cycle: "매월", rev: 0,
+    { id: "LI06", no: "⑥", name: "고객등급 관리", member: "shs", owner: "신한솔", cycle: "매월", rev: 0,
       purpose: "업체별 중요도와 이용 상태를 구분하여 관리 우선순위 설정",
       tasks: ["신규업체 및 기존업체 구분", "MOU 체결 상태 확인", "최근 활동 이력 확인", "서비스 이용 실적 확인", "다른 현장 재이용 여부 확인", "매출 및 구매 이력 확인", "고객별 등급 계산", "장기 미활동 업체 표시", "등급 상승·하락 이력 기록", "등급별 관리 우선순위 설정"],
       measure: "등급 산출 대상 수 · 등급 산출 완료 수 · 등급 변동 업체 수",
@@ -1319,7 +1330,7 @@ var PERF_SEED = {
       outcome: "고객등급은 기존 등급 기준을 우선 적용합니다. 별도 승인 없이 새로운 등급·점수 기준을 확정하지 않습니다.",
       metrics: [{ k: "changed", n: "등급 변동 업체 수", u: "곳" }],
       src: "수동 관리", linkNote: "등급 기준 확인 대기" },
-    { id: "LI07", no: "⑦", name: "기존업체 재이용 관리", owner: "신한솔", cycle: "매주", rev: 0,
+    { id: "LI07", no: "⑦", name: "기존업체 재이용 관리", member: "shs", owner: "신한솔", cycle: "매주", rev: 0,
       purpose: "서비스를 한 번 이용한 시공사의 다른 현장 재이용 촉진",
       tasks: ["첫 서비스 이용업체 확인", "최초 이용일 기록", "최초 이용 현장 기록", "60일 재이용 관리기간 계산", "다른 현장 이용 여부 확인", "재이용하지 않은 업체 확인", "후속 안내 및 재연락", "필요 자료 발송", "이용 이력 업데이트", "60일 관찰 결과 기록"],
       measure: "재이용 관리 대상 업체 수 · 후속관리 완료 업체 수 · 다른 현장 재이용 업체 수",
@@ -1328,7 +1339,7 @@ var PERF_SEED = {
       outcome: "실제 성과는 KPI ② 60일 내 다른 현장 재이용률로 별도 계산합니다.",
       metrics: [{ k: "reused", n: "다른 현장 재이용 업체 수", u: "곳" }],
       src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LI08", no: "⑧", name: "월말실적 자동화 관리", owner: "신한솔", cycle: "매월, 자료 요청 시 추가", rev: 0, support: true,
+    { id: "LI08", no: "⑧", name: "월말실적 자동화 관리", member: "shs", owner: "신한솔", cycle: "매월, 자료 요청 시 추가", rev: 0, support: true,
       purpose: "월말실적 정리 업무를 자동화하고 시공사 자료 제공 대기시간 단축",
       tasks: ["월말실적 자료 취합", "공고·낙찰·매출 데이터 확인", "업체명 및 현장명 매칭", "자동 집계 결과 확인", "누락 및 오류 검증", "월말실적 양식 생성", "자동화 결과 검토", "요청 자료 제공", "수작업 및 자동화 소요시간 비교", "자료 요청부터 제공까지의 대기시간 기록"],
       measure: "월말 자동화 처리 대상 수 · 정상 자동처리 완료 수 · 오류 및 수동 수정 건수 · 시공사 자료 제공 평균 대기시간",
@@ -1338,7 +1349,7 @@ var PERF_SEED = {
       metrics: [{ k: "errors", n: "오류 및 수동 수정 건수", u: "건" }, { k: "waitBefore", n: "자동화 전 평균 대기시간", u: "시간" }, { k: "waitAfter", n: "자동화 후 평균 대기시간", u: "시간" },
         { k: "waitCut", n: "평균 대기시간 감소율", u: "%", from: ["waitBefore", "waitAfter"], op: "cut" }],
       src: "수동 관리", linkNote: "월말실적 자동화 연동 대기" },
-    { id: "LI09", no: "⑨", name: "플랫폼 → 앱 전환 부담 최소화", owner: "신한솔", cycle: "매일 및 매주", rev: 0, support: true,
+    { id: "LI09", no: "⑨", name: "플랫폼 → 앱 전환 부담 최소화", member: "shs", owner: "신한솔", cycle: "매일 및 매주", rev: 0, support: true,
       purpose: "기존 플랫폼에서 POUR 파트너스 앱으로 전환하는 과정에서 시공사의 불편과 업무 부담 최소화",
       tasks: ["기존 플랫폼 이용업체 확인", "앱 전환 대상 업체 확인", "앱 전환 안내메일 발송", "앱 이용 방법 안내", "앱 가이드북 제공", "앱 설치 및 로그인 관련 문의 대응", "앱 이용 불편사항 접수", "미접속 업체 사유 확인", "플랫폼 및 앱 접수 내역 이중 검토", "접수 누락 여부 점검", "앱 사용 관련 문제 해결 및 개선 요청", "전환 후 지속적인 이용 현황 관리"],
       measure: "앱 전환 관리 대상 업체 수 · 안내 완료 업체 수 · 불편사항 접수 건수 · 불편사항 처리 완료 건수 · 플랫폼·앱 접수 누락 건수",
@@ -1350,13 +1361,16 @@ var PERF_SEED = {
       src: "수동 관리", linkNote: "앱 이용 기록 연동 대기" }
   ],
   lagDefs: [
-    { id: "LG1", no: "①", name: "신규업체 첫 이용률", ref: "MK1", rev: 0, measure: "신규 MOU 체결업체 수 · 실제 첫 서비스 이용 업체 수 · 첫 이용 전환율" },
-    { id: "LG2", no: "②", name: "60일 내 재이용률", ref: "MK2", rev: 0, measure: "60일 관찰 완료 업체 수 · 다른 현장 재이용 업체 수 · 실제 재이용률" },
-    { id: "LG3", no: "③", name: "L2 → L3 전환율", ref: "MK3", rev: 0, measure: "영업활동 대상 수 · 서비스 이용 도달 대상 수 · 전환율 · 현장·공종·시공사별 분석" },
-    { id: "LG4", no: "④", name: "장기 미활동 업체 재활성화율", rev: 0, measure: "재활성화 관리 대상 업체 수 · 재활동 업체 수 · 재활성화율",
-      formula: "재활동 업체 수 ÷ 재활성화 관리 대상 업체 수 × 100", denLabel: "재활성화 관리 대상 업체 수", numLabel: "재활동 업체 수", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
-    { id: "LG5", no: "⑤", name: "고객등급 상승률", rev: 0, measure: "등급 비교 가능 업체 수 · 등급 상승 업체 수 · 등급 상승률",
-      formula: "등급 상승 업체 수 ÷ 등급 비교 가능 업체 수 × 100", denLabel: "등급 비교 가능 업체 수", numLabel: "등급 상승 업체 수", src: "수동 관리", linkNote: "등급 기준 확인 대기" }
+    { id: "LG1", no: "①", name: "신규업체 첫 이용률", member: "shs", owner: "신한솔", rev: 0, measure: "신규 MOU 체결업체 수 · 실제 첫 서비스 이용 업체 수 · 첫 이용 전환율",
+      formula: "실제 첫 서비스 이용 업체 수 ÷ 신규 MOU 체결업체 수 × 100", denLabel: "신규 MOU 체결업체 수", numLabel: "실제 첫 서비스 이용 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LG2", no: "②", name: "60일 내 재이용률", member: "shs", owner: "신한솔", rev: 0, measure: "60일 관찰 완료 업체 수 · 다른 현장 재이용 업체 수 · 실제 재이용률",
+      formula: "다른 현장 재이용 업체 수 ÷ 60일 관찰 완료 업체 수 × 100", denLabel: "60일 관찰 완료 업체 수", numLabel: "다른 현장 재이용 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LG3", no: "③", name: "L2 → L3 전환율", member: "shs", owner: "신한솔", rev: 0, measure: "영업활동 대상 수 · 서비스 이용 도달 대상 수 · 전환율",
+      formula: "서비스 이용 도달 대상 수 ÷ 영업활동 대상 수 × 100", denLabel: "영업활동 대상 수", numLabel: "서비스 이용 도달 대상 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "통합 KPI 대시보드 연동 대기" },
+    { id: "LG4", no: "④", name: "장기 미활동 업체 재활성화율", member: "shs", owner: "신한솔", rev: 0, measure: "재활성화 관리 대상 업체 수 · 재활동 업체 수 · 재활성화율",
+      formula: "재활동 업체 수 ÷ 재활성화 관리 대상 업체 수 × 100", denLabel: "재활성화 관리 대상 업체 수", numLabel: "재활동 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "고객관리카드 연동 대기" },
+    { id: "LG5", no: "⑤", name: "고객등급 상승률", member: "shs", owner: "신한솔", rev: 0, measure: "등급 비교 가능 업체 수 · 등급 상승 업체 수 · 등급 상승률",
+      formula: "등급 상승 업체 수 ÷ 등급 비교 가능 업체 수 × 100", denLabel: "등급 비교 가능 업체 수", numLabel: "등급 상승 업체 수", outcome: "신한솔 개인 성과로 별도 저장합니다. 이름이 비슷한 팀 공통 KPI와 합치거나 중복 집계하지 않습니다.", src: "수동 관리", linkNote: "등급 기준 확인 대기" }
   ]
 };
 Object.keys(PERF_SEED).forEach(function (k) { SEED[k] = PERF_SEED[k]; });
@@ -1379,21 +1393,22 @@ var PerfCalc = (function () {
     return { state: "ok", value: clamp(rec.num / rec.den * 100), mode: "auto", den: rec.den, num: rec.num };
   }
 
-  /* 가중치 설정 상태 — 비어 있는 칸은 0과 다르다 */
-  function weightStatus(kpi, draft) {
+  /* 가중치 설정 상태 — 비어 있는 칸은 0과 다르다. only가 있으면 그 팀원의 지표만 본다 */
+  function weightStatus(kpi, draft, only) {
     var w = draft || kpi.weights || {}, total = 0, unset = [];
     (kpi.links || []).forEach(function (l) {
+      if (only && !only(l.li)) return;
       if (isNum(w[l.li])) total += w[l.li]; else unset.push(l.li);
     });
     total = Math.round(total * 100) / 100;
     return { total: total, unset: unset, complete: unset.length === 0, sum100: Math.abs(total - 100) < 0.01 };
   }
 
-  /* KPI 선행점수 = Σ(달성률 × 가중치). 미측정은 0으로 바꾸지 않고 산출 대기로 둔다.
+  /* 개인 선행점수 = Σ(달성률 × 가중치). 미측정은 0으로 바꾸지 않고 산출 대기로 둔다.
      대상 없음(분모 0)인 지표는 그 달 계산에서 빼고 남은 가중치로 비례 재배분한다. */
-  function score(kpi, month, getRec, draft) {
-    var ws = weightStatus(kpi, draft), w = draft || kpi.weights || {};
-    var rows = (kpi.links || []).map(function (l) {
+  function score(kpi, month, getRec, draft, only) {
+    var ws = weightStatus(kpi, draft, only), w = draft || kpi.weights || {};
+    var rows = (kpi.links || []).filter(function (l) { return !only || only(l.li); }).map(function (l) {
       var r = rate(getRec(l.li, month));
       return { li: l.li, rel: l.rel, w: isNum(w[l.li]) ? w[l.li] : null, state: r.state, value: r.value, mode: r.mode };
     });
@@ -1410,6 +1425,34 @@ var PerfCalc = (function () {
     if (!usable.length) { base.state = "empty"; base.reason = "모든 연결 지표가 대상 없음"; return base; }
     var sum = 0;
     usable.forEach(function (r) { r.effective = r.w / usableW * 100; r.contrib = r.value * r.w / usableW; sum += r.contrib; });
+    base.state = "ok"; base.value = clamp(sum);
+    return base;
+  }
+
+  /* 팀 선행점수 = Σ(팀원 개인 점수 × 팀원 반영 가중치). 지표가 등록된 팀원만 대상이다.
+     개인 점수를 곧바로 쓰지 않고, 가중치가 정해진 뒤에만 계산한다. */
+  function teamScore(kpi, memberIds, scoreOf, draft) {
+    var w = draft || kpi.memberWeights || {}, total = 0, unset = [];
+    var rows = memberIds.map(function (id) {
+      var s = scoreOf(id), mw = isNum(w[id]) ? w[id] : null;
+      if (mw == null) unset.push(id); else total += mw;
+      return { id: id, w: mw, state: s.state, value: s.value, reason: s.reason };
+    });
+    total = Math.round(total * 100) / 100;
+    var base = { rows: rows, total: total, unset: unset };
+    function wait(code, reason) { base.state = "wait"; base.code = code; base.reason = reason; return base; }
+    if (!rows.length) return wait("nomember", "지표가 등록된 팀원 없음");
+    if (unset.length) return wait("unset", "팀원 반영 가중치 미설정 " + unset.length + "명");
+    if (Math.abs(total - 100) >= 0.01) return wait("sum", "팀원 반영 가중치 합계 " + total + "% (100%가 되어야 합니다)");
+    var active = rows.filter(function (r) { return r.w > 0; });
+    var waiting = active.filter(function (r) { return r.state === "wait"; });
+    if (waiting.length) { base.missing = waiting.map(function (r) { return r.id; }); return wait("member", "개인 점수 산출 대기 " + waiting.length + "명"); }
+    var usable = active.filter(function (r) { return r.state === "ok"; });
+    var usableW = usable.reduce(function (s, r) { return s + r.w; }, 0);
+    base.excluded = active.filter(function (r) { return r.state === "empty"; }).map(function (r) { return r.id; });
+    if (!usable.length) { base.state = "empty"; base.reason = "반영 대상 팀원의 지표가 모두 대상 없음"; return base; }
+    var sum = 0;
+    usable.forEach(function (r) { r.contrib = r.value * r.w / usableW; sum += r.contrib; });
     base.state = "ok"; base.value = clamp(sum);
     return base;
   }
@@ -1453,7 +1496,7 @@ var PerfCalc = (function () {
     return errs;
   }
 
-  return { rate: rate, weightStatus: weightStatus, score: score, delta: delta, prevMonth: prevMonth, monthsBack: monthsBack, derive: derive, validate: validate, round1: round1, isNum: isNum };
+  return { rate: rate, weightStatus: weightStatus, score: score, teamScore: teamScore, delta: delta, prevMonth: prevMonth, monthsBack: monthsBack, derive: derive, validate: validate, round1: round1, isNum: isNum };
 })();
 </script>
 <script>/* ============================================================
@@ -1482,7 +1525,7 @@ var PerfCalc = (function () {
           if (!o.workKpis) o.workKpis = clone(SEED.workKpis);
           if (!o.automations) o.automations = clone(SEED.automations);
           PF_COLS.concat("perfConfig").forEach(function (k) { if (!o[k]) o[k] = clone(SEED[k]); });
-          return o;
+          return pfNormalize(o);
         }
       }
     } catch (e) {}
@@ -1861,7 +1904,7 @@ var PerfCalc = (function () {
       mb(pct) +
       '<span class="cnt"><span>프로젝트 <b>' + ps.length + "</b></span><span>업무 <b>" + mineAll.length +
       "</b></span><span>완료 <b>" + done + "</b></span><span>미착수 <b>" + todo + "</b></span></span></button>" +
-      routineBlock(m) + perfBlock(m) +
+      routineBlock(m) + perfBlock(m) + pfBoardBlock(m) +
       '<div class="bprojs">' + (groups || '<div class="bempty">조건에 맞는 업무가 없습니다.</div>') +
       (can ? '<div class="pj-add"><button class="mini add" data-pjadd="' + esc(m.id) + '">+ 프로젝트</button></div>' : "") +
       "</div></section>";
@@ -1896,8 +1939,9 @@ var PerfCalc = (function () {
      1. 업무 (메인)
      ============================================================ */
   /* ============================================================
-     신한솔 KPI·선행지표 관리 (팀 업무 화면의 탭 · 팀원 개인 지표이고 팀 전체 KPI가 아니다)
-     - 메인 KPI 3 · 선행지표 9 · 후행지표 5. 값은 월별로 따로 보관한다.
+     팀 공통 KPI 3 + 팀원별 개인 선행·후행지표
+     - 공통 KPI는 팀 업무 현황 위쪽, 개인 지표는 담당자 카드와 개인 지표 탭에 표시한다 (같은 데이터).
+     - 값은 월별로 따로 보관한다.
      - 저장은 항목 단위 PATCH. 같은 항목을 다른 사람이 먼저 고쳤으면 확인을 받는다.
      ============================================================ */
   var PC = window.PerfCalc || PerfCalc;
@@ -1906,6 +1950,8 @@ var PerfCalc = (function () {
   var PF_COLS = ["mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory"];
   var taskTab = "work";
   try { taskTab = localStorage.getItem(KEY_TASKTAB) || "work"; } catch (e) {}
+  if (taskTab === "kpi") taskTab = "kpi:shs";
+  var pfBoardOpen = {}; // 담당자 카드의 개인 지표 접기
   var pfMonth = pfThisMonth();
   var pfM = null; // 열린 상세 창 { type, id, month, view, baseRev, dirty }
 
@@ -1922,7 +1968,48 @@ var PerfCalc = (function () {
   function pfDef(type, id) { return pfFind(type === "kpi" ? "mainKpis" : type === "lead" ? "leadDefs" : "lagDefs", id); }
   function pfRec(ref, month) { return pfFind("perfMonthly", ref + "_" + month); }
   function pfRate(ref, month) { return PC.rate(pfRec(ref, month)); }
-  function pfScore(k, month, draft) { return PC.score(k, month, pfRec, draft); }
+  function pfLisOf(mid) {
+    var o = {};
+    (D.leadDefs || []).forEach(function (l) { if (l.member === mid) o[l.id] = 1; });
+    return function (li) { return !!o[li]; };
+  }
+  function pfMembersAll() { // 개인 지표가 등록된 팀원
+    var seen = {}, out = [];
+    (D.leadDefs || []).concat(D.lagDefs || []).forEach(function (x) { if (x.member && !seen[x.member]) { seen[x.member] = 1; out.push(x.member); } });
+    return out;
+  }
+  function pfMembersOf(k) { // 이 KPI에 연결된 지표가 있는 팀원
+    var seen = {}, out = [];
+    (k.links || []).forEach(function (l) {
+      var d = pfFind("leadDefs", l.li), mid = d && d.member;
+      if (mid && !seen[mid]) { seen[mid] = 1; out.push(mid); }
+    });
+    return out;
+  }
+  function pfMemberScore(k, mid, month, draft) { return PC.score(k, month, pfRec, draft, pfLisOf(mid)); }
+  function pfTeamScore(k, month, draft) {
+    return PC.teamScore(k, pfMembersOf(k), function (mid) { return pfMemberScore(k, mid, month); }, draft);
+  }
+  /* 지표가 먼저 저장된 이전 구조를 현재 구조에 맞춘다. 기존 값은 지우지 않는다 */
+  function pfNormalize(d) {
+    (d.leadDefs || []).forEach(function (l) { if (!l.member) l.member = "shs"; });
+    (d.lagDefs || []).forEach(function (g) {
+      if (!g.member) g.member = "shs";
+      if (g.ref) {
+        var s = (SEED.lagDefs || []).filter(function (x) { return x.id === g.id; })[0] || {};
+        ["owner", "formula", "denLabel", "numLabel", "outcome", "src", "linkNote"].forEach(function (f) { if (!g[f] && s[f]) g[f] = s[f]; });
+        delete g.ref;
+      }
+    });
+    var have = {};
+    (d.members || []).forEach(function (m) { have[m.id] = 1; });
+    (d.leadDefs || []).concat(d.lagDefs || []).forEach(function (x) {
+      if (have[x.member]) return;
+      var s = (SEED.members || []).filter(function (m) { return m.id === x.member; })[0];
+      if (s) { d.members.push(clone(s)); have[x.member] = 1; }
+    });
+    return d;
+  }
   function pf1(v) { return fmt(PC.round1(v)); }
   function pfKst(iso) {
     var d = new Date(iso); if (isNaN(d)) return "—";
@@ -1996,30 +2083,41 @@ var PerfCalc = (function () {
   /* ---------- 화면 ---------- */
   function pfTabs() {
     return '<div class="fg pf-tabs" role="group" aria-label="팀 업무 화면 구분">' +
-      '<button data-tt="kpi" aria-pressed="' + (taskTab === "kpi") + '">신한솔 KPI·선행지표</button>' +
-      '<button data-tt="work" aria-pressed="' + (taskTab === "work") + '">팀 업무 현황</button></div>';
+      '<button data-tt="work" aria-pressed="' + (taskTab === "work") + '">팀 업무 현황</button>' +
+      pfMembersAll().map(function (mid) {
+        return '<button data-tt="kpi:' + esc(mid) + '" aria-pressed="' + (taskTab === "kpi:" + mid) + '">' + esc(member(mid).name) + " 개인 지표</button>";
+      }).join("") + "</div>";
+  }
+  function pfMonthField() {
+    return '<label class="pf-sub">기준 월 <select class="fsel pf-msel" id="pfMonthSel" aria-label="기준 월">' + pfMonthOpts(pfMonth) + "</select></label>";
+  }
+  function pfMemberNames(s) {
+    return (s.rows || []).filter(function (r) { return r.w > 0; }).map(function (r) { return esc(member(r.id).name) + " " + fmt(r.w) + "%"; }).join(" · ");
   }
   function pfKpiCard(k) {
-    var month = pfMonth, r = pfRate(k.id, month), s = pfScore(k, month);
-    var ps = pfScore(k, PC.prevMonth(month));
+    var month = pfMonth, r = pfRate(k.id, month), s = pfTeamScore(k, month);
+    var ps = pfTeamScore(k, PC.prevMonth(month));
     var pr = pfRate(k.id, PC.prevMonth(month));
     var scoreHtml = s.state === "ok"
       ? '<span class="n num">' + pf1(s.value) + "<small>%</small></span>"
       : '<span class="n txt">' + (s.state === "empty" ? "대상 없음" : "산출 대기") + "</span>";
-    var excl = s.excluded && s.excluded.length ? "대상 없음 " + s.excluded.length + "개 제외 · " : "";
     return '<article class="pf-card k">' +
       '<div class="pf-t"><h3><span class="no">KPI ' + esc(k.no) + "</span>" + esc(k.name) + "</h3></div>" +
       '<div class="pf-vals">' +
-      '<div class="pf-v"><span class="l">실제 KPI 달성률</span>' + pfValHtml(r) +
+      '<div class="pf-v"><span class="l">팀 전체 실제 달성률</span>' + pfValHtml(r) +
       '<span class="s">' + esc(r.state === "ok" ? fmt(r.num) + " ÷ " + fmt(r.den) : k.src) + "</span>" +
       pfDelta(r.state === "ok" ? r.value : null, pr.state === "ok" ? pr.value : null) +
       (PC.isNum(k.target) ? '<span class="s">목표 ' + fmt(k.target) + "%</span>" : "") + "</div>" +
-      '<div class="pf-v"><span class="l">선행활동 점수</span>' + scoreHtml +
-      '<span class="s">' + esc(s.state === "ok" ? excl + "자동 계산" : s.reason) + "</span>" +
+      '<div class="pf-v"><span class="l">팀 선행활동 점수</span>' + scoreHtml +
+      '<span class="s">' + (s.state === "ok" ? pfMemberNames(s) : esc(s.reason)) + "</span>" +
       pfDelta(s.state === "ok" ? s.value : null, ps.state === "ok" ? ps.value : null) + "</div></div>" +
       '<div class="pf-tags"><span class="pf-tag link">' + esc(k.src) + " · " + esc(k.linkNote) + "</span></div>" +
-      '<div class="pf-acts"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">연결 선행지표 보기</button>' +
+      '<div class="pf-acts"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">팀 점수 근거 보기</button>' +
       '<button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="input">실적 입력</button></div></article>';
+  }
+  function pfTeamSection() {
+    return '<div class="pf-h2" style="margin-top:0"><h2>B2B팀 공통 KPI</h2><span>팀 전체 공통 · 모든 팀원에게 같은 값 표시</span><span style="margin-left:auto">' + pfMonthField() + "</span></div>" +
+      '<div class="pf-grid k3" style="margin-bottom:22px">' + (D.mainKpis || []).map(pfKpiCard).join("") + "</div>";
   }
   function pfLeadCard(l) {
     var month = pfMonth, r = pfRate(l.id, month), rec = pfRec(l.id, month);
@@ -2036,48 +2134,78 @@ var PerfCalc = (function () {
       '<div class="pf-acts"><button class="mini" data-pf-open="lead" data-id="' + esc(l.id) + '" data-v="input">상세업무 보기 · 실적 입력</button>' +
       '<button class="mini" data-pf-open="lead" data-id="' + esc(l.id) + '" data-v="edit">수정</button></div></article>';
   }
-  function pfLagRef(g) { return g.ref || g.id; }
-  function pfLagTarget(g) {
-    if (g.ref) { var k = pfFind("mainKpis", g.ref); return k ? k.target : null; }
-    return g.target;
-  }
   function pfLagCard(g) {
-    var ref = pfLagRef(g), month = pfMonth, r = pfRate(ref, month), t = pfLagTarget(g);
+    var month = pfMonth, r = pfRate(g.id, month), t = g.target;
     return '<article class="pf-card">' +
       '<div class="pf-t"><h3><span class="no">' + esc(g.no) + "</span>" + esc(g.name) + "</h3>" + pfStatus(r, t) + "</div>" +
-      '<div class="pf-rate">' + pfValHtml(r) + pfRateDelta(ref, month) + "</div>" +
+      '<div class="pf-rate">' + pfValHtml(r) + pfRateDelta(g.id, month) + "</div>" +
       pfMeter(r, t) +
-      '<div class="pf-sub">' + (r.state === "ok" ? "실적 <b class=\"num\">" + fmt(r.num) + " / " + fmt(r.den) + "</b> · " : "") +
+      '<div class="pf-sub">담당 <b>' + esc(g.owner || "미지정") + "</b> · " + (r.state === "ok" ? "실적 <b class=\"num\">" + fmt(r.num) + " / " + fmt(r.den) + "</b> · " : "") +
       "목표 <b>" + (PC.isNum(t) ? fmt(t) + "%" : "미설정") + "</b></div>" +
       '<div class="pf-sub">' + esc(g.measure) + "</div>" +
-      '<div class="pf-acts"><button class="mini" data-pf-open="' + (g.ref ? "kpi" : "lag") + '" data-id="' + esc(ref) + '" data-v="input">' + (g.ref ? "KPI " + esc(g.no) + " 실적 보기" : "실적 입력") + "</button></div></article>";
+      '<div class="pf-acts"><button class="mini" data-pf-open="lag" data-id="' + esc(g.id) + '" data-v="input">실적 입력</button>' +
+      '<button class="mini" data-pf-open="lag" data-id="' + esc(g.id) + '" data-v="edit">수정</button></div></article>';
   }
-  function pfMisses() {
+  function pfMisses(mid) {
     var out = [];
-    (D.lagDefs || []).forEach(function (g) {
-      var r = pfRate(pfLagRef(g), pfMonth), t = pfLagTarget(g);
-      if (r.state === "ok" && PC.isNum(t) && r.value < t) out.push(esc(g.name) + " " + pf1(r.value) + "% (목표 " + fmt(t) + "%)");
+    (D.lagDefs || []).filter(function (g) { return g.member === mid; }).forEach(function (g) {
+      var r = pfRate(g.id, pfMonth);
+      if (r.state === "ok" && PC.isNum(g.target) && r.value < g.target) out.push(esc(g.name) + " " + pf1(r.value) + "% (목표 " + fmt(g.target) + "%)");
     });
     return out;
   }
-  function pfPage() {
-    var core = (D.leadDefs || []).filter(function (l) { return !l.support; });
-    var sup = (D.leadDefs || []).filter(function (l) { return l.support; });
-    var miss = pfMisses();
-    return '<div class="phead"><div><h1>신한솔 KPI·선행지표 관리</h1><div class="hs">업무 실적을 입력하면 달성률과 KPI 선행점수가 다시 계산됩니다. 실제 KPI는 입력된 실적으로만 계산합니다.</div></div>' +
-      '<div class="meta"><label>기준 월 <select class="fsel pf-msel" id="pfMonthSel" aria-label="기준 월">' + pfMonthOpts(pfMonth) + "</select></label></div></div>" +
+  /* 개인 지표가 팀 공통 KPI 점수에 들어가는 몫 — 개인 화면에서 확인 */
+  function pfMemberScoreCard(k, mid) {
+    var s = pfMemberScore(k, mid, pfMonth), ps = pfMemberScore(k, mid, PC.prevMonth(pfMonth));
+    var mw = (k.memberWeights || {})[mid];
+    var excl = s.excluded && s.excluded.length ? "대상 없음 " + s.excluded.length + "개 제외 · " : "";
+    return '<article class="pf-card ms">' +
+      '<div class="pf-t"><h3><span class="no">KPI ' + esc(k.no) + "</span>" + esc(k.name) + "</h3></div>" +
+      '<div class="pf-rate">' + (s.state === "ok" ? '<span class="n num">' + pf1(s.value) + "<small>%</small></span>" : '<span class="n txt">' + (s.state === "empty" ? "대상 없음" : "산출 대기") + "</span>") +
+      pfDelta(s.state === "ok" ? s.value : null, ps.state === "ok" ? ps.value : null) + "</div>" +
+      '<div class="pf-sub">' + esc(s.state === "ok" ? excl + "개인 선행점수" : s.reason) + " · 팀 점수 반영 " + (PC.isNum(mw) ? fmt(mw) + "%" : "미설정") + "</div>" +
+      '<div class="pf-acts"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="weights" data-mem="' + esc(mid) + '">지표 가중치 설정</button></div></article>';
+  }
+  function pfPage(mid) {
+    var mine = (D.leadDefs || []).filter(function (l) { return l.member === mid; });
+    var core = mine.filter(function (l) { return !l.support; }), sup = mine.filter(function (l) { return l.support; });
+    var lags = (D.lagDefs || []).filter(function (g) { return g.member === mid; });
+    var kpis = (D.mainKpis || []).filter(function (k) { return pfMembersOf(k).indexOf(mid) >= 0; });
+    var miss = pfMisses(mid), nm = esc(member(mid).name);
+    return '<div class="phead"><div><h1>' + nm + ' 개인 지표</h1><div class="hs">담당자 카드와 같은 데이터입니다. 선행지표 달성률이 바뀌면 개인 선행점수와 팀 공통 KPI 선행점수가 다시 계산됩니다.</div></div>' +
+      '<div class="meta">' + pfMonthField() + "</div></div>" +
       pfTabs() +
       '<div class="pf-status"><span><b>수동 관리</b> · 고객관리카드·K-apt·이카운트는 자동으로 연결되어 있지 않아 담당자가 직접 입력합니다.</span></div>' +
-      '<div class="pf-h2"><h2>메인 KPI</h2></div><div class="pf-grid k3">' + (D.mainKpis || []).map(pfKpiCard).join("") + "</div>" +
-      '<div class="pf-h2"><h2>선행지표</h2><span>담당자가 수행하는 고객관리 업무</span></div><div class="pf-grid">' + core.map(pfLeadCard).join("") + "</div>" +
+      '<div class="pf-h2"><h2>KPI별 개인 선행점수</h2><span>팀 공통 KPI 점수에는 팀원 반영 가중치를 거쳐 들어갑니다</span></div><div class="pf-grid k3">' + kpis.map(function (k) { return pfMemberScoreCard(k, mid); }).join("") + "</div>" +
+      '<div class="pf-h2"><h2>개인 선행지표</h2><span>' + nm + ' 담당 고객관리 업무</span></div><div class="pf-grid">' + core.map(pfLeadCard).join("") + "</div>" +
       '<div class="pf-h2"><h2>운영 지원지표</h2><span>별도 표시 · KPI 계산 기본 가중치 0%</span></div><div class="pf-grid">' + sup.map(pfLeadCard).join("") + "</div>" +
-      '<div class="pf-h2"><h2>후행지표</h2><span>실제 이용·활동·등급 변동 자료로 계산 · 선행지표와 무관</span></div><div class="pf-grid">' + (D.lagDefs || []).map(pfLagCard).join("") + "</div>" +
+      '<div class="pf-h2"><h2>개인 후행지표</h2><span>개인 성과로 별도 저장 · 팀 공통 KPI와 합산하지 않음</span></div><div class="pf-grid">' + lags.map(pfLagCard).join("") + "</div>" +
       '<div class="note" style="margin-top:14px"><b>주요 미달성 지표</b> — ' + (miss.length ? miss.join(" · ") : "목표 대비 미달로 판정된 후행지표가 없습니다. (목표 미설정·미측정 지표는 판정하지 않습니다)") + "</div>";
+  }
+  function pfBoardRow(type, x) {
+    var r = pfRate(x.id, pfMonth);
+    var val = r.state === "ok" ? '<span class="val num">' + pf1(r.value) + "%</span>" : '<span class="val txt">' + (r.state === "empty" ? "대상 없음" : "미측정") + "</span>";
+    var now = r.state === "ok" && r.mode === "auto" ? fmt(r.num) + " / " + fmt(r.den) : r.state === "ok" ? "직접 입력" : "—";
+    var tgt = x.targetText || (PC.isNum(x.target) ? fmt(x.target) + "%" : "미설정");
+    return '<button class="pfb-row" data-pf-open="' + type + '" data-id="' + esc(x.id) + '" data-v="input"><span class="nm">' + esc(x.no) + " " + esc(x.name) + "</span>" + val +
+      '<span class="sm">목표 ' + esc(tgt) + " · 실적 " + esc(now) + "</span>" + pfMeter(r, x.target) + "</button>";
+  }
+  /* 담당자 카드: 개인 지표가 있으면 표시, 없으면 추후 등록 안내 */
+  function pfBoardBlock(m) {
+    var leads = (D.leadDefs || []).filter(function (l) { return l.member === m.id; });
+    var lags = (D.lagDefs || []).filter(function (g) { return g.member === m.id; });
+    if (!leads.length && !lags.length) return '<div class="bempty">개인 선행·후행지표는 추후 별도 등록합니다.</div>';
+    var o = pfBoardOpen[m.id] !== false;
+    return '<button class="pf-h' + (o ? " on" : "") + '" data-pf-board="' + esc(m.id) + '" aria-expanded="' + o + '"><span class="chev" aria-hidden="true">▶</span><span class="k">개인 선행·후행지표 · ' + esc(pfMonth) + '</span><span class="c num">' + (leads.length + lags.length) + "</span></button>" +
+      '<div class="pf-body' + (o ? " on" : "") + '"><div class="pfb-list">' +
+      '<div class="pfb-sep">개인 선행지표 ' + leads.length + "개</div>" + leads.map(function (l) { return pfBoardRow("lead", l); }).join("") +
+      '<div class="pfb-sep">개인 후행지표 ' + lags.length + "개</div>" + lags.map(function (g) { return pfBoardRow("lag", g); }).join("") +
+      "</div></div>";
   }
 
   /* ---------- 상세 창 ---------- */
-  function pfOpen(type, id, view) {
-    pfM = { type: type, id: id, month: pfMonth, view: view || "input", dirty: false, err: "" };
+  function pfOpen(type, id, view, mem) {
+    pfM = { type: type, id: id, month: pfMonth, view: view || "input", dirty: false, err: "", member: mem || "" };
     pfSetBase();
     pfDraw();
   }
@@ -2101,7 +2229,7 @@ var PerfCalc = (function () {
     if (!list.length) return '<div class="pf-empty">' + esc(empty) + "</div>";
     return list.slice(0, 20).map(function (h) {
       var ch = (h.changes || []).map(function (c) { return c.f + " " + c.from + " → " + c.to; }).join(" · ");
-      return '<div class="pf-row"><span class="nm">' + esc(h.summary || "") + '</span><span class="val" style="font-weight:600;color:var(--text-3)">' + esc(h.month || "") + "</span>" +
+      return '<div class="pfr"><span class="nm">' + esc(h.summary || "") + '</span><span class="val" style="font-weight:600;color:var(--text-3)">' + esc(h.month || "") + "</span>" +
         '<span class="sm">' + esc(pfKst(h.at)) + " · " + esc(h.by || "미입력") + (ch ? "<br>" + esc(ch) : "") + (h.note ? "<br>메모: " + esc(h.note) : "") + "</span></div>";
     }).join("");
   }
@@ -2111,7 +2239,7 @@ var PerfCalc = (function () {
     if (!recs.length) return '<div class="pf-empty">아직 저장된 월별 실적이 없습니다.</div>';
     return recs.map(function (x) {
       var r = PC.rate(x);
-      return '<div class="pf-row"><span class="nm num">' + esc(x.month) + '</span><span class="val num">' +
+      return '<div class="pfr"><span class="nm num">' + esc(x.month) + '</span><span class="val num">' +
         (r.state === "ok" ? pf1(r.value) + "%" : r.state === "empty" ? "대상 없음" : "미측정") + "</span>" +
         '<span class="sm">' + esc(pfCalcText(r)) + " · " + esc(x.updatedBy || "미입력") + " · " + esc(pfKst(x.updatedAt)) + "</span></div>";
     }).join("");
@@ -2169,7 +2297,7 @@ var PerfCalc = (function () {
     var rec = pfRec(def.id, pfM.month), r = PC.rate(rec);
     var links = pfKpisOf(def.id).map(function (k) {
       var rel = (k.links || []).filter(function (l) { return l.li === def.id; })[0].rel, w = (k.weights || {})[def.id];
-      return '<div class="pf-row"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + (rel === "ref" ? " (참고 연결)" : "") + '</span><span class="val num">' + (PC.isNum(w) ? fmt(w) + "%" : "미설정") + "</span></div>";
+      return '<div class="pfr"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + (rel === "ref" ? " (참고 연결)" : "") + '</span><span class="val num">' + (PC.isNum(w) ? fmt(w) + "%" : "미설정") + "</span></div>";
     }).join("");
     var hist = pfHistoryOf(def.id);
     return '<div class="pf-sec"><h3>지표 설명</h3>' + pfDefInfo(def) + "</div>" +
@@ -2181,10 +2309,17 @@ var PerfCalc = (function () {
       '<div class="pf-sec"><h3>최근 작업 이력</h3>' + pfHistRows(hist.filter(function (h) { return h.note || h.checks; }), "작업 메모가 아직 없습니다.") + "</div>" +
       '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(hist.filter(function (h) { return (h.changes || []).length; }), "변경 이력이 아직 없습니다.") + "</div>";
   }
-  function pfWeightRows(k, draft) {
-    var w = draft || k.weights || {}, s = pfScore(k, pfM.month, draft), byId = {};
+  function pfFormMember(k) { // 가중치 화면에서 볼 팀원
+    var list = pfMembersOf(k);
+    if (pfM.member && list.indexOf(pfM.member) >= 0) return pfM.member;
+    pfM.member = list[0] || "";
+    return pfM.member;
+  }
+  function pfWeightRows(k, mid, draft) {
+    var w = draft || k.weights || {}, s = pfMemberScore(k, mid, pfM.month, draft), byId = {};
     (s.rows || []).forEach(function (x) { byId[x.li] = x; });
-    return (k.links || []).map(function (l) {
+    var only = pfLisOf(mid);
+    return (k.links || []).filter(function (l) { return only(l.li); }).map(function (l) {
       var def = pfFind("leadDefs", l.li) || { name: l.li, no: "" }, x = byId[l.li] || {};
       var st = x.state === "ok" ? pf1(x.value) + "%" : x.state === "empty" ? "대상 없음" : "미측정";
       return '<div class="pf-wrow"><span class="nm">' + esc(def.no) + " " + esc(def.name) + (l.rel === "ref" ? " · 참고 연결" : "") +
@@ -2192,29 +2327,59 @@ var PerfCalc = (function () {
         '<input type="number" inputmode="decimal" min="0" max="100" step="any" data-pf-w="' + esc(l.li) + '" value="' + (PC.isNum(w[l.li]) ? esc(w[l.li]) : "") + '" placeholder="미설정" aria-label="' + esc(def.name) + ' 가중치"></div>';
     }).join("");
   }
-  function pfScoreLine(k, draft) {
-    var s = pfScore(k, pfM.month, draft), ws = PC.weightStatus(k, draft);
+  function pfScoreLine(k, mid, draft) {
+    var s = pfMemberScore(k, mid, pfM.month, draft), ws = PC.weightStatus(k, draft, pfLisOf(mid));
     var msg = ws.complete && !ws.sum100 ? '<div class="pf-warn">가중치 합계가 ' + ws.total + "%입니다. 100%가 되어야 선행점수를 계산합니다.</div>"
       : !ws.complete ? '<div class="pf-warn">가중치 미설정 ' + ws.unset.length + "개 — 모두 설정해야 선행점수를 계산합니다. (현재 합계 " + ws.total + "%)</div>" : "";
     var miss = s.code === "none" ? '<div class="pf-warn">미측정: ' + s.missing.map(function (id) { return esc((pfFind("leadDefs", id) || {}).name || id); }).join(", ") + "</div>" : "";
     var ex = s.excluded && s.excluded.length ? '<div class="pf-sub">대상 없음으로 제외: ' + s.excluded.map(function (id) { return esc((pfFind("leadDefs", id) || {}).name || id); }).join(", ") + " — 남은 가중치로 비례 배분</div>" : "";
-    return msg + miss + ex + '<div class="pf-preview">선행활동 점수 <b class="num">' + (s.state === "ok" ? pf1(s.value) + "%" : s.state === "empty" ? "대상 없음" : "산출 대기") + "</b> · 가중치 합계 " + ws.total + "%</div>";
+    return msg + miss + ex + '<div class="pf-preview">' + esc(member(mid).name) + ' 개인 선행점수 <b class="num">' + (s.state === "ok" ? pf1(s.value) + "%" : s.state === "empty" ? "대상 없음" : "산출 대기") + "</b> · 가중치 합계 " + ws.total + "%</div>";
+  }
+  function pfTeamLine(k, draft) {
+    var s = pfTeamScore(k, pfM.month, draft);
+    var warn = s.state === "wait" ? '<div class="pf-warn">' + esc(s.reason) + "</div>" : "";
+    var ex = s.excluded && s.excluded.length ? '<div class="pf-sub">대상 없음으로 제외: ' + s.excluded.map(function (id) { return esc(member(id).name); }).join(", ") + " — 남은 가중치로 비례 배분</div>" : "";
+    return warn + ex + '<div class="pf-preview">팀 선행활동 점수 <b class="num">' + (s.state === "ok" ? pf1(s.value) + "%" : s.state === "empty" ? "대상 없음" : "산출 대기") + "</b> · 팀원 가중치 합계 " + s.total + "%</div>";
+  }
+  function pfMemberWeightRows(k, draft) {
+    var w = draft || k.memberWeights || {}, reg = pfMembersOf(k);
+    var rows = reg.map(function (mid) {
+      var s = pfMemberScore(k, mid, pfM.month);
+      return '<div class="pf-wrow"><span class="nm">' + esc(member(mid).name) +
+        '<span class="sm">개인 선행점수 ' + (s.state === "ok" ? pf1(s.value) + "%" : s.state === "empty" ? "대상 없음" : "산출 대기") + (s.state === "wait" ? " (" + esc(s.reason) + ")" : "") + "</span></span>" +
+        '<input type="number" inputmode="decimal" min="0" max="100" step="any" data-pf-mw="' + esc(mid) + '" value="' + (PC.isNum(w[mid]) ? esc(w[mid]) : "") + '" placeholder="미설정" aria-label="' + esc(member(mid).name) + ' 반영 가중치"></div>';
+    }).join("");
+    var others = D.members.filter(function (m) { return reg.indexOf(m.id) < 0; }).map(function (m) {
+      return '<div class="pfr"><span class="nm">' + esc(m.name) + '</span><span class="val" style="font-weight:600;color:var(--text-3)">지표 미등록</span></div>';
+    }).join("");
+    return rows + others;
   }
   function pfKpiBody(k) {
     if (pfM.view === "links") {
-      return '<div class="pf-sec"><h3>계산 근거 — ' + esc(pfM.month) + '</h3><div class="pf-sub" style="margin-bottom:8px">KPI 선행점수 = Σ(선행지표 달성률 × 가중치). 빈칸은 미설정, 0은 계산에서 제외입니다. 전월 점수도 현재 가중치로 계산합니다.</div>' +
+      return '<div class="pf-sec"><h3>계산 근거 — ' + esc(pfM.month) + '</h3><div class="pf-sub" style="margin-bottom:8px">팀 선행점수 = Σ(팀원 개인 선행점수 × 팀원 반영 가중치). 실제 달성률과는 별개입니다. 전월 점수도 현재 가중치로 계산합니다.</div>' +
         '<label class="pf-f" style="margin-bottom:8px"><span>기준 월</span><select id="pfmMonth">' + pfMonthOpts(pfM.month) + "</select></label>" +
-        '<div id="pfScoreLine">' + pfScoreLine(k) + "</div></div>" +
-        '<div class="pf-sec"><h3>연결 선행지표 · 가중치</h3><div id="pfWeights">' + pfWeightRows(k) + "</div>" +
+        '<div id="pfTeamLine">' + pfTeamLine(k) + "</div></div>" +
+        '<div class="pf-sec"><h3>팀원 반영 가중치</h3><div id="pfMemberWeights">' + pfMemberWeightRows(k) + "</div>" +
         '<label class="pf-f" style="margin-top:10px"><span>입력자 (필수)</span><input type="text" id="pfActor" autocomplete="name" value="' + esc(pfActor()) + '"></label>' +
         (pfM.err ? '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>" : "") +
-        '<div class="pf-save"><button class="btn" id="pfSaveW">가중치 저장</button></div></div>' +
+        '<div class="pf-save"><button class="btn" id="pfSaveMW">팀원 가중치 저장</button></div></div>' +
         '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(pfHistoryOf(k.id).filter(function (h) { return h.kind === "weight"; }), "가중치 변경 이력이 아직 없습니다.") + "</div>";
     }
+    if (pfM.view === "weights") {
+      var mid = pfFormMember(k), list = pfMembersOf(k);
+      return '<div class="pf-sec"><h3>계산 근거 — ' + esc(pfM.month) + '</h3><div class="pf-sub" style="margin-bottom:8px">개인 선행점수 = Σ(선행지표 달성률 × 가중치). 빈칸은 미설정, 0은 계산에서 제외입니다. 전월 점수도 현재 가중치로 계산합니다.</div>' +
+        (list.length > 1 ? '<label class="pf-f" style="margin-bottom:8px"><span>팀원</span><select id="pfmMember">' + list.map(function (x) { return '<option value="' + esc(x) + '"' + (x === mid ? " selected" : "") + ">" + esc(member(x).name) + "</option>"; }).join("") + "</select></label>" : "") +
+        '<label class="pf-f" style="margin-bottom:8px"><span>기준 월</span><select id="pfmMonth">' + pfMonthOpts(pfM.month) + "</select></label>" +
+        '<div id="pfScoreLine">' + pfScoreLine(k, mid) + "</div></div>" +
+        '<div class="pf-sec"><h3>' + esc(member(mid).name) + ' 연결 선행지표 · 가중치</h3><div id="pfWeights">' + pfWeightRows(k, mid) + "</div>" +
+        '<label class="pf-f" style="margin-top:10px"><span>입력자 (필수)</span><input type="text" id="pfActor" autocomplete="name" value="' + esc(pfActor()) + '"></label>' +
+        (pfM.err ? '<div class="pf-bad" role="alert">' + esc(pfM.err) + "</div>" : "") +
+        '<div class="pf-save"><button class="btn" id="pfSaveW">가중치 저장</button></div></div>';
+    }
     var accept = k.accept ? '<div class="pf-sec"><h3>인정 활동</h3><ul class="pf-list">' + k.accept.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" : "";
-    return '<div class="pf-sec"><h3>KPI 설명</h3>' + pfDefInfo(k) + (k.defNote ? '<div class="pf-warn" style="margin-top:8px">' + esc(k.defNote) + "</div>" : "") + "</div>" + accept +
+    return '<div class="pf-sec"><h3>KPI 설명 — 팀 공통</h3>' + pfDefInfo(k) + (k.defNote ? '<div class="pf-warn" style="margin-top:8px">' + esc(k.defNote) + "</div>" : "") + "</div>" + accept +
       '<div class="pf-sec"><h3>관리 내용</h3><ul class="pf-list">' + (k.manage || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>" +
-      '<div class="pf-sec"><h3>실적 입력 — 원천 자료를 확인한 값</h3>' + pfRecForm(k, pfRec(k.id, pfM.month)) + "</div>" +
+      '<div class="pf-sec"><h3>팀 전체 실적 입력 — 원천 자료를 확인한 값</h3>' + pfRecForm(k, pfRec(k.id, pfM.month)) + "</div>" +
       '<div class="pf-sec"><h3>월별 실적</h3>' + pfMonthlyRows(k.id) + "</div>" +
       '<div class="pf-sec"><h3>변경 이력</h3>' + pfHistRows(pfHistoryOf(k.id).filter(function (h) { return h.kind !== "weight"; }), "변경 이력이 아직 없습니다.") + "</div>";
   }
@@ -2233,7 +2398,7 @@ var PerfCalc = (function () {
     var fields = pfM.type === "lead"
       ? txt("owner", "담당자") + txt("cycle", "관리 주기") + txt("purpose", "관리 목적", 1) + txt("measure", "측정 대상", 1) + txt("targetText", "목표 설명")
       : txt("purpose", "목적", 1);
-    if (pfM.type === "lag") fields = txt("measure", "측정 항목", 1);
+    if (pfM.type === "lag") fields = txt("owner", "담당자") + txt("measure", "측정 항목", 1);
     return '<div class="pf-sec"><div class="pf-form">' + fields +
       '<label class="pf-f w"><span>목표 달성률(%) — 비우면 미설정</span><input type="number" inputmode="decimal" min="0" max="100" step="any" data-pf-def-num="target" value="' + (PC.isNum(def.target) ? esc(def.target) : "") + '" placeholder="미설정"></label>' +
       '<label class="pf-f w"><span>입력자 (필수)</span><input type="text" id="pfActor" autocomplete="name" value="' + esc(pfActor()) + '"></label></div>' +
@@ -2244,7 +2409,7 @@ var PerfCalc = (function () {
     var el = $("#pfModal"), def = pfDef(pfM.type, pfM.id);
     if (!def) { pfClose(true); return; }
     var views = pfM.type === "kpi"
-      ? [["links", "연결 선행지표·가중치"], ["input", "실적·설명"], ["edit", "수정"]]
+      ? [["links", "팀 선행점수"], ["weights", "개인 지표 가중치"], ["input", "실적·설명"], ["edit", "수정"]]
       : pfM.type === "lead" ? [["input", "상세·실적"], ["edit", "수정"]] : [["input", "실적"], ["edit", "수정"]];
     var title = (pfM.type === "kpi" ? "KPI " : "") + def.no + " " + def.name;
     var body = pfM.view === "edit" ? pfEditBody(def) : pfM.type === "kpi" ? pfKpiBody(def) : pfM.type === "lead" ? pfLeadBody(def) : pfLagBody(def);
@@ -2323,18 +2488,30 @@ var PerfCalc = (function () {
     var sr = $("#pfSaveRec", m); if (sr) sr.onclick = function () { pfSaveRec(def); };
     var sd = $("#pfSaveDef", m); if (sd) sd.onclick = function () { pfSaveDef(def); };
     var sw = $("#pfSaveW", m); if (sw) sw.onclick = function () { pfSaveWeights(def); };
+    var smw = $("#pfSaveMW", m); if (smw) smw.onclick = function () { pfSaveMemberWeights(def); };
+    var mm = $("#pfmMember", m);
+    if (mm) mm.onchange = function () {
+      if (pfM.dirty && !confirm("저장하지 않은 입력이 있습니다. 팀원을 바꿀까요?")) { mm.value = pfM.member; return; }
+      pfM.member = mm.value; pfM.dirty = false; pfM.err = ""; pfDraw();
+    };
+    $$("[data-pf-mw]", m).forEach(function (el) {
+      el.addEventListener("input", function () {
+        var draft = pfDraftOf("data-pf-mw"), line = $("#pfTeamLine", m);
+        if (line) line.innerHTML = pfTeamLine(def, draft);
+      });
+    });
     $$("[data-pf-w]", m).forEach(function (el) {
       el.addEventListener("input", function () {
-        var draft = pfWeightDraft(), line = $("#pfScoreLine", m);
-        if (line) line.innerHTML = pfScoreLine(def, draft);
+        var draft = pfDraftOf("data-pf-w"), line = $("#pfScoreLine", m);
+        if (line) line.innerHTML = pfScoreLine(def, pfM.member, draft);
       });
     });
   }
-  function pfWeightDraft() {
+  function pfDraftOf(attr) {
     var w = {};
-    $$("[data-pf-w]", $("#pfModal")).forEach(function (el) {
+    $$("[" + attr + "]", $("#pfModal")).forEach(function (el) {
       var v = pfNumOf(el);
-      if (v != null && !isNaN(v)) w[el.getAttribute("data-pf-w")] = v;
+      if (v != null && !isNaN(v)) w[el.getAttribute(attr)] = v;
     });
     return w;
   }
@@ -2417,7 +2594,9 @@ var PerfCalc = (function () {
   }
   function pfSaveWeights(k) {
     k = pfDef(pfM.type, pfM.id);
-    var m = $("#pfModal"), next = {}, bad = false;
+    var m = $("#pfModal"), next = {}, bad = false, only = pfLisOf(pfM.member);
+    var old = k.weights || {};
+    Object.keys(old).forEach(function (li) { if (!only(li)) next[li] = old[li]; }); // 다른 팀원의 가중치는 그대로
     $$("[data-pf-w]", m).forEach(function (el) {
       var v = pfNumOf(el);
       if (v == null) return;
@@ -2427,7 +2606,7 @@ var PerfCalc = (function () {
     var by = pfNeedActor();
     if (!by) { pfKeepDraw(k); return; }
     if ((k.rev || 0) !== pfM.baseDefRev && !pfConflictOk(k.updatedBy, k.updatedAt)) return;
-    var old = k.weights || {}, changes = [];
+    var changes = [];
     (k.links || []).forEach(function (l) {
       if ((PC.isNum(old[l.li]) ? old[l.li] : null) !== (PC.isNum(next[l.li]) ? next[l.li] : null)) {
         changes.push({ f: ((pfFind("leadDefs", l.li) || {}).name || l.li), from: PC.isNum(old[l.li]) ? old[l.li] + "%" : "미설정", to: PC.isNum(next[l.li]) ? next[l.li] + "%" : "미설정" });
@@ -2435,9 +2614,32 @@ var PerfCalc = (function () {
     });
     if (!changes.length) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
     k.weights = next; k.rev = (k.rev || 0) + 1; k.updatedAt = new Date().toISOString(); k.updatedBy = by;
-    pfPushHist({ ref: k.id, kind: "weight", by: by, summary: "가중치 변경", changes: changes });
-    var ws = PC.weightStatus(k);
+    pfPushHist({ ref: k.id, kind: "weight", by: by, summary: member(pfM.member).name + " 지표 가중치 변경", changes: changes });
+    var ws = PC.weightStatus(k, null, only);
     pfCommit(ws.complete && ws.sum100 ? "가중치를 저장했습니다" : "저장했습니다 — 합계가 100%가 되어야 점수가 계산됩니다");
+  }
+  function pfSaveMemberWeights(k) {
+    k = pfDef(pfM.type, pfM.id);
+    var m = $("#pfModal"), next = {}, bad = false, old = k.memberWeights || {};
+    $$("[data-pf-mw]", m).forEach(function (el) {
+      var v = pfNumOf(el);
+      if (v == null) return;
+      if (isNaN(v) || v < 0 || v > 100) bad = true; else next[el.getAttribute("data-pf-mw")] = v;
+    });
+    if (bad) { pfM.err = "가중치는 0~100 사이여야 합니다."; pfKeepDraw(k); return; }
+    var by = pfNeedActor();
+    if (!by) { pfKeepDraw(k); return; }
+    if ((k.rev || 0) !== pfM.baseDefRev && !pfConflictOk(k.updatedBy, k.updatedAt)) return;
+    var changes = [];
+    pfMembersOf(k).forEach(function (mid) {
+      if ((PC.isNum(old[mid]) ? old[mid] : null) !== (PC.isNum(next[mid]) ? next[mid] : null)) {
+        changes.push({ f: member(mid).name, from: PC.isNum(old[mid]) ? old[mid] + "%" : "미설정", to: PC.isNum(next[mid]) ? next[mid] + "%" : "미설정" });
+      }
+    });
+    if (!changes.length) { toast("바뀐 내용이 없습니다"); pfM.dirty = false; return; }
+    k.memberWeights = next; k.rev = (k.rev || 0) + 1; k.updatedAt = new Date().toISOString(); k.updatedBy = by;
+    pfPushHist({ ref: k.id, kind: "weight", by: by, summary: "팀원 반영 가중치 변경", changes: changes });
+    pfCommit("팀원 가중치를 저장했습니다");
   }
   function pfSaveDef(def) {
     def = pfDef(pfM.type, pfM.id);
@@ -2479,12 +2681,16 @@ var PerfCalc = (function () {
   function pfAdminCard() {
     var c = D.perfConfig || {};
     var rows = (D.mainKpis || []).map(function (k) {
-      var ws = PC.weightStatus(k);
-      return '<div class="pf-row"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + '</span><span class="val"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">가중치 설정</button></span>' +
-        '<span class="sm">' + (ws.complete ? "합계 " + ws.total + "%" + (ws.sum100 ? " · 계산 가능" : " · 100%가 아니어서 산출 대기") : "미설정 " + ws.unset.length + "개 · 산출 대기") + "</span></div>";
+      var team = pfTeamScore(k, pfMonth), reg = pfMembersOf(k);
+      var perMember = reg.map(function (mid) {
+        var ws = PC.weightStatus(k, null, pfLisOf(mid));
+        return esc(member(mid).name) + " 지표 " + (ws.complete ? "합계 " + ws.total + "%" : "미설정 " + ws.unset.length + "개");
+      }).join(" · ");
+      return '<div class="pfr"><span class="nm">KPI ' + esc(k.no) + " " + esc(k.name) + '</span><span class="val"><button class="mini" data-pf-open="kpi" data-id="' + esc(k.id) + '" data-v="links">가중치 설정</button></span>' +
+        '<span class="sm">팀원 가중치 합계 ' + team.total + "% · " + perMember + "</span></div>";
     }).join("");
     function num(k, l) { return '<label class="pf-f"><span>' + esc(l) + '</span><input type="number" inputmode="numeric" min="0" step="1" data-pf-cfg="' + k + '" value="' + (PC.isNum(c[k]) ? esc(c[k]) : "") + '" placeholder="미설정"></label>'; }
-    return '<div class="card"><div class="card-h"><h2>신한솔 KPI·선행지표 설정</h2></div>' + rows +
+    return '<div class="card"><div class="card-h"><h2>팀 KPI·개인 지표 설정</h2></div>' + rows +
       '<div class="pf-sec"><h3>미응답 재연락 기준 (선행지표 ② 안내용 · 메일 기록 연동 전까지 자동 분류하지 않습니다)</h3><div class="pf-form">' +
       num("noReplyDays", "미응답 판정 기간(일)") + num("resendDays", "재발송 주기(일)") + num("longNoReplyDays", "장기 미응답 기준(일)") + "</div></div></div>";
   }
@@ -2496,10 +2702,13 @@ var PerfCalc = (function () {
         repaint(false);
       };
     });
+    $$("[data-pf-board]").forEach(function (b) {
+      b.onclick = function () { var id = b.getAttribute("data-pf-board"); pfBoardOpen[id] = pfBoardOpen[id] === false; repaint(true); };
+    });
     var ms = $("#pfMonthSel");
     if (ms) ms.onchange = function () { pfMonth = ms.value; repaint(true); };
     $$("[data-pf-open]").forEach(function (b) {
-      b.onclick = function () { pfOpen(b.getAttribute("data-pf-open"), b.getAttribute("data-id"), b.getAttribute("data-v")); };
+      b.onclick = function () { pfOpen(b.getAttribute("data-pf-open"), b.getAttribute("data-id"), b.getAttribute("data-v"), b.getAttribute("data-mem")); };
     });
     $$("[data-pf-cfg]").forEach(function (el) {
       el.onchange = function () {
@@ -2515,7 +2724,11 @@ var PerfCalc = (function () {
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && pfM) pfClose(false); });
 
   function pageTasks() {
-    if (taskTab !== "work") return pfPage();
+    if (taskTab !== "work") {
+      var tabMid = taskTab.replace("kpi:", "");
+      if (pfMembersAll().indexOf(tabMid) >= 0) return pfPage(tabMid);
+      taskTab = "work";
+    }
     var all = allTasks();
     var rows = applyFilter(all);
     var doneN = all.filter(function (r) { return tkState(r.t.p) === "done"; }).length;
@@ -2562,7 +2775,7 @@ var PerfCalc = (function () {
       (edit ? "편집 중 — 업무를 누르면 바로 고칠 수 있고, 루틴·프로젝트·하위업무를 추가하거나 지울 수 있습니다."
         : "담당자별 루틴 · 프로젝트 · 하위업무. 이름을 누르면 그 사람 업무가 모두 펼쳐집니다.") + "</div></div>" +
       '<div class="meta">기준일 <b class="num">' + esc(D.meta.baseDate) + "</b>" + printBtn() + "</div></div>" +
-      pfTabs() + goalBanner() + strip + filters + body + LEGEND;
+      pfTabs() + pfTeamSection() + goalBanner() + strip + filters + body + LEGEND;
   }
 
   /* ============================================================
@@ -3793,14 +4006,14 @@ var PerfCalc = (function () {
           if (!o.routines) o.routines = clone(SEED.routines);
           if (!o.workKpis) o.workKpis = clone(SEED.workKpis);
           if (!o.automations) o.automations = clone(SEED.automations);
-          D = pfKeep(o, D, false); save(); repaint(false); toast("가져왔습니다");
+          D = pfNormalize(pfKeep(o, D, false)); save(); repaint(false); toast("가져왔습니다");
         } catch (err) { toast("불러오지 못했습니다 — 이 트래커가 내보낸 JSON인지 확인해 주세요"); }
       };
       r.readAsText(f);
     };
     var e4 = $("#btnSeed"); if (e4) e4.onclick = function () {
       if (!confirm("수정 내용을 버리고 기준선(" + SEED.meta.baseline + ") 상태로 되돌립니다. KPI·선행지표의 월별 실적과 이력은 그대로 둡니다. 계속할까요?")) return;
-      D = pfKeep(clone(SEED), D, true); open = {}; jOpen = {}; auOpen = {}; pjEdit = null; save(); repaint(false); toast("기준선으로 되돌렸습니다");
+      D = pfNormalize(pfKeep(clone(SEED), D, true)); open = {}; jOpen = {}; auOpen = {}; pjEdit = null; save(); repaint(false); toast("기준선으로 되돌렸습니다");
     };
     var e5 = $("#btnWipe"); if (e5) e5.onclick = function () {
       if (!confirm("구조와 지표 정의는 남기고 진행률·측정값·루틴 체크만 비웁니다. KPI·선행지표의 월별 실적과 이력은 그대로 둡니다. 계속할까요?")) return;
@@ -3871,7 +4084,7 @@ var PerfCalc = (function () {
       d[k] = Object.keys(remote[k]).sort().map(function (id) { return remote[k][id]; });
     });
     FB_BY_MEMBER.forEach(function (k) { if (remote[k]) d[k] = remote[k]; });
-    return d;
+    return pfNormalize(d);
   }
 
   /* ---- 이전에 확인된 원격 모양과 비교해, 바뀐 항목의 경로만 뽑는다 ---- */

@@ -19,12 +19,18 @@ async function t(name, fn) {
 const db = async () => (await fetch(BASE + '/__db')).json();
 const reset = () => fetch(BASE + '/__reset');
 const OLD_KEYS = Object.keys(baseline);
-function sameOld(d) { OLD_KEYS.forEach(k => assert.deepStrictEqual(d[k], baseline[k], k + ' 변경됨')); }
+// 멤버는 신한솔 카드 표시를 위해 추가될 수 있다. 기존 멤버와 나머지 키는 그대로여야 한다
+function sameOld(d) {
+  OLD_KEYS.forEach(k => {
+    if (k !== 'members') return assert.deepStrictEqual(d[k], baseline[k], k + ' 변경됨');
+    Object.keys(baseline.members).forEach(id => assert.deepStrictEqual(d.members[id], baseline.members[id], '멤버 ' + id + ' 변경됨'));
+  });
+}
 
 async function newPage(browser, opts, fresh) {
   const ctx = await browser.newContext(opts || { viewport: { width: 1320, height: 900 } });
-  // 시험은 KPI 탭에서 진행한다. 처음 접속 기본 탭은 별도 시험에서 확인.
-  if (!fresh) await ctx.addInitScript(() => { if (!localStorage.getItem('netform.b2b.tracker.tasktab.v1')) localStorage.setItem('netform.b2b.tracker.tasktab.v1', 'kpi'); });
+  // 시험은 신한솔 개인 지표 탭에서 시작한다. 처음 접속 기본 탭은 별도 시험에서 확인.
+  if (!fresh) await ctx.addInitScript(() => { if (!localStorage.getItem('netform.b2b.tracker.tasktab.v1')) localStorage.setItem('netform.b2b.tracker.tasktab.v1', 'kpi:shs'); });
   const p = await ctx.newPage();
   p.on('console', m => { if (m.type() === 'error' && !/__nosdk|ERR_|404|Failed to load/.test(m.text())) consoleErrors.push(m.text()); });
   p.on('pageerror', e => consoleErrors.push(String(e)));
@@ -39,10 +45,16 @@ async function open(p, hash) {
   await p.reload();
   await p.waitForFunction(() => document.querySelector('#view .wrap'));
 }
-const card = id => `[data-pf-open][data-id="${id}"]`;
+async function tab(p, tt) {
+  if (!await p.locator(`[data-tt="${tt}"][aria-pressed="true"]`).count()) await p.click(`[data-tt="${tt}"]`);
+}
+function tabFor(type, id, view) {
+  if (type === 'kpi') return view === 'weights' ? 'kpi:shs' : 'work';
+  return id.indexOf('LX') === 0 ? 'kpi:m1' : 'kpi:shs';
+}
 async function openModal(p, type, id, view) {
-  const sel = `[data-pf-open="${type}"][data-id="${id}"][data-v="${view}"]`;
-  await p.click(sel);
+  await tab(p, tabFor(type, id, view));
+  await p.click(`[data-pf-open="${type}"][data-id="${id}"][data-v="${view}"]`);
   await p.waitForSelector('#pfModal.on', { timeout: 5000 });
 }
 async function saveDirect(p, id, val, opts) {
@@ -67,14 +79,26 @@ async function saveAuto(p, type, id, num, den, opts) {
   await p.click('#pfClose');
 }
 async function setWeights(p, kid, w) {
-  await openModal(p, 'kpi', kid, 'links');
+  await openModal(p, 'kpi', kid, 'weights');
   for (const li of Object.keys(w)) await p.fill(`[data-pf-w="${li}"]`, w[li] == null ? '' : String(w[li]));
   await p.fill('#pfActor', '시험자');
   await p.click('#pfSaveW');
   await p.click('#pfClose');
 }
-const kpiCardText = (p, kid) => p.locator(`article.k:has([data-id="${kid}"])`).innerText();
-const leadCardText = (p, id) => p.locator(`article:has([data-pf-open="lead"][data-id="${id}"])`).innerText();
+async function setMemberWeights(p, kid, w) {
+  await openModal(p, 'kpi', kid, 'links');
+  for (const mid of Object.keys(w)) await p.fill(`[data-pf-mw="${mid}"]`, String(w[mid]));
+  await p.fill('#pfActor', '시험자');
+  await p.click('#pfSaveMW');
+  await p.click('#pfClose');
+}
+const kpiCardText = async (p, kid) => { await tab(p, 'work'); return p.locator(`article.k:has([data-id="${kid}"])`).innerText(); };
+const personalText = async (p, kid) => { await tab(p, 'kpi:shs'); return p.locator(`article.ms:has([data-id="${kid}"])`).innerText(); };
+const leadCardText = async (p, id) => { await tab(p, 'kpi:shs'); return p.locator(`article:has([data-pf-open="lead"][data-id="${id}"][data-v="edit"])`).innerText(); };
+const lagCardText = async (p, id) => { await tab(p, 'kpi:shs'); return p.locator(`article:has([data-pf-open="lag"][data-id="${id}"][data-v="edit"])`).innerText(); };
+const boardCard = mid => `.bcol:has([data-edsc="${mid}"])`;
+const API = BASE + '/__rtdb/shared/b2bOpsTracker.json';
+const patchDb = o => fetch(API, { method: 'PATCH', body: JSON.stringify(o) });
 const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; while (Date.now() < end) { try { const r = await fn(); if (r !== false) return r; } catch (x) { e = x; } await new Promise(r => setTimeout(r, 150)); } throw e || new Error('시간 초과'); };
 
 (async () => {
@@ -84,39 +108,61 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
   const p = await newPage(browser);
   try {
     // 로컬 호환 서버는 연결이 끊기면 다른 연결의 쓰기를 놓칠 수 있어, 다른 화면을 열기 전에 시험한다
-    await t('처음 접속하면 팀 업무 현황이 먼저 보이고 KPI는 신한솔 탭에 있음', async () => {
+    await t('처음 접속하면 팀 업무 현황과 공통 KPI가 먼저 보이고 개인 지표는 신한솔 탭에 있음', async () => {
       const f = await newPage(browser, null, true);
       await open(f);
       assert.ok(/팀 업무 현황/.test(await f.locator('.phead h1').innerText()));
-      assert.equal(await f.locator('article.k').count(), 0);
-      await f.click('[data-tt="kpi"]');
-      assert.ok(/신한솔 KPI·선행지표 관리/.test(await f.locator('.phead h1').innerText()));
       assert.equal(await f.locator('article.k').count(), 3);
+      assert.ok(/B2B팀 공통 KPI/.test(await f.locator('#view .wrap').innerText()));
+      await f.click('[data-tt="kpi:shs"]');
+      assert.ok(/신한솔 개인 지표/.test(await f.locator('.phead h1').innerText()));
+      assert.equal(await f.locator('article.k').count(), 0, '개인 화면에 팀 KPI 카드 없음');
       await f.reload(); await f.waitForFunction(() => document.querySelector('#view .wrap'));
-      assert.equal(await f.locator('article.k').count(), 3, '선택한 탭 기억');
+      assert.ok(/신한솔 개인 지표/.test(await f.locator('.phead h1').innerText()), '선택한 탭 기억');
       await f.context().close();
     });
     await t('처음 열어도 저장 없음 — 기존 데이터 그대로', async () => {
       await open(p); await new Promise(r => setTimeout(r, 1500));
       assert.deepStrictEqual(await db(), baseline);
     });
-    await t('선행지표 9개 담당자가 신한솔', async () => {
+    await t('개인 선행·후행지표 14개 담당자가 신한솔', async () => {
       const txt = await p.locator('#view .wrap').innerText();
-      assert.equal((txt.match(/담당 신한솔/g) || []).length, 9);
+      assert.equal((txt.match(/담당 신한솔/g) || []).length, 14);
     });
-    await t('메인 KPI 3 · 선행지표 9 · 후행지표 5 표시', async () => {
-      assert.equal(await p.locator('article.k').count(), 3);
+    await t('팀 공통 KPI 3 · 개인 선행 9 · 개인 후행 5 표시', async () => {
       assert.equal(await p.locator('[data-pf-open="lead"][data-v="edit"]').count(), 9);
+      assert.equal(await p.locator('[data-pf-open="lag"][data-v="edit"]').count(), 5);
       assert.equal(await p.locator('article.support').count(), 2);
-      const lag = await p.locator('.pf-grid').nth(3).locator('article').count();
-      assert.equal(lag, 5);
-      await p.screenshot({ path: path.join(outDir, '01_초기_데스크톱.png'), fullPage: true });
+      assert.equal(await p.locator('article.ms').count(), 3);
+      await p.screenshot({ path: path.join(outDir, '01_초기_개인지표.png'), fullPage: true });
+      await tab(p, 'work');
+      assert.equal(await p.locator('article.k').count(), 3);
+      const txt = await p.locator('article.k').first().innerText();
+      assert.ok(/팀 전체 실제 달성률/.test(txt) && /팀 선행활동 점수/.test(txt), txt);
+      await p.screenshot({ path: path.join(outDir, '01_초기_팀업무현황.png'), fullPage: true });
     });
-    await t('초기 상태: 실적 미측정 · 선행점수 산출 대기 (0으로 표시 안 함)', async () => {
+    await t('담당자 카드: 신한솔은 기존 업무 유지 + 지표 14개, 다른 팀원은 추후 등록 안내', async () => {
+      await tab(p, 'work');
+      const shs = await p.locator(boardCard('shs')).innerText();
+      assert.ok(/공사실적정리/.test(shs), '기존 루틴');
+      assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14);
+      assert.ok(/개인 선행지표 9개/.test(shs) && /개인 후행지표 5개/.test(shs), shs);
+      assert.ok(/목표/.test(shs) && /실적/.test(shs) && /미측정/.test(shs));
+      assert.equal(await p.locator(boardCard('m1') + ' .pfb-row').count(), 0);
+      assert.ok(/추후 별도 등록/.test(await p.locator(boardCard('m1')).innerText()));
+    });
+    await t('회귀 방지: 기존 개인 성과 줄 배치가 유지됨', async () => {
+      await p.click('[data-perf="shs"]');
+      const cols = await p.evaluate(() => getComputedStyle(document.querySelector('.pf-body.on .pf-row')).gridTemplateColumns.split(' ').length);
+      assert.equal(cols, 4);
+      await p.click('[data-perf="shs"]');
+    });
+    await t('초기 상태: 실적 미측정 · 점수 산출 대기 (0으로 표시 안 함)', async () => {
       const txt = await kpiCardText(p, 'MK1');
-      assert.ok(/미측정/.test(txt) && /산출 대기/.test(txt) && /가중치 미설정 5개/.test(txt), txt);
+      assert.ok(/미측정/.test(txt) && /산출 대기/.test(txt) && /팀원 반영 가중치 미설정 1명/.test(txt), txt);
       assert.ok(!/\b0%/.test(txt), txt);
       assert.ok(/수동 관리/.test(txt), '수동 관리 표시 없음');
+      assert.ok(/가중치 미설정 5개/.test(await personalText(p, 'MK1')));
     });
     await t('선행지표 달성률 0% 입력', async () => {
       await saveDirect(p, 'LI03', 0);
@@ -132,38 +178,47 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       const txt = await leadCardText(p, 'LI01');
       assert.ok(/100\s*%/.test(txt) && /자동 계산/.test(txt), txt);
     });
-    await t('가중치 일부만 설정 → 산출 대기 유지', async () => {
+    await t('가중치 일부만 설정 → 개인 점수 산출 대기', async () => {
       await setWeights(p, 'MK1', { LI01: 30, LI02: 30 });
-      const txt = await kpiCardText(p, 'MK1');
+      const txt = await personalText(p, 'MK1');
       assert.ok(/산출 대기/.test(txt) && /가중치 미설정 3개/.test(txt), txt);
     });
     await t('가중치 합계 90% → 경고 · 산출 대기', async () => {
       await setWeights(p, 'MK1', { LI01: 30, LI02: 30, LI03: 30, LI04: 0, LI06: 0 });
-      assert.ok(/가중치 합계 90%/.test(await kpiCardText(p, 'MK1')));
-      await openModal(p, 'kpi', 'MK1', 'links');
+      assert.ok(/가중치 합계 90%/.test(await personalText(p, 'MK1')));
+      await openModal(p, 'kpi', 'MK1', 'weights');
       assert.ok(/100%가 되어야/.test(await p.locator('#pfScoreLine').innerText()));
       await p.click('#pfClose');
     });
-    await t('입력 중 가중치 미리 계산 · 수치 입력 즉시 재계산', async () => {
-      await openModal(p, 'kpi', 'MK1', 'links');
+    await t('입력 중 가중치 미리 계산', async () => {
+      await openModal(p, 'kpi', 'MK1', 'weights');
       await p.fill('[data-pf-w="LI03"]', '40');
       assert.ok(/합계 100%/.test(await p.locator('#pfScoreLine').innerText()));
       await p.fill('#pfActor', '시험자'); await p.click('#pfSaveW'); await p.click('#pfClose');
     });
     await t('미측정 지표가 남아 있으면 산출 대기 (0 대체 없음)', async () => {
-      const txt = await kpiCardText(p, 'MK1');
+      const txt = await personalText(p, 'MK1');
       assert.ok(/산출 대기/.test(txt) && /미측정 지표 1개/.test(txt), txt);
     });
-    await t('명령서 예시 78% 계산', async () => {
+    await t('개인 점수 78% — 팀원 가중치를 정하기 전에는 팀 점수로 쓰지 않음', async () => {
       await saveDirect(p, 'LI01', 100); await saveDirect(p, 'LI02', 80); await saveDirect(p, 'LI03', 60);
-      const txt = await kpiCardText(p, 'MK1');
-      assert.ok(/78\s*%/.test(txt), txt);
+      assert.ok(/78\s*%/.test(await personalText(p, 'MK1')));
+      const team = await kpiCardText(p, 'MK1');
+      assert.ok(/산출 대기/.test(team) && /팀원 반영 가중치 미설정 1명/.test(team) && !/78\s*%/.test(team), team);
     });
-    await t('연결 KPI 선행점수 상승 (재연락 80→100 = 84%)', async () => {
+    await t('팀원 가중치 합계 검사 → 설정 후 팀 점수 계산', async () => {
+      await setMemberWeights(p, 'MK1', { shs: 80 });
+      assert.ok(/합계 80%/.test(await kpiCardText(p, 'MK1')));
+      await setMemberWeights(p, 'MK1', { shs: 100 });
+      const team = await kpiCardText(p, 'MK1');
+      assert.ok(/78\s*%/.test(team) && /신한솔 100%/.test(team), team);
+    });
+    await t('개인 달성률 변경이 팀 점수에 자동 반영 — 상승 (80→100 = 84%)', async () => {
       await saveDirect(p, 'LI02', 100);
       assert.ok(/84\s*%/.test(await kpiCardText(p, 'MK1')));
+      assert.ok(/84\s*%/.test(await personalText(p, 'MK1')));
     });
-    await t('연결 KPI 선행점수 하락 (재연락 100→50 = 69%)', async () => {
+    await t('개인 달성률 변경이 팀 점수에 자동 반영 — 하락 (100→50 = 69%)', async () => {
       await saveDirect(p, 'LI02', 50);
       assert.ok(/69\s*%/.test(await kpiCardText(p, 'MK1')));
       await saveDirect(p, 'LI02', 80);
@@ -171,9 +226,10 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
     await t('분모 0 → 대상 없음 · 남은 가중치로 비례 재배분', async () => {
       await saveAuto(p, 'lead', 'LI02', null, 0);
       assert.ok(/대상 없음/.test(await leadCardText(p, 'LI02')));
-      const txt = await kpiCardText(p, 'MK1');
+      const txt = await personalText(p, 'MK1');
       assert.ok(/대상 없음 1개 제외/.test(txt), txt); // (100*30+60*40)/70 = 77.1
       assert.ok(/77\.1\s*%/.test(txt), txt);
+      assert.ok(/77\.1\s*%/.test(await kpiCardText(p, 'MK1')));
       await saveDirect(p, 'LI02', 80);
     });
     await t('입력 검사: 분자>분모 · 입력자 누락 거부', async () => {
@@ -206,7 +262,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       assert.ok(/33\.3\s*%/.test(txt) && /17 ÷ 51/.test(txt), txt);
       await saveDirect(p, 'LI03', 60);
     });
-    await t('KPI ③ 현장·시공사 단위 별도 저장, 후행지표는 KPI 실적 공유', async () => {
+    await t('KPI ③ 현장·시공사 단위 별도 저장', async () => {
       await openModal(p, 'kpi', 'MK3', 'input');
       await p.fill('[data-pf="den"]', '100'); await p.fill('[data-pf="num"]', '25');
       await p.fill('[data-pf="u.site.den"]', '80'); await p.fill('[data-pf="u.site.num"]', '20');
@@ -214,15 +270,38 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await p.fill('#pfActor', '시험자'); await p.click('#pfSaveRec'); await p.click('#pfClose');
       const r = (await db()).perfMonthly['MK3_' + MONTH];
       assert.equal(r.units.site.num, 20); assert.equal(r.units.contractor.den, 40);
-      const lag = await p.locator('article:has-text("L2 → L3 전환율")').innerText();
-      assert.ok(/25\s*%/.test(lag), lag);
+    });
+    await t('개인 후행지표와 팀 KPI 실적은 서로 섞이지 않음', async () => {
+      const lag = await lagCardText(p, 'LG3');
+      assert.ok(/미측정/.test(lag) && !/25\s*%/.test(lag), '팀 KPI 값이 개인 후행지표에 나타남: ' + lag);
+      const before = (await db()).perfMonthly['MK3_' + MONTH];
+      await saveAuto(p, 'lag', 'LG3', 3, 10);
+      assert.ok(/30\s*%/.test(await lagCardText(p, 'LG3')));
+      const team = await kpiCardText(p, 'MK3');
+      assert.ok(/25\s*%/.test(team) && /25 ÷ 100/.test(team), team);
+      const d = await until(async () => { const x = await db(); return x.perfMonthly['LG3_' + MONTH] ? x : false; });
+      assert.deepStrictEqual(d.perfMonthly['MK3_' + MONTH], before);
+      assert.equal(d.perfMonthly['LG3_' + MONTH].num, 3);
+    });
+    await t('담당자 카드와 개인 화면 자동 동기화 (양방향)', async () => {
+      await tab(p, 'work');
+      await p.click(boardCard('shs') + ' .pfb-row[data-id="LI06"]');
+      await p.waitForSelector('#pfModal.on');
+      await p.check('input[name=pfmode][value=direct]');
+      await p.fill('[data-pf="direct"]', '33'); await p.fill('#pfActor', '시험자');
+      await p.click('#pfSaveRec'); await p.click('#pfClose');
+      assert.ok(/33\s*%/.test(await p.locator(boardCard('shs') + ' .pfb-row[data-id="LI06"]').innerText()));
+      assert.ok(/33\s*%/.test(await leadCardText(p, 'LI06')));
+      await saveDirect(p, 'LI06', 44);
+      await tab(p, 'work');
+      assert.ok(/44\s*%/.test(await p.locator(boardCard('shs') + ' .pfb-row[data-id="LI06"]').innerText()));
     });
     await t('후행지표 직접 실적 · 목표 대비 미달 목록', async () => {
       await saveAuto(p, 'lag', 'LG4', 1, 4);
-      await p.click('[data-pf-open="lag"][data-id="LG4"]');
-      await p.click('[data-pf-view="edit"]');
+      await openModal(p, 'lag', 'LG4', 'edit');
       await p.fill('[data-pf-def-num="target"]', '50'); await p.fill('#pfActor', '시험자');
       await p.click('#pfSaveDef'); await p.click('#pfClose');
+      await tab(p, 'kpi:shs');
       assert.ok(/장기 미활동 업체 재활성화율 25%/.test(await p.locator('.note').last().innerText()));
     });
     await t('담당자·목표 수정 · 변경 이력과 세부업무 체크·메모', async () => {
@@ -239,12 +318,22 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       await p.click('#pfClose');
       assert.ok(/담당자A/.test(await leadCardText(p, 'LI05')));
     });
-    await p.screenshot({ path: path.join(outDir, '05_입력후_데스크톱.png'), fullPage: true });
+    await tab(p, 'kpi:shs');
+    await p.screenshot({ path: path.join(outDir, '05_입력후_개인지표.png'), fullPage: true });
+    await tab(p, 'work');
+    await p.screenshot({ path: path.join(outDir, '05_입력후_팀업무현황.png'), fullPage: true });
     await t('새로고침 후 데이터 유지', async () => {
       await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
       const txt = await kpiCardText(p, 'MK1');
       assert.ok(/78\s*%/.test(txt) && /33\.3\s*%/.test(txt), txt);
       assert.ok(/담당자A/.test(await leadCardText(p, 'LI05')));
+    });
+    await t('기존 멤버·업무·프로젝트 유지, 신한솔 멤버만 추가', async () => {
+      const d = await db();
+      assert.deepStrictEqual(Object.keys(d.members).sort(), ['m1', 'shs']);
+      assert.equal(d.members.shs.name, '신한솔');
+      assert.deepStrictEqual(d.projects, baseline.projects);
+      assert.deepStrictEqual(d.routines, baseline.routines);
     });
     await t('기존 데이터 유지 — 기존 키 전부 원본과 동일', async () => { sameOld(await until(async () => { const d = await db(); return d.perfHistory ? d : false; })); });
     await t('원본과 수동 입력 구분: 이력 보관·ID 부여', async () => {
@@ -253,6 +342,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       assert.ok(d.perfMonthly['LI01_' + MONTH].updatedBy === '시험자');
       assert.equal(Object.keys(d.leadDefs).length, 9);
       assert.deepStrictEqual(Object.keys(d.mainKpis), ['MK1', 'MK2', 'MK3']);
+      Object.values(d.leadDefs).concat(Object.values(d.lagDefs)).forEach(x => assert.equal(x.member, 'shs', x.id));
     });
 
     /* 다른 사용자 */
@@ -307,9 +397,55 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
       const after = await until(async () => { const d = await db(); return d.workKpis.W1.target === 41 ? d : false; });
       ['mainKpis', 'leadDefs', 'lagDefs', 'perfMonthly', 'perfHistory'].forEach(k => assert.deepStrictEqual(after[k], before[k], k));
       fs.unlinkSync(f);
-      console.log('  참고: 구버전 저장 후 업무 KPI 항목 수 ' + Object.keys(baseline.workKpis).length + ' → ' + Object.keys(after.workKpis).length + ' (구버전 결함)');
+      console.log('  참고: 구버전 저장 후 업무 KPI ' + Object.keys(baseline.workKpis).length + ' → ' + Object.keys(after.workKpis).length + '개, 멤버 ' + Object.keys(before.members).length + ' → ' + Object.keys(after.members || {}).length + '명 (구버전 결함)');
       await o.context().close();
-      await fetch(BASE + '/__rtdb/shared/b2bOpsTracker.json', { method: 'PATCH', body: JSON.stringify({ workKpis: baseline.workKpis }) });
+      await fetch(BASE + '/__rtdb/shared/b2bOpsTracker.json', { method: 'PATCH', body: JSON.stringify({ workKpis: baseline.workKpis, members: before.members }) }); // 구버전 저장이 지운 컬렉션 복원
+      await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
+    });
+
+    await t('다른 팀원 지표 추가: 팀 점수는 가중 종합, 신한솔 개인 점수·실적은 그대로', async () => {
+      const before = await db(), mk1 = before.mainKpis.MK1;
+      const personalBefore = await personalText(p, 'MK1');
+      assert.ok(/78\s*%/.test(personalBefore), personalBefore);
+      await patchDb({
+        'leadDefs/LX01': { id: 'LX01', no: '①', name: '시험 지표', member: 'm1', owner: '팀원', cycle: '매주', rev: 0, formula: 'a ÷ b', denLabel: '대상', numLabel: '완료', measure: '시험', src: '수동 관리', linkNote: '시험' },
+        'mainKpis/MK1': Object.assign({}, mk1, { links: mk1.links.concat([{ li: 'LX01', rel: 'core' }]), weights: Object.assign({}, mk1.weights, { LX01: 100 }) })
+      });
+      await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
+      assert.ok(await p.locator('[data-tt="kpi:m1"]').count(), '다른 팀원 탭 생성');
+      await saveDirect(p, 'LX01', 50);
+      assert.ok(/산출 대기/.test(await kpiCardText(p, 'MK1')) , '새 팀원 가중치 전에는 대기');
+      await setMemberWeights(p, 'MK1', { shs: 60, m1: 40 });
+      const team = await kpiCardText(p, 'MK1'); // 78×0.6 + 50×0.4 = 66.8
+      assert.ok(/66\.8\s*%/.test(team) && /신한솔 60%/.test(team), team);
+      assert.ok(/78\s*%/.test(await personalText(p, 'MK1')), '신한솔 개인 점수 불변');
+      await openModal(p, 'kpi', 'MK1', 'weights');
+      assert.equal(await p.locator('#pfmMember').count(), 1, '팀원 선택 칸');
+      await p.click('#pfClose');
+      await tab(p, 'work');
+      assert.equal(await p.locator(boardCard('shs') + ' .pfb-row').count(), 14, '신한솔 카드에 다른 팀원 지표 없음');
+      assert.equal(await p.locator(boardCard('m1') + ' .pfb-row').count(), 1, '다른 팀원 카드 지표 줄: ' + (await p.locator(boardCard('m1')).innerText()).slice(0, 300));
+      const d = await db();
+      assert.equal(d.perfMonthly['LI01_' + MONTH].direct, before.perfMonthly['LI01_' + MONTH].direct);
+      await patchDb({ 'leadDefs/LX01': null, ['perfMonthly/LX01_' + MONTH]: null, 'mainKpis/MK1': mk1 });
+      await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
+      assert.ok(/78\s*%/.test(await kpiCardText(p, 'MK1')));
+    });
+    await t('이전 구조로 저장된 지표도 값 손실 없이 표시', async () => {
+      const before = await db(), lg1 = before.lagDefs.LG1, li9 = before.leadDefs.LI09;
+      const oldLg1 = { id: 'LG1', no: '①', name: lg1.name, ref: 'MK1', rev: 0, measure: lg1.measure, target: 40 };
+      const oldLi9 = Object.assign({}, li9); delete oldLi9.member;
+      await patchDb({ 'lagDefs/LG1': oldLg1, 'leadDefs/LI09': oldLi9 });
+      await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
+      assert.equal(await p.locator('[data-pf-open="lead"][data-v="edit"]').count() + await p.locator(boardCard('shs') + ' .pfb-row').count() >= 9, true);
+      const txt = await lagCardText(p, 'LG1');
+      assert.ok(/40%/.test(txt) && /담당 신한솔/.test(txt), txt);
+      await openModal(p, 'lag', 'LG1', 'input');
+      assert.equal(await p.locator('[data-pf="den"]').count(), 1);
+      assert.ok(/신규 MOU 체결업체 수/.test(await p.locator('#pfModal').innerText()));
+      await p.click('#pfClose');
+      assert.ok(/플랫폼/.test(await leadCardText(p, 'LI09')));
+      await patchDb({ 'lagDefs/LG1': lg1, 'leadDefs/LI09': li9 });
       await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
     });
 
@@ -389,7 +525,7 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
     /* 기존 화면 */
     await t('기존 메뉴 7개 전부 정상 표시 · 팀 업무 현황 탭 유지', async () => {
       await p.goto(BASE + '/#tasks'); await p.reload(); await p.waitForFunction(() => document.querySelector('#view .wrap'));
-      await p.click('[data-tt="work"]');
+      await tab(p, 'work');
       assert.ok(/팀 업무 현황/.test(await p.locator('.phead h1').innerText()));
       assert.ok(await p.locator('.filters').count());
       for (const id of ['programs', 'metrics', 'auto', 'map', 'hub', 'admin', 'tasks']) {
@@ -398,7 +534,6 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
         assert.ok((await p.locator('#view .wrap').innerText()).length > 50, id);
       }
       assert.ok(/팀 업무 현황/.test(await p.locator('.phead h1').innerText()), '탭 기억');
-      await p.click('[data-tt="kpi"]');
     });
 
     /* 모바일 */
@@ -412,10 +547,10 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
         });
         return { scroll: document.documentElement.scrollWidth - vw, bad: bad.slice(0, 5) };
       });
-      await t(`모바일 ${w}px: KPI 화면 가로 넘침 없음`, async () => {
+      await t(`모바일 ${w}px: 개인 지표 화면 가로 넘침 없음`, async () => {
         await open(m);
         const o = await over(); assert.ok(o.scroll <= 0 && !o.bad.length, JSON.stringify(o));
-        await m.screenshot({ path: path.join(outDir, `02_모바일${w}_KPI.png`), fullPage: true });
+        await m.screenshot({ path: path.join(outDir, `02_모바일${w}_개인지표.png`), fullPage: true });
       });
       await t(`모바일 ${w}px: 상세·가중치 창 넘침 없음 · 터치 영역 36px 이상`, async () => {
         await m.tap('[data-pf-open="lead"][data-id="LI01"][data-v="input"]');
@@ -425,16 +560,20 @@ const until = async (fn, ms) => { const end = Date.now() + (ms || 8000); let e; 
         assert.deepStrictEqual(small, []);
         await m.screenshot({ path: path.join(outDir, `03_모바일${w}_상세.png`) });
         await m.tap('#pfClose');
+        await m.tap('[data-tt="work"]');
         await m.tap('[data-pf-open="kpi"][data-id="MK1"][data-v="links"]');
         o = await over(); assert.ok(!o.bad.length, JSON.stringify(o));
-        await m.screenshot({ path: path.join(outDir, `04_모바일${w}_가중치.png`) });
+        await m.screenshot({ path: path.join(outDir, `04_모바일${w}_팀점수.png`) });
         await m.tap('#pfClose');
         const cardBtn = await m.evaluate(() => Math.min(...[...document.querySelectorAll('.pf-acts .mini')].map(e => e.offsetHeight)));
         assert.ok(cardBtn >= 36, '카드 버튼 ' + cardBtn);
       });
-      await t(`모바일 ${w}px: 팀 업무 현황 탭 유지`, async () => {
-        await m.tap('[data-tt="work"]');
+      await t(`모바일 ${w}px: 팀 업무 현황·담당자 카드 넘침 없음 · 지표 줄 터치 영역 44px`, async () => {
         assert.ok(/팀 업무 현황/.test(await m.locator('.phead h1').innerText()));
+        const o = await over(); assert.ok(o.scroll <= 0 && !o.bad.length, JSON.stringify(o));
+        const small = await m.evaluate(() => [...document.querySelectorAll('.pfb-row')].filter(e => e.offsetHeight < 44).length);
+        assert.equal(small, 0);
+        await m.screenshot({ path: path.join(outDir, `06_모바일${w}_팀업무현황.png`), fullPage: true });
       });
       await m.context().close();
     }

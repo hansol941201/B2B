@@ -57,12 +57,31 @@ t('KPI별 연결이 명령서 3장과 일치', () => {
 });
 t('초기 가중치: 핵심 연결은 미설정, 운영 지원지표는 0%, 점수는 산출 대기', () => {
   S.mainKpis.forEach(k => {
+    assert.equal(k.memberWeights, undefined);
     k.links.forEach(l => { if (l.rel === 'core') assert.equal(k.weights[l.li], undefined); else assert.equal(k.weights[l.li], 0); });
     assert.equal(PC.score(k, '2026-11', () => null).code, 'unset');
   });
   ['LI08', 'LI09'].forEach(id => assert.ok(S.leadDefs.find(l => l.id === id).support));
 });
-t('후행지표 5개, ①~③은 KPI 실적을 공유해 중복 입력하지 않음', () => { assert.equal(S.lagDefs.length, 5); assert.deepEqual(S.lagDefs.map(g => g.ref || ''), ['MK1', 'MK2', 'MK3', '', '']); });
+t('후행지표 5개는 신한솔 개인 지표이고 KPI 실적을 참조하지 않음', () => { assert.equal(S.lagDefs.length, 5); S.lagDefs.forEach(g => { assert.equal(g.member, 'shs'); assert.equal(g.ref, undefined); assert.ok(g.denLabel && g.numLabel && g.formula, g.id); }); });
+t('선행지표 9개는 신한솔 개인 지표', () => S.leadDefs.forEach(l => assert.equal(l.member, 'shs', l.id)));
+t('개인 점수는 그 팀원의 지표만 계산', () => {
+  const k = kpi({ A: 30, B: 70, X: 100 }), only = li => li !== 'X';
+  const s = PC.score(k, 'm', getter({ A: dir(100), B: dir(50) }), null, only);
+  assert.equal(s.state, 'ok'); near(s.value, 65); assert.equal(s.rows.length, 2);
+  assert.equal(PC.weightStatus(k, null, only).total, 100);
+  near(PC.score(k, 'm', getter({ X: dir(40) }), null, li => li === 'X').value, 40);
+});
+const OK = v => ({ state: 'ok', value: v }), WAIT = { state: 'wait', reason: 'x' }, EMPTY = { state: 'empty' };
+const team = (w, scores, draft) => PC.teamScore({ memberWeights: w }, Object.keys(scores), id => scores[id], draft);
+t('팀 점수: 팀원 가중치 미설정이면 개인 점수를 그대로 쓰지 않고 산출 대기', () => { const s = team({}, { shs: OK(78) }); assert.equal(s.state, 'wait'); assert.equal(s.code, 'unset'); assert.equal(s.value, undefined); });
+t('팀 점수: 팀원 가중치로 종합 (78×60% + 50×40% = 66.8)', () => near(team({ shs: 60, m1: 40 }, { shs: OK(78), m1: OK(50) }).value, 66.8));
+t('팀 점수: 개인 점수가 오르면 함께 오름', () => { const a = team({ shs: 60, m1: 40 }, { shs: OK(78), m1: OK(50) }).value, b = team({ shs: 60, m1: 40 }, { shs: OK(84), m1: OK(50) }).value; near(b - a, 3.6); });
+t('팀 점수: 합계 100% 아니면 산출 대기', () => assert.equal(team({ shs: 60, m1: 30 }, { shs: OK(78), m1: OK(50) }).code, 'sum'));
+t('팀 점수: 반영 팀원의 개인 점수가 산출 대기면 팀도 산출 대기', () => { const s = team({ shs: 60, m1: 40 }, { shs: OK(78), m1: WAIT }); assert.equal(s.code, 'member'); assert.deepEqual(Array.from(s.missing), ['m1']); });
+t('팀 점수: 가중치 0인 팀원은 대기여도 막지 않음', () => near(team({ shs: 100, m1: 0 }, { shs: OK(78), m1: WAIT }).value, 78));
+t('팀 점수: 대상 없음 팀원은 빼고 비례 재배분', () => { const s = team({ shs: 60, m1: 40 }, { shs: OK(78), m1: EMPTY }); near(s.value, 78); assert.deepEqual(Array.from(s.excluded), ['m1']); });
+t('팀 점수: 지표 등록 팀원이 없으면 산출 대기', () => assert.equal(team({}, {}).code, 'nomember'));
 t('자동 연동으로 표시한 지표 없음', () => { S.leadDefs.concat(S.mainKpis).forEach(x => { assert.equal(x.src, '수동 관리'); assert.ok(/대기/.test(x.linkNote), x.id); }); });
 
 console.log(results.join('\n'));
