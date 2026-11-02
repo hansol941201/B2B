@@ -211,6 +211,9 @@ if (h.lastIndexOf(initCall) < 0) throw new Error('init');
 const banned = ['주현진', '신명희', '송보람', '김경미', '신수진', '김수진', '김영성', '김미연', '이지연', '임채명', 'data:image/jpeg'];
 const left = banned.filter(w => h.includes(w));
 if (left.length) console.log('남은 표현:', left.join(', '), left.map(w => (h.match(new RegExp(w, 'g')) || []).length).join(','));
+
+/* 11. 흰색·남색 화면과 선 아이콘 (tools/theme-navy.cjs) */
+{ const t = require('./theme-navy.cjs').apply(h); h = t.h; }
 const demoArg = process.argv.find(a => a.startsWith('--demo='));
 if (demoArg) {
   const demo = JSON.parse(fs.readFileSync(demoArg.slice(7), 'utf8'));

@@ -10,17 +10,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FBFAF6;
+    --bg: #FFFFFF;
     --surface: #FFFFFF;
-    --ink: #18211D;
-    --ink-2: #2D3934;
-    --muted: #6B7570;
-    --line: #E8E5DD;
-    --line-2: #F0EEE7;
-    --accent: #1B5E6E;
-    --accent-soft: #DAEBEE;
-    --accent-2: #B89968;
-    --accent-2-soft: #F4EBD9;
+    --ink: #14213A;
+    --ink-2: #2A3A55;
+    --muted: #64748B;
+    --line: #E2E8F0;
+    --line-2: #F1F5F9;
+    --accent: #1B4480;
+    --accent-soft: #E6EDF8;
+    --accent-2: #4A73B5;
+    --accent-2-soft: #EAF0FA;
     --success: #2E7D52;
     --success-soft: #DCEEDE;
     --warn: #B4651E;
@@ -51,7 +51,7 @@
 
   /* ===== Header ===== */
   .topbar {
-    background: linear-gradient(180deg, #FCFBF7, var(--bg));
+    background: linear-gradient(180deg, #F8FAFC, var(--bg));
     border-bottom: 1px solid var(--line);
     padding: 22px 36px 28px;
   }
@@ -92,9 +92,9 @@
     animation: cloud-pulse 2s infinite;
   }
   .cloud-status.syncing {
-    background: linear-gradient(135deg, #FDF5E8, #FFFBF0);
-    border-color: #D9C9A3;
-    color: #6E5530;
+    background: linear-gradient(135deg, #F5F8FD, #F8FAFC);
+    border-color: #C3D2EA;
+    color: #1F3D6E;
   }
   .cloud-status.error {
     background: var(--danger-soft);
@@ -109,8 +109,8 @@
 
   /* Firebase 설정 모달 */
   .fb-status-card {
-    background: linear-gradient(135deg, #F0F7FA, #F8FCFD);
-    border: 1px solid #C5DEE6;
+    background: linear-gradient(135deg, #F1F5FB, #F8FAFC);
+    border: 1px solid #C8D6EE;
     border-radius: 10px;
     padding: 14px 16px;
   }
@@ -122,7 +122,7 @@
     font-size: 12px;
   }
   .fb-status-line + .fb-status-line {
-    border-top: 1px dashed #C5DEE6;
+    border-top: 1px dashed #C8D6EE;
     padding-top: 8px;
     margin-top: 4px;
   }
@@ -144,7 +144,7 @@
   .fb-help {
     margin-top: 20px;
     padding: 12px 14px;
-    background: #FCFBF7;
+    background: #F8FAFC;
     border: 1px solid var(--line-2);
     border-radius: 8px;
     font-size: 12px;
@@ -181,7 +181,7 @@
     border-radius: 3px;
     font-family: var(--num);
     font-size: 11px;
-    color: #6E5530;
+    color: #1F3D6E;
   }
   .fb-help-content a {
     color: var(--accent);
@@ -221,9 +221,9 @@
   /* ===== 팀 KPI 목표 카드 ===== */
   .team-kpi-card {
     margin-top: 16px;
-    background: linear-gradient(135deg, #FFF8E8 0%, #FCFBF7 100%);
-    border: 1px solid #E5D9B8;
-    border-left: 4px solid #B89968;
+    background: linear-gradient(135deg, #F5F8FD 0%, #F8FAFC 100%);
+    border: 1px solid #D3DEF0;
+    border-left: 4px solid #4A73B5;
     border-radius: 10px;
     padding: 14px 18px;
   }
@@ -239,9 +239,9 @@
     color: var(--ink); letter-spacing: -0.01em;
   }
   .team-kpi-label {
-    font-size: 10px; font-weight: 800; color: #8A6E3A;
+    font-size: 10px; font-weight: 800; color: #2F5490;
     text-transform: uppercase; letter-spacing: 0.12em;
-    background: #F4E8C8; padding: 2px 8px; border-radius: 99px;
+    background: #E6EDF8; padding: 2px 8px; border-radius: 99px;
     margin-left: 4px;
   }
   .team-kpi-input {
@@ -258,11 +258,11 @@
     transition: all 0.15s;
   }
   .team-kpi-input:hover {
-    border-color: #E5D9B8;
+    border-color: #D3DEF0;
   }
   .team-kpi-input:focus {
     outline: none;
-    border-color: #B89968;
+    border-color: #4A73B5;
     box-shadow: 0 0 0 3px rgba(184, 153, 104, 0.15);
   }
   .team-kpi-input::placeholder {
@@ -276,12 +276,12 @@
     align-items: center;
     gap: 8px;
     padding: 6px 10px;
-    background: linear-gradient(180deg, #FFFBF0, #FFF7E5);
-    border: 1px dashed #E5D9B8;
+    background: linear-gradient(180deg, #F8FAFC, #F1F5FB);
+    border: 1px dashed #D3DEF0;
     border-radius: 6px;
     margin-top: 8px;
     font-size: 11px;
-    color: #6B5530;
+    color: #1F3D6E;
   }
   .member-kpi-flag {
     font-size: 11px;
@@ -302,24 +302,24 @@
   .member-kpi-input {
     width: 100%;
     padding: 5px 8px;
-    border: 1px solid #E5D9B8;
+    border: 1px solid #D3DEF0;
     background: var(--surface);
     border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
-    color: #6B5530;
+    color: #1F3D6E;
     font-family: inherit;
     box-sizing: border-box;
   }
   .member-kpi-input:focus {
     outline: none;
-    border-color: #B89968;
+    border-color: #4A73B5;
     box-shadow: 0 0 0 2px rgba(184, 153, 104, 0.15);
   }
   .member-kpi-edit-btn {
     background: transparent;
     border: none;
-    color: #8A6E3A;
+    color: #2F5490;
     font-size: 11px;
     cursor: pointer;
     padding: 2px 4px;
@@ -353,7 +353,7 @@
   }
   .hero-kpi-bar-fill {
     height: 100%; border-radius: 99px;
-    background: linear-gradient(90deg, var(--accent), #2A8195);
+    background: linear-gradient(90deg, var(--accent), #3563AE);
     transition: width 0.5s cubic-bezier(.2,.8,.2,1);
   }
   .hero-kpi-bar-fill.warn { background: var(--warn); }
@@ -413,7 +413,7 @@
   /* + 새 직원 추가 카드 */
   .today-card-add {
     background: transparent;
-    border: 2px dashed #D9C9A3;
+    border: 2px dashed #C3D2EA;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -422,7 +422,7 @@
     transition: all 0.2s;
   }
   .today-card-add:hover {
-    background: #FFFBF0;
+    background: #F8FAFC;
     border-color: var(--accent-2);
     border-style: solid;
     transform: translateY(-2px);
@@ -430,7 +430,7 @@
   }
   .today-card-add-inner {
     text-align: center;
-    color: #8A6E3A;
+    color: #2F5490;
     padding: 24px;
   }
   .today-card-add-icon {
@@ -444,7 +444,7 @@
     font-family: var(--display);
     font-size: 14px;
     font-weight: 800;
-    color: #6E5530;
+    color: #1F3D6E;
     margin-bottom: 4px;
   }
   .today-card-add-sub {
@@ -454,7 +454,7 @@
   .today-card-head {
     padding: 16px 20px 14px; border-bottom: 1px solid var(--line-2);
     display: flex; justify-content: space-between; align-items: center;
-    background: linear-gradient(180deg, #FCFBF7, var(--surface));
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
   }
   .member-info { display: flex; align-items: center; gap: 12px; }
   .avatar {
@@ -556,7 +556,7 @@
   .routine-edit-btn:hover {
     background: var(--accent-2-soft);
     border-color: var(--accent-2);
-    color: #6E5530;
+    color: #1F3D6E;
   }
   .routine-del-btn {
     font-size: 16px;
@@ -577,7 +577,7 @@
     font-weight: 700; flex-shrink: 0;
   }
   .routine-tag.daily { background: var(--accent-soft); color: var(--accent); }
-  .routine-tag.weekly { background: var(--accent-2-soft); color: #6E5530; }
+  .routine-tag.weekly { background: var(--accent-2-soft); color: #1F3D6E; }
   .routine-tag.monthly { background: var(--success-soft); color: var(--success); }
 
   /* 일회성 업무 미니 리스트 — 진행중 프로젝트는 모두 베이지 톤 */
@@ -585,16 +585,16 @@
   .task-mini {
     display: flex; align-items: center; gap: 10px;
     padding: 9px 10px;
-    background: linear-gradient(180deg, #FDFBF5, var(--bg));
+    background: linear-gradient(180deg, #F8FAFC, var(--bg));
     border-radius: 8px;
-    border: 1px solid #E5D9B8;
+    border: 1px solid #D3DEF0;
     border-left: 3px solid var(--accent-2);
     transition: all 0.15s;
     cursor: pointer;
   }
   /* 우선순위는 작은 점으로만 표시 — 좌측 색깔 띠 통일 */
   .task-mini.status-doing {
-    background: linear-gradient(180deg, #FCF6E4, #FDFBF5);
+    background: linear-gradient(180deg, #F1F5FB, #F8FAFC);
   }
   .task-mini.status-done {
     background: linear-gradient(180deg, #F4F9F2, var(--bg));
@@ -643,7 +643,7 @@
   }
   .task-mini-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #D9C9A3, var(--accent-2));
+    background: linear-gradient(90deg, #C3D2EA, var(--accent-2));
     border-radius: 99px;
   }
   .task-mini.routine-type .task-mini-progress-fill {
@@ -667,8 +667,8 @@
   .task-mini-expand {
     margin-top: 4px;
     padding: 10px 12px;
-    background: linear-gradient(180deg, #FFFBF0, #FDFBF5);
-    border: 1px solid #E5D9B8;
+    background: linear-gradient(180deg, #F8FAFC, #F8FAFC);
+    border: 1px solid #D3DEF0;
     border-radius: 8px;
     display: none;
   }
@@ -676,11 +676,11 @@
   .task-mini-expand-head {
     display: flex; align-items: center; gap: 8px;
     padding-bottom: 8px;
-    border-bottom: 1px dashed #E5D9B8;
+    border-bottom: 1px dashed #D3DEF0;
     margin-bottom: 8px;
     font-size: 11px;
     font-weight: 700;
-    color: #6E5530;
+    color: #1F3D6E;
   }
   .task-mini-expand-actions {
     margin-left: auto;
@@ -688,16 +688,16 @@
   }
   .task-mini-expand-actions button {
     background: var(--surface);
-    border: 1px solid #E5D9B8;
+    border: 1px solid #D3DEF0;
     border-radius: 5px;
     padding: 3px 8px;
     font-size: 10px;
-    color: #6E5530;
+    color: #1F3D6E;
     cursor: pointer;
     transition: all 0.15s;
   }
   .task-mini-expand-actions button:hover {
-    background: #F4E8C8;
+    background: #E6EDF8;
     border-color: var(--accent-2);
   }
   .task-mini-expand-actions button.danger {
@@ -743,7 +743,7 @@
     font-family: var(--num);
     font-size: 10px;
     font-weight: 700;
-    color: #6E5530;
+    color: #1F3D6E;
   }
   .task-mini-sub-del {
     background: transparent;
@@ -832,7 +832,7 @@
   }
   .panel-head {
     padding: 16px 20px; border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, #FCFBF7, var(--surface));
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
     display: flex; justify-content: space-between; align-items: center;
   }
   .panel-head h3 {
@@ -1008,24 +1008,24 @@
   .table th {
     text-align: left; padding: 10px 16px; font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
-    border-bottom: 1px solid var(--line); background: #FCFBF7;
+    border-bottom: 1px solid var(--line); background: #F8FAFC;
   }
   .table td {
     padding: 11px 16px; border-bottom: 1px solid var(--line-2);
     vertical-align: middle;
   }
   .table tr:last-child td { border-bottom: none; }
-  .table tr:hover td { background: #FCFBF7; }
+  .table tr:hover td { background: #F8FAFC; }
 
   .badge {
     display: inline-block; padding: 2px 8px; border-radius: 99px;
     font-size: 10px; font-weight: 700;
   }
   .badge.daily { background: var(--accent-soft); color: var(--accent); }
-  .badge.weekly { background: var(--accent-2-soft); color: #6E5530; }
+  .badge.weekly { background: var(--accent-2-soft); color: #1F3D6E; }
   .badge.monthly { background: var(--success-soft); color: var(--success); }
   .badge.priority-high { background: var(--danger-soft); color: var(--danger); }
-  .badge.priority-mid { background: var(--accent-2-soft); color: #6E5530; }
+  .badge.priority-mid { background: var(--accent-2-soft); color: #1F3D6E; }
   .badge.priority-low { background: var(--line-2); color: var(--muted); }
   .badge.status-todo { background: var(--line-2); color: var(--muted); }
   .badge.status-doing { background: var(--accent-soft); color: var(--accent); }
@@ -1072,7 +1072,7 @@
     cursor: pointer; user-select: none;
     transition: background 0.15s;
   }
-  .stale-head:hover { background: #FCFBF7; }
+  .stale-head:hover { background: #F8FAFC; }
   .stale-icon {
     width: 32px; height: 32px; border-radius: 8px;
     background: var(--warn-soft); color: var(--warn);
@@ -1105,7 +1105,7 @@
     border-top: 1px solid var(--line-2);
     padding: 14px 18px 18px;
     display: none;
-    background: linear-gradient(180deg, #FCFBF7, var(--surface));
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
   }
   .stale-banner.open .stale-body { display: block; }
   .stale-list {
@@ -1125,7 +1125,7 @@
     transition: all 0.15s;
   }
   .stale-item[onclick]:hover {
-    background: #FFFAF0;
+    background: #F8FAFC;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     transform: translateY(-1px);
   }
@@ -1190,7 +1190,7 @@
     cursor: pointer; user-select: none;
     transition: background 0.15s;
   }
-  .alba-panel-head:hover { background: #FFF7F0; }
+  .alba-panel-head:hover { background: #F8FAFC; }
   .alba-panel-icon {
     width: 32px; height: 32px; border-radius: 8px;
     background: #FFE3D1; color: #B4651E;
@@ -1222,7 +1222,7 @@
     border-top: 1px solid var(--line-2);
     padding: 14px 18px 18px;
     display: none;
-    background: linear-gradient(180deg, #FFFAF5, var(--surface));
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
   }
   .alba-panel.open .alba-panel-body { display: block; }
 
@@ -1315,8 +1315,8 @@
     font-size: 10px; font-weight: 700;
     color: var(--muted);
   }
-  .alba-task-freq.daily { background: #DBE5E8; color: #1B5E6E; }
-  .alba-task-freq.weekly { background: #EEE3D0; color: #8A6E3A; }
+  .alba-task-freq.daily { background: #DBE5E8; color: #1B4480; }
+  .alba-task-freq.weekly { background: #EEE3D0; color: #2F5490; }
   .alba-task-freq.monthly { background: #E3DCF1; color: #5B4B8A; }
   .alba-task-freq.quarterly { background: #FDE8D8; color: #B4651E; }
   .alba-task-freq.yearly { background: #FCD9D5; color: #B83A2E; }
@@ -1329,7 +1329,7 @@
   /* 필터 토글 (관리 탭) */
   .filter-row {
     display: flex; gap: 6px; flex-wrap: wrap;
-    padding: 10px 16px; background: #FCFBF7;
+    padding: 10px 16px; background: #F8FAFC;
     border-bottom: 1px solid var(--line-2);
   }
   .filter-chip {
@@ -1355,14 +1355,14 @@
     padding: 18px 22px;
     border-bottom: 1px solid var(--line);
     display: flex; align-items: center; gap: 14px;
-    background: linear-gradient(180deg, #FCFBF7, var(--surface));
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
   }
   /* 간소화된 팀 헤더 */
   .team-block-head-simple {
     padding: 14px 20px;
     border-bottom: 1px solid var(--line);
     display: flex; align-items: center; gap: 12px;
-    background: #FCFBF7;
+    background: #F8FAFC;
   }
   .team-icon-box-sm {
     width: 28px; height: 28px; border-radius: 7px;
@@ -1379,13 +1379,13 @@
   .team-members-bar {
     padding: 12px 20px;
     border-bottom: 1px solid var(--line-2);
-    background: linear-gradient(180deg, #FDFBF5, var(--surface));
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
     display: flex; align-items: flex-start; gap: 12px;
     flex-wrap: wrap;
   }
   .team-members-label {
     font-size: 11px; font-weight: 800;
-    color: #6E5530;
+    color: #1F3D6E;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     padding-top: 6px;
@@ -1403,7 +1403,7 @@
     gap: 6px;
     padding: 5px 10px 5px 8px;
     background: var(--surface);
-    border: 1px solid #E5D9B8;
+    border: 1px solid #D3DEF0;
     border-radius: 99px;
     font-size: 12px;
     font-weight: 600;
@@ -1412,7 +1412,7 @@
     position: relative;
   }
   .team-member-chip:hover {
-    background: #FBF3DA;
+    background: #EEF3FB;
     border-color: var(--accent-2);
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
@@ -1454,12 +1454,12 @@
     border-radius: 99px;
     font-size: 12px;
     font-weight: 700;
-    color: #6E5530;
+    color: #1F3D6E;
     cursor: pointer;
     transition: all 0.15s;
   }
   .team-member-add-btn:hover {
-    background: #FBF3DA;
+    background: #EEF3FB;
     border-style: solid;
     border-color: var(--accent-2);
   }
@@ -1587,7 +1587,7 @@
 
   /* 하위업무 펼침 영역 */
   .subtask-container {
-    background: linear-gradient(180deg, #FAF8F2, var(--bg));
+    background: linear-gradient(180deg, #F8FAFC, var(--bg));
     border: 1px solid var(--line-2);
     border-left: 3px solid var(--accent-2);
     border-radius: 8px;
@@ -1669,7 +1669,7 @@
   }
   .expand-toggle:hover { background: var(--line-2); color: var(--ink); }
   .expand-toggle .sub-count {
-    background: var(--accent-2-soft); color: #6E5530;
+    background: var(--accent-2-soft); color: #1F3D6E;
     padding: 1px 6px; border-radius: 99px;
     font-family: var(--num); margin-left: 4px;
   }
@@ -1753,7 +1753,7 @@
   /* 멤버 검색 (관리탭에서 멤버 많아질 때) */
   .search-row {
     display: flex; gap: 8px; align-items: center;
-    padding: 10px 16px; background: #FCFBF7;
+    padding: 10px 16px; background: #F8FAFC;
     border-bottom: 1px solid var(--line-2);
   }
   .search-row input {
@@ -1769,8 +1769,8 @@
     gap: 14px;
   }
   .project-card {
-    background: linear-gradient(180deg, #FDFBF5, var(--surface));
-    border: 1px solid #E5D9B8;
+    background: linear-gradient(180deg, #F8FAFC, var(--surface));
+    border: 1px solid #D3DEF0;
     border-left: 3px solid var(--accent-2);
     border-radius: 12px;
     padding: 14px 16px;
@@ -1816,7 +1816,7 @@
     word-break: break-word;
     transition: color 0.15s;
   }
-  .project-title:hover { color: #6E5530; }
+  .project-title:hover { color: #1F3D6E; }
   .project-card.routine-task .project-title:hover { color: #5B4B8A; }
   .project-owner-badge {
     background: var(--line-2); color: var(--ink-2);
@@ -1841,7 +1841,7 @@
     font-weight: 700;
   }
   .project-meta-status.done { background: var(--success-soft); color: var(--success); }
-  .project-meta-status.doing { background: #FBF3DA; color: #6E5530; }
+  .project-meta-status.doing { background: #EEF3FB; color: #1F3D6E; }
   .project-meta-status.todo { background: var(--line-2); color: var(--muted); }
   .project-meta-status.hold { background: var(--warn-soft); color: var(--warn); }
   .project-meta-due.urgent { color: var(--danger); font-weight: 700; }
@@ -1855,7 +1855,7 @@
   }
   .project-progress-bar > div {
     height: 100%;
-    background: linear-gradient(90deg, #D9C9A3, var(--accent-2));
+    background: linear-gradient(90deg, #C3D2EA, var(--accent-2));
     border-radius: 99px;
     transition: width 0.3s;
   }
@@ -1867,7 +1867,7 @@
   }
   .project-progress-pct {
     font-family: var(--num); font-size: 13px; font-weight: 800;
-    color: #6E5530;
+    color: #1F3D6E;
     min-width: 42px; text-align: right;
   }
   .project-card.routine-task .project-progress-pct { color: #5B4B8A; }
@@ -1885,7 +1885,7 @@
     font-size: 12px;
     transition: all 0.15s;
   }
-  .project-icon-btn:hover { background: #FBF3DA; border-color: var(--accent-2); }
+  .project-icon-btn:hover { background: #EEF3FB; border-color: var(--accent-2); }
   .project-icon-btn.danger:hover { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
 
   .project-subtasks {
@@ -1987,7 +1987,7 @@
   /* 보조업무 섹션 헤더 */
   .project-subtasks-section {
     margin-top: 4px;
-    background: linear-gradient(180deg, #FAF8F2, var(--bg));
+    background: linear-gradient(180deg, #F8FAFC, var(--bg));
     border: 1px solid var(--line-2);
     border-left: 3px solid var(--accent-2);
     border-radius: 8px;
@@ -2057,8 +2057,8 @@
 
   /* 진한 베이지 강조 — primary 액션 */
   .action-btn.primary {
-    background: #D9C9A3;
-    border-color: #B89968;
+    background: #C3D2EA;
+    border-color: #4A73B5;
     color: #4A3920;
   }
   .action-btn.primary:hover {
@@ -2219,7 +2219,7 @@
     transition: all 0.15s;
   }
   .project-add-subtask-form button:hover {
-    background: linear-gradient(135deg, #154852, #A67E50);
+    background: linear-gradient(135deg, #13315F, #3B63A3);
   }
   .project-add-subtask-form button.cancel {
     background: var(--surface); color: var(--muted);
@@ -2430,7 +2430,7 @@
   .modal-foot {
     padding: 14px 22px;
     border-top: 1px solid var(--line);
-    background: #FCFBF7;
+    background: #F8FAFC;
     display: flex; gap: 10px; justify-content: flex-end;
     flex-shrink: 0;
   }
@@ -2452,7 +2452,7 @@
     box-shadow: 0 2px 6px rgba(24, 33, 29, 0.1);
   }
   .modal-btn.primary:hover {
-    background: linear-gradient(135deg, #154852, #A67E50);
+    background: linear-gradient(135deg, #13315F, #3B63A3);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(24, 33, 29, 0.15);
   }
@@ -2555,7 +2555,7 @@
   .type-choice.project:hover {
     border-color: var(--accent-2);
   }
-  .type-choice.project:hover .type-choice-title { color: #6E5530; }
+  .type-choice.project:hover .type-choice-title { color: #1F3D6E; }
 
   /* 빈도 선택 칩 */
   .freq-pick {
@@ -2693,7 +2693,7 @@
   }
   .modal-subtask-add button:hover {
     transform: translateY(-1px);
-    background: linear-gradient(135deg, #154852, #A67E50);
+    background: linear-gradient(135deg, #13315F, #3B63A3);
     box-shadow: 0 4px 8px rgba(0,0,0,0.12);
   }
 
@@ -2735,8 +2735,8 @@
   .kpi-viewtoggle button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
 
   .kpi-teamvision {
-    background: linear-gradient(135deg, #12333B, #1B5E6E);
-    color: #EAF6F8; border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
+    background: linear-gradient(135deg, #0F2547, #1B4480);
+    color: #EEF3FB; border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
     box-shadow: var(--shadow-md); position: relative; overflow: hidden;
   }
   .kpi-teamvision::after {
@@ -2824,7 +2824,7 @@
   .kpi-objective .olbl { font-size: 10px; color: var(--accent); font-weight: 800; letter-spacing: .1em; margin-right: 6px; }
 
   .kpi-headline {
-    padding: 9px 14px; font-size: 12.5px; font-weight: 700; color: #6E5530;
+    padding: 9px 14px; font-size: 12.5px; font-weight: 700; color: #1F3D6E;
     background: var(--accent-2-soft); border-bottom: 1px solid var(--line-2);
     display: flex; align-items: center; gap: 6px;
   }
@@ -3105,6 +3105,15 @@
   .ks-sec.lead.support .ks-tag { background: var(--line-2); color: var(--muted); }
   @media (max-width: 900px) { .ks-team { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .ks-list { grid-template-columns: 1fr; } .ks-month { margin-left: 0; } .ks-item .ks-field .kmv { font-size: 18px; } }
+
+  /* 선 아이콘 · 흰색·남색 화면 */
+  .ic { width: 1.1em; height: 1.1em; vertical-align: -0.18em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .tab .ic { color: var(--accent); }
+  .ic-dot { display: inline-block; width: .7em; height: .7em; border-radius: 50%; vertical-align: .02em; }
+  .dot-r { background: var(--danger); } .dot-y { background: #D9A400; } .dot-g { background: var(--success); }
+  .today-pill::before { content: none !important; }
+  .kpi-teamvision::after { content: none !important; }
+  body { background: var(--bg); }
 </style>
 </head>
 <body>
@@ -3350,7 +3359,7 @@
       <svg id="mindmap-svg" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="mindmap-legend">
-      <span style="color:#B89968; font-weight:800;">[프로젝트]</span>
+      <span style="color:#4A73B5; font-weight:800;">[프로젝트]</span>
       <span style="color:#5B4B8A; font-weight:800;">[루틴]</span>
       <span style="color:#2E7D52; font-weight:800;">완료</span>
       <span style="color:#B83A2E; font-weight:800;">보류</span>
@@ -3368,13 +3377,13 @@
         <input type="text" id="tm-name" placeholder="팀 이름 (예: 연구개발팀)">
         <input type="text" id="tm-icon" placeholder="🔬" maxlength="2" style="text-align:center; font-size:18px;">
         <select id="tm-color">
-          <option value="#1B5E6E">청록</option>
-          <option value="#B89968">골드</option>
+          <option value="#1B4480">청록</option>
+          <option value="#4A73B5">골드</option>
           <option value="#2E7D52">그린</option>
           <option value="#B4651E">오렌지</option>
           <option value="#5B4B8A">퍼플</option>
           <option value="#B83A2E">레드</option>
-          <option value="#2D3934">차콜</option>
+          <option value="#2A3A55">차콜</option>
         </select>
         <button class="btn accent" onclick="addTeam()">+ 팀 추가</button>
       </div>
@@ -3497,14 +3506,14 @@
         <input type="text" id="m-name" placeholder="이름 (예: 김혜진)">
         <input type="text" id="m-role" placeholder="직책 (예: 연구원)">
         <select id="m-color">
-          <option value="#1B5E6E">청록</option>
-          <option value="#B89968">골드</option>
+          <option value="#1B4480">청록</option>
+          <option value="#4A73B5">골드</option>
           <option value="#2E7D52">그린</option>
           <option value="#B4651E">오렌지</option>
           <option value="#5B4B8A">퍼플</option>
           <option value="#B83A2E">레드</option>
-          <option value="#2D3934">차콜</option>
-          <option value="#6B7570">그레이</option>
+          <option value="#2A3A55">차콜</option>
+          <option value="#64748B">그레이</option>
         </select>
         <button class="btn accent" onclick="addMember()">+ 추가</button>
       </div>
@@ -3806,7 +3815,7 @@
         </div>
       </div>
 
-      <div style="background:#FCFBF7; border:1px solid var(--line-2); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--ink-2); margin-top:8px;">
+      <div style="background:#F8FAFC; border:1px solid var(--line-2); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--ink-2); margin-top:8px;">
         💡 <b>자동 체크 갱신:</b> 지정한 빈도(주기) 안에서 한 번이라도 완료 체크하면 그 주기는 완료로 처리됩니다. 다음 주기가 시작되면 자동으로 미완료 상태가 됩니다.
       </div>
     </div>
@@ -3822,7 +3831,7 @@
 <div class="modal-backdrop" id="modal-project" onclick="if(event.target===this)closeModal()">
   <div class="modal modal-lg">
     <div class="modal-head">
-      <div class="modal-head-icon" style="background:var(--accent-2-soft); color:#6E5530;">🚀</div>
+      <div class="modal-head-icon" style="background:var(--accent-2-soft); color:#1F3D6E;">🚀</div>
       <div>
         <div class="modal-title" id="project-modal-title">프로젝트 등록</div>
         <div class="modal-subtitle">메인 프로젝트와 보조 업무를 한 번에 등록</div>
@@ -5540,7 +5549,7 @@ function renderProjectCard(task, memberMap) {
     ? `🏁 ${startDate} 시작 · 완료까지 ${daysBetween(startDate, task.completedAt || t)}일`
     : elapsedDays === 0
       ? `📅 ${startDate} 시작 · 오늘 시작`
-      : `📅 ${startDate} 시작 · <b style="color:#6E5530; font-weight:800;">${elapsedDays}일 경과</b>`;
+      : `📅 ${startDate} 시작 · <b style="color:#1F3D6E; font-weight:800;">${elapsedDays}일 경과</b>`;
 
   return `
     <div class="${cardClass}">
@@ -5566,7 +5575,7 @@ function renderProjectCard(task, memberMap) {
         <div class="project-progress-bar"><div style="width:${task.progress || 0}%"></div></div>
         ${subs.length > 0 ? `
           <div class="project-progress-pct" title="보조업무 ${subs.length}개의 평균">${task.progress || 0}%</div>
-          <span style="font-size:9px; color:#6E5530; font-weight:700; background:#F4E8C8; padding:2px 6px; border-radius:99px; white-space:nowrap;">📊 평균</span>
+          <span style="font-size:9px; color:#1F3D6E; font-weight:700; background:#E6EDF8; padding:2px 6px; border-radius:99px; white-space:nowrap;">📊 평균</span>
         ` : pctSpinnerHTML(task.progress || 0, `updateProgress('${task.id}', __V__)`, 'lg')}
         <div class="project-progress-actions">
           <button class="project-icon-btn" onclick="cycleTaskStatus('${task.id}')" title="상태 변경">${statusIcon}</button>
@@ -5935,7 +5944,7 @@ function buildMindmapTree(memberFilter, typeFilter) {
   const root = {
     name: '업무 전체',
     type: 'root',
-    color: '#18211D',
+    color: '#14213A',
     children: []
   };
 
@@ -5967,7 +5976,7 @@ function buildMindmapTree(memberFilter, typeFilter) {
         taskCount++;
         const taskColor = tk.status === 'done' ? '#2E7D52'
                         : tk.status === 'hold' ? '#B83A2E'
-                        : (tk.taskType === 'routine' ? '#5B4B8A' : '#B89968');
+                        : (tk.taskType === 'routine' ? '#5B4B8A' : '#4A73B5');
         const taskNode = {
           name: tk.title,
           type: 'task',
@@ -5980,7 +5989,7 @@ function buildMindmapTree(memberFilter, typeFilter) {
         (tk.subtasks || []).forEach(st => {
           subCount++;
           const subColor = st.status === 'done' ? '#2E7D52'
-                         : st.status === 'doing' ? '#1B5E6E'
+                         : st.status === 'doing' ? '#1B4480'
                          : '#9CA39E';
           taskNode.children.push({
             name: st.title,
@@ -6018,7 +6027,7 @@ function countLeaves(node) {
 function renderMindmapSVG(root) {
   if (!root.children || root.children.length === 0) {
     return `<svg id="mindmap-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
-      <text x="400" y="200" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="16" fill="#6B7570">표시할 업무가 없습니다.</text>
+      <text x="400" y="200" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="16" fill="#64748B">표시할 업무가 없습니다.</text>
     </svg>`;
   }
 
@@ -6185,22 +6194,22 @@ function renderMindmapSVG(root) {
         borderColor = '#C9BFDE';
         bgColor = '#FBFAFE';
       } else {
-        textColor = '#6E5530';
-        borderColor = '#D9C9A3';
-        bgColor = '#FDFBF5';
+        textColor = '#1F3D6E';
+        borderColor = '#C3D2EA';
+        bgColor = '#F8FAFC';
       }
     } else if (n.type === 'root') {
       textColor = '#FFFFFF';
-      borderColor = '#18211D';
-      bgColor = '#18211D';
+      borderColor = '#14213A';
+      bgColor = '#14213A';
     } else if (n.type === 'team') {
       textColor = '#FFFFFF';
-      borderColor = n.color || '#1B5E6E';
-      bgColor = n.color || '#1B5E6E';
+      borderColor = n.color || '#1B4480';
+      bgColor = n.color || '#1B4480';
     } else if (n.type === 'member') {
-      textColor = '#18211D';
-      borderColor = n.color || '#1B5E6E';
-      bgColor = '#FCFBF7';
+      textColor = '#14213A';
+      borderColor = n.color || '#1B4480';
+      bgColor = '#F8FAFC';
     }
 
     const boxX = n._x;
@@ -6211,7 +6220,7 @@ function renderMindmapSVG(root) {
 
     let inner = `<text x="${boxX + padX}" y="${textY1}" class="mm-node-text" font-size="${n._fontSize}" font-weight="${n._fontWeight}" fill="${textColor}">${escapeXml(n._label)}</text>`;
     if (n._kpiLabel) {
-      const kpiColor = n.type === 'team' || n.type === 'root' ? '#FFE3B0' : '#8A6E3A';
+      const kpiColor = n.type === 'team' || n.type === 'root' ? '#FFE3B0' : '#2F5490';
       inner += `<text x="${boxX + padX}" y="${textY2}" class="mm-node-text" font-size="${n._kpiFontSize}" font-weight="500" fill="${kpiColor}">🎯 ${escapeXml(n._kpiLabel)}</text>`;
     }
 
@@ -6231,8 +6240,8 @@ function renderMindmapSVG(root) {
         .mm-node-text { font-family: 'Pretendard', -apple-system, sans-serif; }
       </style>
     </defs>
-    <text x="20" y="28" font-family="Pretendard, sans-serif" font-size="13" font-weight="800" fill="#18211D">🗺️ 업무 마인드맵</text>
-    <text x="20" y="44" font-family="Pretendard, sans-serif" font-size="10" fill="#6B7570">${new Date().toLocaleDateString('ko-KR')} 기준 · 업무 ${root._taskCount}건 · 하위업무 ${root._subCount}개 · 색: <tspan fill="#B89968" font-weight="700">[프로젝트]</tspan> <tspan fill="#5B4B8A" font-weight="700">[루틴]</tspan> <tspan fill="#2E7D52" font-weight="700">완료</tspan> <tspan fill="#B83A2E" font-weight="700">보류</tspan></text>
+    <text x="20" y="28" font-family="Pretendard, sans-serif" font-size="13" font-weight="800" fill="#14213A">🗺️ 업무 마인드맵</text>
+    <text x="20" y="44" font-family="Pretendard, sans-serif" font-size="10" fill="#64748B">${new Date().toLocaleDateString('ko-KR')} 기준 · 업무 ${root._taskCount}건 · 하위업무 ${root._subCount}개 · 색: <tspan fill="#4A73B5" font-weight="700">[프로젝트]</tspan> <tspan fill="#5B4B8A" font-weight="700">[루틴]</tspan> <tspan fill="#2E7D52" font-weight="700">완료</tspan> <tspan fill="#B83A2E" font-weight="700">보류</tspan></text>
     ${edgesSvg}
     ${nodesSvg}
   </svg>`;
@@ -6475,7 +6484,7 @@ function renderTodayPage() {
       <div class="today-card">
         <div class="today-card-head">
           <div class="member-info">
-            <div class="avatar" style="background:${m.color || '#1B5E6E'};">${m.isAlba ? '🧑‍💼' : escapeHtml(initials(m.name))}</div>
+            <div class="avatar" style="background:${m.color || '#1B4480'};">${m.isAlba ? '🧑‍💼' : escapeHtml(initials(m.name))}</div>
             <div>
               <div class="member-name">${escapeHtml(m.name)}${m.isAlba ? ` <span style="font-size:10px; color:#B4651E; background:#FFE3D1; padding:1px 6px; border-radius:99px; font-weight:800; margin-left:4px;">알바</span>` : ''}</div>
               <div class="member-role">${m.isAlba ? escapeHtml((DATA.teams.find(t=>t.id===m.teamId)||{}).name || '') + ' • ' : ''}${escapeHtml(m.role || '')}</div>
@@ -6484,8 +6493,8 @@ function renderTodayPage() {
           <div class="today-progress">
             <div class="ring">
               <svg width="38" height="38">
-                <circle cx="19" cy="19" r="16" fill="none" stroke="#E8E5DD" stroke-width="3"/>
-                <circle cx="19" cy="19" r="16" fill="none" stroke="${m.color || '#1B5E6E'}" stroke-width="3"
+                <circle cx="19" cy="19" r="16" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+                <circle cx="19" cy="19" r="16" fill="none" stroke="${m.color || '#1B4480'}" stroke-width="3"
                   stroke-dasharray="${rCircum}" stroke-dashoffset="${rOffset}" stroke-linecap="round"/>
               </svg>
               <div class="ring-text">${pct}%</div>
@@ -6544,7 +6553,7 @@ function renderTodayPage() {
               let rightInfo = '';
               if (taskType === 'project' && tk.startDate) {
                 const days = daysBetween(tk.startDate, t);
-                rightInfo = `<div class="task-mini-due" style="color:#6E5530; font-weight:800;">+${days}d</div>`;
+                rightInfo = `<div class="task-mini-due" style="color:#1F3D6E; font-weight:800;">+${days}d</div>`;
               } else if (tk.dueDate) {
                 rightInfo = `<div class="task-mini-due ${isUrgent ? 'urgent' : ''}">${tk.dueDate.slice(5)}</div>`;
               }
@@ -6690,7 +6699,7 @@ function renderDetailPage() {
     const team = DATA.teams.find(t => t.id === m.teamId);
     return `
       <div class="member-chip ${UI.detailMember === m.id ? 'on' : ''}" onclick="setDetailMember('${m.id}')" title="${team ? escapeHtml(team.name) : ''}">
-        <span class="chip-dot" style="background:${m.color || '#1B5E6E'};"></span>
+        <span class="chip-dot" style="background:${m.color || '#1B4480'};"></span>
         ${m.isAlba ? '🧑‍💼' : (team ? escapeHtml(team.icon || '📁') : '')} ${escapeHtml(m.name)}${m.isAlba ? ` <span style="font-size:9px; color:#B4651E; font-weight:800;">(${team ? team.name : ''})</span>` : ''}
         <span class="chip-count">${activeCount}</span>
       </div>
@@ -7014,7 +7023,7 @@ function renderManagePage() {
       const activeCount = DATA.tasks.filter(t => t.memberId === m.id && t.status !== 'done').length;
       const routineCount = DATA.routines.filter(r => r.memberId === m.id && r.active).length;
       const team = DATA.teams.find(t => t.id === m.teamId);
-      const rowStyle = m.isAlba ? 'background: #FFF7F0;' : '';
+      const rowStyle = m.isAlba ? 'background: #F8FAFC;' : '';
       return `
         <tr style="${rowStyle}">
           <td>
@@ -7026,13 +7035,13 @@ function renderManagePage() {
           </td>
           <td>
             <div style="display:flex; align-items:center; gap:10px;">
-              <div class="avatar" style="background:${m.color || '#1B5E6E'}; width:28px; height:28px; font-size:12px;">${m.isAlba ? '🧑‍💼' : escapeHtml(initials(m.name))}</div>
+              <div class="avatar" style="background:${m.color || '#1B4480'}; width:28px; height:28px; font-size:12px;">${m.isAlba ? '🧑‍💼' : escapeHtml(initials(m.name))}</div>
               <span style="font-weight:700;">${escapeHtml(m.name)}</span>
               ${m.isAlba ? '<span style="font-size:9px; color:#B4651E; background:#FFE3D1; padding:2px 6px; border-radius:99px; font-weight:800;">시스템</span>' : ''}
             </div>
           </td>
           <td>${escapeHtml(m.role || '—')}</td>
-          <td><span style="display:inline-block; width:14px; height:14px; background:${m.color || '#1B5E6E'}; border-radius:4px; vertical-align: middle;"></span></td>
+          <td><span style="display:inline-block; width:14px; height:14px; background:${m.color || '#1B4480'}; border-radius:4px; vertical-align: middle;"></span></td>
           <td><span class="badge status-doing">${activeCount}건</span></td>
           <td><span class="badge daily">${routineCount}개</span></td>
           <td>${m.isAlba ? '<span style="font-size:11px; color:var(--muted);">팀 자동</span>' : `<button class="x-btn" onclick="deleteMember('${m.id}')">×</button>`}</td>
@@ -7124,7 +7133,7 @@ function renderManagePage() {
           <td>${m ? escapeHtml(m.name) : '—'}</td>
           <td style="font-weight:600;">
             ${escapeHtml(tk.title)}${isStale ? ' <span class="tag-mini alba" style="background:var(--warn-soft); color:var(--warn);">정체</span>' : ''}
-            ${(tk.subtasks && tk.subtasks.length > 0) ? ` <span class="tag-mini" style="background:var(--accent-2-soft); color:#6E5530;">📎 ${tk.subtasks.filter(s=>s.status==='done').length}/${tk.subtasks.length}</span>` : ''}
+            ${(tk.subtasks && tk.subtasks.length > 0) ? ` <span class="tag-mini" style="background:var(--accent-2-soft); color:#1F3D6E;">📎 ${tk.subtasks.filter(s=>s.status==='done').length}/${tk.subtasks.length}</span>` : ''}
           </td>
           <td><span class="badge type-${taskType}">${typeLabel}</span></td>
           <td style="font-family:var(--num); font-size:12px;">
@@ -7255,7 +7264,7 @@ function quickAddMember(teamId) {
   const role = (prompt('직책을 입력하세요 (예: 매니저, 수석매니저, 리드매니저). 없으면 빈칸:') || '').trim();
   // 사용 안 한 색상 우선
   const usedColors = new Set(DATA.members.filter(m => m.teamId === teamId).map(m => m.color));
-  const palette = ['#1B5E6E', '#B89968', '#2E7D52', '#B4651E', '#5B4B8A', '#B83A2E', '#2D3934', '#6B7570'];
+  const palette = ['#1B4480', '#4A73B5', '#2E7D52', '#B4651E', '#5B4B8A', '#B83A2E', '#2A3A55', '#64748B'];
   const color = palette.find(c => !usedColors.has(c)) || palette[DATA.members.length % palette.length];
   DATA.members.push({
     id: uid(),
@@ -7607,7 +7616,7 @@ function renderManualCard(x) {
   const hasContent = !!(x.content && x.content.trim());
   const m = manualMember(x.owner);
   const ownerName = m ? m.name : '미지정';
-  const ownerColor = m ? (m.color || '#1B5E6E') : '#9AA5A0';
+  const ownerColor = m ? (m.color || '#1B4480') : '#94A3B8';
   const acts = [];
   if (hasUrl) acts.push(`<a class="dash-link app" href="${escapeHtml(normalizeUrl(x.url))}" target="_blank" rel="noopener">▶ 열기</a>`);
   if (hasContent) acts.push(`<button class="dash-link" onclick="openManualView('${x.id}')">📄 내용 보기</button>`);
@@ -7724,7 +7733,7 @@ function renderAutomationPage() {
 function renderDashCard(d) {
   const m = dashMember(d.owner);
   const ownerName = m ? m.name : '미지정';
-  const ownerColor = m ? (m.color || '#1B5E6E') : '#9AA5A0';
+  const ownerColor = m ? (m.color || '#1B4480') : '#94A3B8';
   const openUrl = normalizeUrl(d.appUrl || d.htmlUrl || '');
   const tags = Array.isArray(d.tags) ? d.tags : [];
   const thumb = d.thumbnail
@@ -7841,7 +7850,7 @@ function kpiOwnerMember(name) {
 }
 function kpiAvatarHtml(name, size) {
   const m = kpiOwnerMember(name);
-  const color = m ? (m.color || '#1B5E6E') : '#9AA5A0';
+  const color = m ? (m.color || '#1B4480') : '#94A3B8';
   const sz = size || 30;
   return `<div class="avatar" style="background:${color}; width:${sz}px; height:${sz}px; font-size:${Math.round(sz*0.42)}px;">${escapeHtml(initials(name || '?'))}</div>`;
 }
@@ -8153,7 +8162,7 @@ function renderAll() {
 
 function init() {
   // 배포 버전 확인용 마커 — 콘솔(F12)에 이 문구가 보이면 '열기 버튼 수정본'이 적용된 것입니다.
-  console.info('%c✅ 매뉴얼/대시보드 열기 버튼 수정본 적용됨 (build: open-fix-2026-07-27)', 'color:#1B5E6E;font-weight:bold;');
+  console.info('%c✅ 매뉴얼/대시보드 열기 버튼 수정본 적용됨 (build: open-fix-2026-07-27)', 'color:#1B4480;font-weight:bold;');
   window.__BUILD__ = 'open-fix-2026-07-27';
   load();
   updateFreqOptions();
@@ -8231,7 +8240,7 @@ const FB_BY_ID = ["members", "programs", "projects", "workKpis", "kpis", "automa
 const FB_BY_MEMBER = ["routines", "personal"];
 const KEY_PENDING_B2B = "netform.b2b.tracker.pending.v1", KEY_ACTOR_B2B = "netform.b2b.tracker.actor.v1";
 const PC = PerfCalc, TEAM_ID = "team_b2b";
-const MEMBER_COLORS = ["#1B5E6E", "#B89968", "#2E7D52", "#B4651E", "#5B4B8A", "#B83A2E"];
+const MEMBER_COLORS = ["#1B4480", "#4A73B5", "#2E7D52", "#B4651E", "#5B4B8A", "#B83A2E"];
 const CY_TO_FREQ = { "일": "daily", "주": "weekly", "월": "monthly", "분기": "quarterly", "연": "yearly", "년": "yearly" };
 const FREQ_TO_CY = { daily: "일", weekly: "주", monthly: "월", quarterly: "분기", yearly: "연" };
 const B2B = { shape: null, synced: null, pending: null, writing: 0, seq: 0, mode: null, sdk: null, root: null, state: "connecting", poll: null, retry: null, deferred: false };
@@ -8283,7 +8292,7 @@ function toData(s) {
     } });
   });
   const dashboards = Object.values(s.links).map(l => ({ id: l.id, title: l.name || "", owner: l.owner || "", purpose: l.d || "", appUrl: l.url || "", htmlUrl: l.htmlUrl || "", thumbnail: l.thumbnail || "", tags: l.cat ? [l.cat] : [], createdAt: l.createdAt || 0, _raw: l }));
-  return { teams: [{ id: TEAM_ID, name: (s.meta && s.meta.team) || "B2B운영팀", color: "#1B5E6E", icon: "🏢", kpi: (s.meta && s.meta.goal) || "" }], members, tasks, routines, routineChecks: Object.values(s.routineChecks), dashboards, manuals: [], kpiPlan: { teamGoals: [], kpis: [] } };
+  return { teams: [{ id: TEAM_ID, name: (s.meta && s.meta.team) || "B2B운영팀", color: "#1B4480", icon: "🏢", kpi: (s.meta && s.meta.goal) || "" }], members, tasks, routines, routineChecks: Object.values(s.routineChecks), dashboards, manuals: [], kpiPlan: { teamGoals: [], kpis: [] } };
 }
 
 /* ---------- 작업 데이터 → 원격 모양 ---------- */
@@ -8616,7 +8625,7 @@ function b2bKpiTree(k) {
   const lags = Object.values(s.lagDefs).filter(g => B2B_LAG_KPI[g.id] === k.id).sort((a, b) => a.id < b.id ? -1 : 1);
   return `<div class="kt-tree">
     <div class="kt-sub">이 KPI를 높이는 팀원 활동 <span>활동 달성률은 팀 KPI 실적에 더하지 않아요</span></div>
-    ${members.filter(m => byMember[m.id]).map(m => `<div class="kt-member"><div class="kt-who"><span class="chip-dot" style="background:${m.color || "#1B5E6E"};"></span>${escapeHtml(b2bMemberName(m.id))} <span>${byMember[m.id].length}개</span></div>${byMember[m.id].map(act).join("")}</div>`).join("") || '<div class="kt-none">연결된 활동이 아직 없어요.</div>'}
+    ${members.filter(m => byMember[m.id]).map(m => `<div class="kt-member"><div class="kt-who"><span class="chip-dot" style="background:${m.color || "#1B4480"};"></span>${escapeHtml(b2bMemberName(m.id))} <span>${byMember[m.id].length}개</span></div>${byMember[m.id].map(act).join("")}</div>`).join("") || '<div class="kt-none">연결된 활동이 아직 없어요.</div>'}
     ${without.length ? `<div class="kt-none">${without.map(m => escapeHtml(b2bMemberName(m.id))).join(" · ")}: 아직 연결된 활동 없음</div>` : ""}
     ${lags.length ? `<div class="kt-sub">관리 후 고객 변화 <span>관리한 업체에서 생긴 변화 · 개인 점수 아님</span></div>${lags.map(g => `<button class="kt-act lag" data-act="${g.id}" onclick="b2bOpenInd('${g.id}')"><span class="kt-no">${escapeHtml(b2bMemberName(g.member))}</span><span class="kt-name">${escapeHtml(g.name)}</span>${b2bRatePill(g.id)}</button>`).join("")}` : ""}
   </div>`;
@@ -8640,7 +8649,7 @@ renderKpiPage = function () {
   const kpis = Object.values(s.mainKpis).sort((a, b) => a.id < b.id ? -1 : 1);
   const chips = Object.values(s.members).sort((a, b) => a.id < b.id ? -1 : 1).map(m => {
     const n = Object.values(s.leadDefs).concat(Object.values(s.lagDefs)).filter(d => d.member === m.id).length;
-    return `<button class="member-chip ${m.id === mid ? "on" : ""}" data-kpi-member="${m.id}" onclick="b2bSetKpiMember('${m.id}')"><span class="chip-dot" style="background:${m.color || "#1B5E6E"};"></span>${escapeHtml(String(m.name || "").trim())}<span class="chip-count">${n}</span></button>`;
+    return `<button class="member-chip ${m.id === mid ? "on" : ""}" data-kpi-member="${m.id}" onclick="b2bSetKpiMember('${m.id}')"><span class="chip-dot" style="background:${m.color || "#1B4480"};"></span>${escapeHtml(String(m.name || "").trim())}<span class="chip-count">${n}</span></button>`;
   }).join("");
   root.innerHTML = `<div class="ks-h">🎯 팀 KPI ${kpis.length}개 <span>최상위 목표 · 실적은 전체 업체의 실제 이용으로만 계산해요</span></div>
     <div class="ks-team">${kpis.map(k => `<div class="kt-block">${b2bIndRow(k, true)}${b2bKpiTree(k)}</div>`).join("")}</div>
@@ -8742,5 +8751,40 @@ document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () =>
 b2bBoot();
 </script>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></symbol><symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1M16 4.1a4 4 0 0 1 0 7.8M22 21v-1a6 6 0 0 0-4-5.6"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol><symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 12h6M9 16h6"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></symbol><symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol><symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol><symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol><symbol id="i-clip" viewBox="0 0 24 24"><path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/></symbol><symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M15.1 14c.2-1 .7-1.7 1.4-2.5A6 6 0 1 0 7.5 11.5c.7.8 1.2 1.5 1.4 2.5"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5M8 4h8M9 4v6l-3 4h12l-3-4V4"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16v-4M12 16V8M17 16V9"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/></symbol><symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="m21 8-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol><symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5M9 8V2M15 8V2M18 8v5a6 6 0 0 1-12 0V8z"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21 7 14.2l-5-4.9 6.9-1z"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></symbol><symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M2 13h20"/></symbol><symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4 20a1 1 0 0 0 .9 1.5h14.2A1 1 0 0 0 20 20l-6-11V3"/></symbol></svg>
+<script>
+/* 이모지 아이콘 → 선 아이콘. 그림을 넣을 수 없는 자리(선택 목록·제목·SVG 글자·직접 편집 칸)는 이모지만 지운다. */
+(function () {
+  var MAP = {"📅":"calendar","🗓":"calendar","📆":"calendar","👤":"user","🙋":"user","👥":"users","🎯":"target","🧰":"grid","📋":"clipboard","⚙":"settings","🚀":"layers","🔁":"repeat","🔄":"repeat","✅":"check","⏰":"clock","⏱":"clock","⏳":"hourglass","⚠":"alert","☁":"cloud","📁":"folder","🗑":"trash","✏":"edit","📎":"clip","💡":"bulb","❌":"x","📖":"book","📌":"pin","📊":"chart","🗺":"map","📄":"file","📥":"download","🖼":"image","🖨":"printer","📦":"package","🔒":"lock","🖥":"monitor","🔌":"plug","🏁":"flag","➕":"plus","🌐":"globe","⭐":"star","🏢":"building","🧑‍💼":"briefcase","💼":"briefcase","🔬":"flask","🔴":"dot-r","🟡":"dot-y","🟢":"dot-g"};
+  var keys = Object.keys(MAP).sort(function (a, b) { return b.length - a.length; }).map(function (k) { return k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+  var RE = new RegExp('(' + keys.join('|') + ')\uFE0F?', 'g'), HAS = new RegExp(RE.source);
+  var PLAIN = { OPTION: 1, OPTGROUP: 1, TEXTAREA: 1, TITLE: 1 }, SKIP = { SCRIPT: 1, STYLE: 1 }, NS = 'http://www.w3.org/2000/svg';
+  function icon(name) {
+    if (name.indexOf('dot-') === 0) { var d = document.createElement('span'); d.className = 'ic-dot ' + name; return d; }
+    var s = document.createElementNS(NS, 'svg'); s.setAttribute('class', 'ic ic-' + name); s.setAttribute('aria-hidden', 'true');
+    var u = document.createElementNS(NS, 'use'); u.setAttribute('href', '#i-' + name); s.appendChild(u); return s;
+  }
+  function fix(t) {
+    var v = t.nodeValue, p = t.parentNode;
+    if (!v || !p || SKIP[p.nodeName] || !HAS.test(v)) return;
+    if (PLAIN[p.nodeName] || (p.closest && (p.closest('svg') || p.closest('[contenteditable]')))) { t.nodeValue = v.replace(RE, '').replace(/^\s+/, ''); return; }
+    var f = document.createDocumentFragment(), last = 0, m; RE.lastIndex = 0;
+    while ((m = RE.exec(v))) { if (m.index > last) f.appendChild(document.createTextNode(v.slice(last, m.index))); f.appendChild(icon(MAP[m[1]])); last = RE.lastIndex; }
+    if (last < v.length) f.appendChild(document.createTextNode(v.slice(last)));
+    p.replaceChild(f, t);
+  }
+  function walk(root) {
+    if (root.nodeType === 3) return fix(root);
+    if (root.nodeType !== 1 || SKIP[root.nodeName]) return;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), list = [], n;
+    while ((n = w.nextNode())) if (HAS.test(n.nodeValue)) list.push(n);
+    list.forEach(fix);
+  }
+  walk(document.body);
+  new MutationObserver(function (ms) { ms.forEach(function (m) {
+    if (m.type === 'characterData') fix(m.target); else m.addedNodes.forEach(walk);
+  }); }).observe(document.body, { childList: true, subtree: true, characterData: true });
+})();
+</script>
 </body>
 </html>
