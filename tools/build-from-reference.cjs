@@ -148,6 +148,9 @@ once('</style>\n</head>', `
   .ks-item .ks-field .kmv:focus { outline: none; border-color: var(--accent); background: var(--accent-soft); }
   .ks-item .ks-field .kmv::placeholder { color: var(--muted); font-size: 14px; font-weight: 600; }
   .ks-more { align-self: flex-start; background: none; border: 0; padding: 6px 0; min-height: 36px; font-size: 13px; font-weight: 700; color: var(--accent); cursor: pointer; }
+  .ks-auto { font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  .ks-item .ks-field .kmv.is-auto { background: var(--line-2); color: var(--ink-2); border-style: dashed; cursor: default; }
+  .ks-item .ks-field .kmv.is-auto:focus { background: var(--line-2); border-color: var(--line); }
   #modal-kpi .ks-more { display: none; }
   #modal-kpi .ks-item .ktext { pointer-events: none; }
   .ks-pick .member-chip { min-height: 44px; font-size: 15px; padding: 8px 18px; }

@@ -29,7 +29,7 @@ function canon(v) {
 
 /* ---------- 원격 → 작업 데이터 ---------- */
 function b2bNormalize(s) {
-  ["members", "projects", "routines", "programs", "links", "automations", "perfMonthly", "perfHistory", "routineChecks"].forEach(k => { if (!s[k]) s[k] = {}; });
+  ["members", "projects", "routines", "programs", "links", "automations", "perfMonthly", "perfHistory", "routineChecks", "perfAuto"].forEach(k => { if (!s[k]) s[k] = {}; });
   const bySeed = (col, keyList) => { (PERF_SEED[col] || []).forEach(x => { if (!s[col][x.id]) s[col][x.id] = copy(x); }); };
   ["mainKpis", "leadDefs", "lagDefs"].forEach(c => { if (!s[c]) s[c] = {}; bySeed(c); });
   if (!s.perfConfig) s.perfConfig = copy(PERF_SEED.perfConfig);
@@ -287,16 +287,21 @@ function b2bFilterTasks() { renderManagePage(); }
 /* ---------- 지표 값 저장 ---------- */
 function b2bMonth() { if (!UI.kpiMonth) { const d = new Date(), m = d.getMonth() + 1; UI.kpiMonth = d.getFullYear() + "-" + (m < 10 ? "0" : "") + m; } return UI.kpiMonth; }
 function b2bRec(ref, month) { return B2B.shape.perfMonthly[ref + "_" + month] || null; }
-function b2bRate(ref, month) { return PC.rate(b2bRec(ref, month)); }
+/* 고객관리카드 자동 집계값(perfAuto) — 집계 서버만 쓰고 이 화면은 읽기만 한다(FB_BY_ID 에 없어 저장되지 않음).
+   자동값이 있는 달은 그 값을 보여 주고, 같은 달의 직접 입력값(perfMonthly)은 지우지 않고 이력으로 남긴다. */
+function b2bAuto(ref, month) { return (B2B.shape.perfAuto || {})[ref + "_" + month] || null; }
+function b2bView(ref, month) { return b2bAuto(ref, month) || b2bRec(ref, month); }
+function b2bRate(ref, month) { return PC.rate(b2bView(ref, month)); }
 function b2bDef(ref) { const s = B2B.shape; return s.mainKpis[ref] || s.leadDefs[ref] || s.lagDefs[ref] || null; }
 function b2bLis(mid) { const o = {}; Object.values(B2B.shape.leadDefs).forEach(l => { if (l.member === mid) o[l.id] = 1; }); return li => !!o[li]; }
 function b2bMembersOf(k) { const out = []; (k.links || []).forEach(l => { const d = B2B.shape.leadDefs[l.li]; if (d && d.member && !out.includes(d.member)) out.push(d.member); }); return out; }
-function b2bMemberScore(k, mid, month, draft) { return PC.score(k, month, b2bRec, draft, b2bLis(mid)); }
+function b2bMemberScore(k, mid, month, draft) { return PC.score(k, month, b2bView, draft, b2bLis(mid)); }
 function b2bTeamScore(k, month, draft) { return PC.teamScore(k, b2bMembersOf(k), mid => b2bMemberScore(k, mid, month), draft); }
 function b2bHist(h) { const id = "H" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); h.id = id; h.at = new Date().toISOString(); B2B.shape.perfHistory[id] = h; }
 function b2bPct(v) { return PC.round1(v); }
 function b2bMemberName(id) { const m = B2B.shape.members[id]; return m ? String(m.name || "").trim() : id; }
 function b2bSetVal(ref, field, el) {
+  if (b2bAuto(ref, b2bMonth())) { toast("고객관리카드에서 자동으로 계산되는 지표입니다. 값은 카드에서 고쳐 주세요"); renderKpiPage(); if (UI.b2bInd) b2bDrawInd(); return; }
   const month = b2bMonth(), def = b2bDef(ref), cur = b2bRec(ref, month), rev = cur ? (cur.rev || 0) : 0;
   const raw = (el.value || "").trim(), val = raw === "" ? null : Number(raw);
   if (el.dataset.rev !== undefined && +el.dataset.rev !== rev && !confirm((cur && cur.updatedBy || "다른 사용자") + "님이 먼저 저장했습니다. 내 값으로 덮어쓸까요?")) { renderKpiPage(); return; }
@@ -347,21 +352,23 @@ function b2bSubAdd(ref) {
 const KEY_KPI_MEMBER = "netform.b2b.tracker.kpiMember.v1";
 function b2bRateLabel(r) { return r.state === "ok" ? b2bPct(r.value) + "%" : r.state === "empty" ? "대상 없음" : "미측정"; }
 function b2bIndRow(def, team) {
-  const month = b2bMonth(), r = b2bRate(def.id, month), rec = b2bRec(def.id, month), ok = r.state === "ok", pct = ok ? b2bPct(r.value) : 0;
+  const month = b2bMonth(), r = b2bRate(def.id, month), auto = b2bAuto(def.id, month), rec = auto || b2bRec(def.id, month), ok = r.state === "ok", pct = ok ? b2bPct(r.value) : 0;
   const cls = !ok ? "s-todo" : pct >= 100 ? "s-done" : "s-doing";
-  const rev = rec ? (rec.rev || 0) : 0;
+  const rev = rec ? (rec.rev || 0) : 0, lock = auto ? ' readonly tabindex="-1" aria-readonly="true"' : "";
   const den = rec && rec.mode !== "direct" && PC.isNum(rec.den) ? rec.den : "", num = rec && rec.mode !== "direct" && PC.isNum(rec.num) ? rec.num : "";
   return `<div class="kpi-ind ks-item${team ? " ks-teamcard" : ""}" data-ind="${def.id}">
     <div class="ks-top"><span class="ks-no">${escapeHtml(def.no || "")}</span><div class="ktext b2b-link" onclick="b2bOpenInd('${def.id}')">${escapeHtml(def.name)}</div></div>
-    <div class="ks-rate"><span class="kstatus ${cls}">${b2bRateLabel(r)}</span><span class="ks-rate-lbl">달성률</span></div>
+    <div class="ks-rate"><span class="kstatus ${cls}">${b2bRateLabel(r)}</span><span class="ks-rate-lbl">달성률</span>${auto ? `<span class="ks-auto" title="${escapeHtml(auto.rule || "")}">카드 자동 · ${escapeHtml(b2bAutoTime(auto))}</span>` : ""}</div>
     <div class="kpi-mbar"><i style="width:${pct}%; background:${pct >= 100 ? "var(--success)" : "var(--accent)"};"></i></div>
     <div class="ks-inputs">
-      <label class="ks-field"><span>목표</span><input type="number" min="0" inputmode="numeric" class="kmv tgt" value="${den}" placeholder="몇 개?" data-rev="${rev}" onchange="b2bSetVal('${def.id}','den',this)"></label>
-      <label class="ks-field"><span>현재 실적</span><input type="number" min="0" inputmode="numeric" class="kmv" value="${num}" placeholder="몇 개?" data-rev="${rev}" onchange="b2bSetVal('${def.id}','num',this)"></label>
+      <label class="ks-field"><span>목표</span><input type="number" min="0" inputmode="numeric" class="kmv tgt${auto ? " is-auto" : ""}" value="${den}" placeholder="몇 개?" data-rev="${rev}"${lock} onchange="b2bSetVal('${def.id}','den',this)"></label>
+      <label class="ks-field"><span>현재 실적</span><input type="number" min="0" inputmode="numeric" class="kmv${auto ? " is-auto" : ""}" value="${num}" placeholder="몇 개?" data-rev="${rev}"${lock} onchange="b2bSetVal('${def.id}','num',this)"></label>
     </div>
     <button class="ks-more" onclick="b2bOpenInd('${def.id}')">상세보기 ›</button>
   </div>`;
 }
+function b2bAutoTime(a) { const d = new Date(a.computedAt || ""); if (isNaN(d.getTime())) return ""; const p = n => (n < 10 ? "0" : "") + n; return p(d.getMonth() + 1) + "." + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()); }
+const B2B_AUTO_COUNTS = [["done", "완료"], ["scheduled", "정상 예정"], ["waiting", "등록 대기"], ["missed", "누락"], ["late", "등록 지연"], ["carried", "그중 지난달 이월"], ["coord", "일정 조율 중"], ["branch", "지사 진행"], ["format", "날짜 확인 필요"], ["exempt", "예외(집계 제외)"]];
 function b2bKpiMember() {
   const s = B2B.shape, ids = Object.keys(s.members).sort();
   if (UI.kpiMember && s.members[UI.kpiMember]) return UI.kpiMember;
@@ -384,7 +391,7 @@ renderKpiPage = function () {
   const root = $("kpi-root"); if (!root || !B2B.shape) return;
   const s = B2B.shape, month = b2bMonth(), mid = b2bKpiMember();
   const sel = $("kpi-month");
-  if (sel) { const o = {}; PC.monthsBack(month > b2bNowMonth() ? month : b2bNowMonth(), 18).forEach(m => { o[m] = 1; }); Object.values(s.perfMonthly).forEach(r => { o[r.month] = 1; }); sel.innerHTML = Object.keys(o).sort().reverse().map(m => `<option${m === month ? " selected" : ""}>${m}</option>`).join(""); }
+  if (sel) { const o = {}; PC.monthsBack(month > b2bNowMonth() ? month : b2bNowMonth(), 18).forEach(m => { o[m] = 1; }); Object.values(s.perfMonthly).concat(Object.values(s.perfAuto || {})).forEach(r => { o[r.month] = 1; }); sel.innerHTML = Object.keys(o).sort().reverse().map(m => `<option${m === month ? " selected" : ""}>${m}</option>`).join(""); }
   if ($("kpi-updated")) $("kpi-updated").textContent = month;
   const kpis = Object.values(s.mainKpis).sort((a, b) => a.id < b.id ? -1 : 1);
   const chips = Object.values(s.members).sort((a, b) => a.id < b.id ? -1 : 1).map(m => {
@@ -411,12 +418,17 @@ function b2bDrawInd() {
   const kl = isLead ? Object.values(s.mainKpis).filter(k => (k.links || []).some(l => l.li === ref)).map(k => "KPI " + k.no).join(", ") : "";
   const projs = isLead ? Object.values(s.projects).filter(p => p.leads && p.leads[ref]).map(p => p.name).join(", ") : "";
   const subs = tasks.map((t, i) => { const p = PC.taskPct(rec, i), k = p >= 100 ? "done" : p > 0 ? "doing" : "todo", icon = { todo: "○", doing: "▶", done: "✓" }[k], nx = PC.nextStep(p); return `<div class="subtask-row ${k}"><button class="sub-status-btn" onclick="b2bSubSet('${ref}',${i},${nx})" title="상태 변경">${icon}</button><div class="subtask-title">${i + 1}. ${escapeHtml(t)}</div><div class="subtask-progress-bar"><div style="width:${p}%"></div></div><input type="number" min="0" max="100" step="10" value="${p}" onchange="b2bSubSet('${ref}',${i},Number(this.value)||0)" style="width:52px; padding:3px; font-size:12px; text-align:right; border:1px solid var(--line); border-radius:4px;"></div>`; }).join("");
-  const rows = Object.values(s.perfMonthly).filter(x => x.ref === ref).sort((a, b) => a.month < b.month ? 1 : -1).map(x => { const y = PC.rate(x), ws = isLead ? PC.workStats(tasks, x) : null; return `<tr><td>${x.month}</td><td>${PC.isNum(x.num) && PC.isNum(x.den) ? x.num + " / " + x.den : x.mode === "direct" ? "직접 입력" : "—"}</td><td>${y.state === "ok" ? b2bPct(y.value) + "%" : y.state === "empty" ? "대상 없음" : "미측정"}</td>${isLead ? `<td>${Math.round(ws.value || 0)}%</td>` : ""}<td>${escapeHtml(x.updatedBy || "")}</td></tr>`; }).join("");
+  const auto = b2bAuto(ref, month);
+  const autoBox = auto ? `<div class="ks-what"><div class="ks-what-t">고객관리카드 자동 계산</div>${kv("계산 시각", b2bAutoTime(auto))}${kv("기준", auto.rule)}${B2B_AUTO_COUNTS.filter(c => auto.counts && auto.counts[c[0]]).map(c => kv(c[1], auto.counts[c[0]] + "건")).join("")}<div class="b2b-kv"><span>값을 고치려면</span><b>고객관리카드의 미팅 일정에서 고칩니다</b></div></div>` : "";
+  const monthRecs = Object.values(s.perfAuto || {}).filter(x => x.ref === ref).map(x => Object.assign({ _auto: true }, x))
+    .concat(Object.values(s.perfMonthly).filter(x => x.ref === ref).map(x => Object.assign({ _old: !!b2bAuto(ref, x.month) }, x)));
+  const rows = monthRecs.sort((a, b) => a.month < b.month ? 1 : a.month > b.month ? -1 : a._auto ? -1 : 1).map(x => { const y = PC.rate(x), ws = isLead ? PC.workStats(tasks, x) : null; return `<tr><td>${x.month}</td><td>${PC.isNum(x.num) && PC.isNum(x.den) ? x.num + " / " + x.den : x.mode === "direct" ? "직접 입력" : "—"}</td><td>${y.state === "ok" ? b2bPct(y.value) + "%" : y.state === "empty" ? "대상 없음" : "미측정"}</td>${isLead ? `<td>${Math.round(ws.value || 0)}%</td>` : ""}<td>${x._auto ? "카드 자동" : escapeHtml(x.updatedBy || "") + (x._old ? " · 직접 입력(이전)" : "")}</td></tr>`; }).join("");
   const hist = Object.values(s.perfHistory).filter(h => h.ref === ref).sort((a, b) => a.at < b.at ? 1 : -1).slice(0, 20).map(h => `<div class="b2b-kv"><span>${escapeHtml((h.at || "").slice(0, 16).replace("T", " "))}</span><b>${escapeHtml(h.by || "")} · ${escapeHtml(h.summary || "")} ${escapeHtml((h.changes || []).map(c => c.f + " " + c.from + "→" + c.to).join(", "))}</b></div>`).join("");
   const team = s.mainKpis[ref] ? b2bTeamScore(def, month) : null;
   const teamScore = !team ? "" : team.state === "ok" ? b2bPct(team.value) + "%" : team.state === "empty" ? "대상 없음" : team.state === "wait" && (team.code === "unset" || team.code === "sum") ? "미확정" : "산출 대기";
   const memberScores = team ? b2bMembersOf(def).map(mid => { const v = b2bMemberScore(def, mid, month); return b2bMemberName(mid) + " " + (v.state === "ok" ? b2bPct(v.value) + "%" : v.state === "empty" ? "대상 없음" : "산출 대기"); }).join(" · ") : "";
   el.innerHTML = `${b2bIndRow(def)}
+    ${autoBox}
     <div class="ks-what"><div class="ks-what-t">무엇을 세나요?</div><div class="b2b-kv"><span>목표</span><b>${escapeHtml(def.denLabel || "대상 수")}</b></div><div class="b2b-kv"><span>현재 실적</span><b>${escapeHtml(def.numLabel || "완료 수")}</b></div><div class="b2b-kv"><span>달성률</span><b>현재 실적 ÷ 목표 × 100</b></div></div>
     ${isLead ? `<div class="b2b-kv" style="margin-top:8px;"><span>업무 진행률</span><b>${tasks.length ? Math.round(w.value) + "% · 완료 " + w.done + " / " + w.total : "세부업무 없음"} (달성률과 별개)</b></div>` : ""}
     <details style="margin-top:12px;"><summary class="b2b-sum">기준·계산식·설명</summary>

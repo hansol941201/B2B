@@ -233,6 +233,30 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       assert.ok(/조재연/.test(await p.locator('#kpi-root .member-chip.on').innerText()));
       await pick('신한솔');
     });
+    await t('카드 자동값(perfAuto): 표시·잠금, 직접 입력값은 이력으로 남고 화면은 자동값을 쓰지 않음', async () => {
+      const auto = { id: 'LI01_' + MONTH, ref: 'LI01', month: MONTH, mode: 'auto', num: 45, den: 50, source: '고객관리카드', rule: '카드 미팅 판정 · 유예 3일 · 등록 기한 14일 · 조율 기한 30일', computedAt: new Date().toISOString(),
+        counts: { done: 30, scheduled: 10, waiting: 5, missed: 2, late: 3, carried: 1, coord: 2, branch: 3, format: 1, exempt: 4 } };
+      const manual = { id: 'LI01_' + MONTH, ref: 'LI01', month: MONTH, mode: 'auto', num: 3, den: 5, updatedBy: '시험', rev: 1 };
+      await patchDb({ ['perfMonthly/LI01_' + MONTH]: manual, ['perfAuto/LI01_' + MONTH]: auto });
+      await p.reload(); await ready(p); await tab(p, 'kpi'); await pick('신한솔');
+      const card = await indText(p, 'LI01');
+      assert.ok(/90%/.test(card) && /카드 자동/.test(card), card);
+      assert.equal(await p.locator('.kpi-ind[data-ind="LI01"] .kmv.tgt').first().inputValue(), '50');
+      assert.ok(await p.locator('.kpi-ind[data-ind="LI01"] .kmv.tgt').first().getAttribute('readonly') !== null, '잠금');
+      await p.evaluate(() => b2bSetVal('LI01', 'num', { value: '1', dataset: {} }));
+      assert.ok(/자동으로 계산되는 지표/.test(await p.locator('#toast').innerText()));
+      await p.locator('.kpi-ind[data-ind="LI01"] .ks-more').click();
+      const b = await p.locator('#modal-kpi-body').innerText();
+      assert.ok(/고객관리카드 자동 계산/.test(b) && /누락\s*2건/.test(b) && /등록 지연\s*3건/.test(b), b.slice(0, 300));
+      await p.locator('#modal-kpi summary:has-text("월별 실적")').click();
+      assert.ok(/직접 입력\(이전\)/.test(await p.locator('#modal-kpi-body').innerText()));
+      await p.evaluate(() => closeModal());
+      await new Promise(r => setTimeout(r, 600));
+      const d = await db();
+      assert.deepStrictEqual(d.perfAuto['LI01_' + MONTH], auto, '자동값은 화면이 바꾸지 않음');
+      assert.deepStrictEqual(d.perfMonthly['LI01_' + MONTH], manual, '직접 입력값 유지');
+      assert.ok(!/90%/.test(await p.locator('.ks-sec.lag').innerText()), '후행지표에 섞이지 않음');
+    });
     /* 설정 */
     await t('설정: 가중치 저장, 팀원 삭제 보호, 담당 확인', async () => {
       await tab(p, 'settings');
