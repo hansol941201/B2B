@@ -42,7 +42,11 @@ once('<span class="brand-mark">서비스운영본부 업무 트래커</span>', '
 once('<span class="brand-sub">SERVICE OPS · TASK TRACKER</span>', '<span class="brand-sub">B2B OPS · TASK TRACKER</span>');
 once(`<div class="cloud-status" id="cloud-status" onclick="openFirebaseSettings()" title="클라우드 동기화 설정">`, `<div class="cloud-status" id="cloud-status" title="저장 상태">`);
 cut(`<button class="action-btn ghost sm" onclick="document.getElementById('import-file-top').click()"`, `<button class="action-btn project" onclick="openAddMenu()"`, '');
+/* 홈 = 통합 KPI 대시보드 바로가기(새 창). 대시보드는 다른 사이트 안에 표시할 수 없어(X-Frame-Options) 링크로 연다.
+   .tab 이 아닌 별도 클래스 — 참고 코드의 탭 전환(.tab → page-*)에 걸리지 않게 한다. */
+const HOME_URL = 'https://script.google.com/macros/s/AKfycbxVUyuJxCDL3BcYJmLzEiOFieKn14kUQKKfcPxwm8qN5PUHLWiLQG5EKhLI9ghafmFjSw/exec';
 cut('<div class="tabs">\n', '</div>\n</div>\n\n<!-- ============== MAIN', `<div class="tabs">
+    <a class="tab-link" id="tab-home" href="${HOME_URL}" target="_blank" rel="noopener" title="B2B 통합 KPI 대시보드를 새 창으로 엽니다">🏠 홈 <span class="tab-ext">↗</span></a>
     <button class="tab active" data-page="today">📅 오늘</button>
     <button class="tab" data-page="detail">👤 멤버별 상세</button>
     <button class="tab" data-page="kpi">🎯 KPI 체계</button>
@@ -122,6 +126,9 @@ once('</style>\n</head>', `
   #page-settings .form-card > div { min-width: 0; }
   @media (max-width: 640px) { #page-settings .form-card > div { grid-template-columns: 1fr !important; } }
   @media (max-width: 640px) { .b2b-search input, #kpi-month, .kmv, .b2b-kv input { font-size: 16px; } }
+  .tab-link { padding: 16px 22px; color: var(--accent); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; flex: none; }
+  .tab-link:hover { color: var(--ink); background: var(--accent-soft); }
+  .tab-ext { font-size: 12px; opacity: .7; }
   /* KPI 체계: 쉬운 카드 */
   .ks-month { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
   .ks-month select { min-height: 40px; }

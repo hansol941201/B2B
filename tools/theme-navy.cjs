@@ -25,6 +25,7 @@ function recolor(h) {
 
 /* 선 아이콘(24×24, 선 굵기 2) */
 const ICONS = {
+  home: '<path d="M3 10.5 12 3l9 7.5M5 9v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9"/>',
   calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
   users: '<circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1M16 4.1a4 4 0 0 1 0 7.8M22 21v-1a6 6 0 0 0-4-5.6"/>',
@@ -67,7 +68,7 @@ const ICONS = {
 };
 /* 이모지 → 아이콘 (dot-* 는 색 점) */
 const EMOJI = {
-  '📅': 'calendar', '🗓': 'calendar', '📆': 'calendar', '👤': 'user', '🙋': 'user', '👥': 'users', '🎯': 'target', '🧰': 'grid',
+  '🏠': 'home', '📅': 'calendar', '🗓': 'calendar', '📆': 'calendar', '👤': 'user', '🙋': 'user', '👥': 'users', '🎯': 'target', '🧰': 'grid',
   '📋': 'clipboard', '⚙': 'settings', '🚀': 'layers', '🔁': 'repeat', '🔄': 'repeat', '✅': 'check', '⏰': 'clock', '⏱': 'clock',
   '⏳': 'hourglass', '⚠': 'alert', '☁': 'cloud', '📁': 'folder', '🗑': 'trash', '✏': 'edit', '📎': 'clip', '💡': 'bulb', '❌': 'x',
   '📖': 'book', '📌': 'pin', '📊': 'chart', '🗺': 'map', '📄': 'file', '📥': 'download', '🖼': 'image', '🖨': 'printer',

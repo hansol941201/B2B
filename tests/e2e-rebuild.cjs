@@ -38,6 +38,13 @@ const indText = (p, id) => p.locator(`.kpi-ind[data-ind="${id}"]`).first().inner
       const names = (await p.locator('.tab').allInnerTexts()).map(s => s.replace(/[^가-힣A-Za-z·\s]/g, '').trim());
       assert.deepStrictEqual(names, ['오늘', '멤버별 상세', 'KPI 체계', '앱·도구 모음', '전체 업무 관리', '설정']);
     });
+    await t('홈 바로가기: 탭 줄 맨 앞, 통합 KPI 대시보드를 새 창으로, 화면 전환은 그대로', async () => {
+      const first = await p.locator('.tabs > *').first().evaluate(e => ({ id: e.id, href: e.getAttribute('href'), target: e.target, rel: e.rel, text: e.innerText.trim(), icon: !!e.querySelector('svg.ic-home') }));
+      assert.equal(first.id, 'tab-home'); assert.ok(/^홈/.test(first.text), first.text); assert.ok(first.icon, '선 아이콘');
+      assert.equal(first.href, 'https://script.google.com/macros/s/AKfycbxVUyuJxCDL3BcYJmLzEiOFieKn14kUQKKfcPxwm8qN5PUHLWiLQG5EKhLI9ghafmFjSw/exec');
+      assert.equal(first.target, '_blank'); assert.ok(/noopener/.test(first.rel));
+      assert.equal(await p.locator('.tab.active').getAttribute('data-page'), 'today', '기본 화면은 오늘');
+    });
     await t('팀원 3명과 담당자 ID 일치', async () => {
       const txt = await p.locator('#today-grid').innerText();
       ['박희선', '조재연', '신한솔'].forEach(n => assert.ok(txt.includes(n), n));
