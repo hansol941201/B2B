@@ -532,6 +532,7 @@ input:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0
 input.dirty,select.dirty{background:var(--peach);border-color:var(--brand)}
 .btn{display:inline-flex;align-items:center;gap:5px;background:var(--brand);color:#fff;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:700}
 .btn:hover{background:var(--ink)}
+.btn:disabled,.btn:disabled:hover{opacity:.45;cursor:not-allowed;background:var(--bg)}
 .btn.ghost{background:var(--bg);color:var(--brand);border:1px solid var(--line)}
 .btn.ghost:hover{background:var(--surf)}
 .btn.warnb{background:var(--bg);color:var(--bad);border:1px solid #EBCFCC}
@@ -4054,6 +4055,7 @@ var PerfCalc = (function () {
   /* ============================================================
      5. 관리
      ============================================================ */
+  var SEED_LOCK = "기준선으로 되돌리기";
   function pageAdmin() {
     var mem = D.members.map(function (m, i) {
       var np = D.projects.filter(function (x) { return x.owner === m.id; }).length;
@@ -4115,10 +4117,13 @@ var PerfCalc = (function () {
       '<div class="card"><div class="card-h"><h2>데이터</h2></div>' +
       '<div class="btnrow" style="margin-top:0"><button class="btn" id="btnExp">JSON 내보내기</button>' +
       '<button class="btn ghost" id="btnImp">JSON 가져오기</button>' +
-      '<button class="btn ghost" id="btnSeed">기준선으로 되돌리기</button>' +
       '<button class="btn warnb" id="btnWipe">업무·지표 값 비우기</button></div>' +
       '<input type="file" id="fileImp" accept="application/json" style="display:none">' +
-      '<div class="note"><b>업무·지표 값 비우기</b>는 구조와 지표 정의는 남기고 진행률·측정값·루틴 체크만 되돌립니다.</div></div>';
+      '<div class="note"><b>업무·지표 값 비우기</b>는 구조와 지표 정의는 남기고 진행률·측정값·루틴 체크만 되돌립니다.</div>' +
+      '<details class="disc"><summary>기준선으로 되돌리기 (잠김)</summary><div class="body">' +
+      '<div class="pf-warn">현재 팀원과 프로젝트가 처음 기본 데이터로 바뀝니다. 평소에는 쓰지 않습니다. 실행하려면 아래 칸에 <b>' + SEED_LOCK + '</b> 를 그대로 적어 주세요.</div>' +
+      '<label class="pf-f" style="margin:10px 0"><span>확인 문구</span><input type="text" id="seedUnlock" autocomplete="off" aria-label="기준선 되돌리기 확인 문구"></label>' +
+      '<button class="btn warnb" id="btnSeed" disabled>기준선으로 되돌리기</button></div></details></div>';
   }
 
   /* ============================================================
@@ -4599,7 +4604,10 @@ var PerfCalc = (function () {
       };
       r.readAsText(f);
     };
-    var e4 = $("#btnSeed"); if (e4) e4.onclick = function () {
+    var su = $("#seedUnlock"), e4 = $("#btnSeed");
+    if (su && e4) su.oninput = function () { e4.disabled = su.value.trim() !== SEED_LOCK; }; // 다시 그리면 다시 잠긴다
+    if (e4) e4.onclick = function () {
+      if (!su || su.value.trim() !== SEED_LOCK) return;
       if (!confirm("수정 내용을 버리고 기준선(" + SEED.meta.baseline + ") 상태로 되돌립니다. KPI·선행지표의 월별 실적과 이력은 그대로 둡니다. 계속할까요?")) return;
       D = pfNormalize(pfKeep(clone(SEED), D, true)); open = {}; jOpen = {}; auOpen = {}; pjEdit = null; save(); repaint(false); toast("기준선으로 되돌렸습니다");
     };
