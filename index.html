@@ -3134,6 +3134,39 @@
   .kd-sec:first-child { margin-top: 0; }
   .kd-h { font-size: 14px; font-weight: 800; color: var(--ink); padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
   .kd-table { overflow-x: auto; }
+  /* 성과 카드: 기준일 이후 상승한 팀 지표의 증감(%p)을 크게. 상세에 추진 활동·전후 지표·연결·한계·미집계 */
+  .kc.ach { border-top: 4px solid var(--success); }
+  .kc.ach .kc-pct { color: var(--success); }
+  .kt-rate.s-down { background: var(--warn-soft); color: var(--warn); }
+  .ach-goal { margin: 0 0 4px; font-size: 14px; font-weight: 600; color: var(--ink-2); line-height: 1.5; word-break: keep-all; }
+  .ach-acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ach-act { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-width: 0; }
+  .ach-act-h { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 14px; }
+  .ach-act-p { font-size: 12px; color: var(--muted); }
+  .ach-act-v { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+  .ach-act-v input { width: 100%; min-width: 0; height: 44px; font-family: var(--num); font-size: 16px; font-weight: 700; text-align: center; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  .ach-act-v input::placeholder { color: var(--muted); font-family: inherit; font-size: 14px; }
+  .ach-out { padding: 12px; border: 1px solid var(--line); border-radius: 12px; margin-top: 8px; background: var(--surface); }
+  .ach-out.up { border-left: 4px solid var(--success); }
+  .ach-out-h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; font-size: 14.5px; }
+  .ach-nums { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin: 10px 0 6px; text-align: center; }
+  .ach-side span, .ach-d span { display: block; font-size: 11.5px; font-weight: 700; color: var(--muted); }
+  .ach-side b { display: block; font-family: var(--num); font-size: 24px; font-weight: 800; color: var(--ink); }
+  .ach-side em { display: block; font-style: normal; font-family: var(--num); font-size: 12.5px; color: var(--ink-2); }
+  .ach-side i { display: block; font-style: normal; font-size: 11px; color: var(--muted); }
+  .ach-d b { font-family: var(--num); font-size: 17px; font-weight: 800; color: var(--muted); white-space: nowrap; }
+  .ach-out.up .ach-d b { color: var(--success); }
+  .ach-out.down .ach-d b { color: var(--warn); }
+  .ach-why { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 4px; overflow-wrap: anywhere; }
+  .ach-claim { font-size: 12.5px; font-weight: 700; padding: 8px 10px; border-radius: 10px; line-height: 1.5; }
+  .ach-claim.ok { background: var(--success-soft); color: var(--success); }
+  .ach-claim.bad { background: var(--warn-soft); color: var(--warn); }
+  .ach-p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-2); word-break: keep-all; }
+  .ach-ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .ach-open { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ach-open span { font-size: 12.5px; padding: 4px 10px; border-radius: 99px; background: var(--line-2); color: var(--ink-2); }
+  .ach-open b { color: var(--muted); font-weight: 800; }
+  @media (max-width: 640px) { .ach-acts { grid-template-columns: 1fr; } .ach-side b { font-size: 20px; } }
   @media (max-width: 640px) { .kc-grid, .kc-grid.ks-team { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .kc { min-height: 140px; padding: 14px 12px 12px; } .kc-pct { font-size: 34px; } }
   @media (max-width: 640px) { .ks-list { grid-template-columns: 1fr; } .ks-month { margin-left: 0; } .ks-item .ks-field .kmv { font-size: 18px; } }
 
@@ -8268,7 +8301,7 @@ async function autoReconnectFirebase() {
 const FB_URL = "https://b2b-task-tracker-39144-default-rtdb.asia-southeast1.firebasedatabase.app";
 const FB_PATH = "shared/b2bOpsTracker", FB_SDK_VER = "10.12.5", FB_POLL_MS = 2000;
 const FB_SINGLE = ["meta", "bid", "perfConfig"];
-const FB_BY_ID = ["members", "programs", "projects", "workKpis", "kpis", "automations", "links", "mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory", "routineChecks"];
+const FB_BY_ID = ["members", "programs", "projects", "workKpis", "kpis", "automations", "links", "mainKpis", "leadDefs", "lagDefs", "perfMonthly", "perfHistory", "routineChecks", "achievements"];
 const FB_BY_MEMBER = ["routines", "personal"];
 const KEY_PENDING_B2B = "netform.b2b.tracker.pending.v1", KEY_ACTOR_B2B = "netform.b2b.tracker.actor.v1";
 const PC = PerfCalc, TEAM_ID = "team_b2b";
@@ -8291,7 +8324,7 @@ function canon(v) {
 
 /* ---------- 원격 → 작업 데이터 ---------- */
 function b2bNormalize(s) {
-  ["members", "projects", "routines", "programs", "links", "automations", "perfMonthly", "perfHistory", "routineChecks", "perfAuto"].forEach(k => { if (!s[k]) s[k] = {}; });
+  ["members", "projects", "routines", "programs", "links", "automations", "perfMonthly", "perfHistory", "routineChecks", "perfAuto", "achievements"].forEach(k => { if (!s[k]) s[k] = {}; });
   const bySeed = (col, keyList) => { (PERF_SEED[col] || []).forEach(x => { if (!s[col][x.id]) s[col][x.id] = copy(x); }); };
   ["mainKpis", "leadDefs", "lagDefs"].forEach(c => { if (!s[c]) s[c] = {}; bySeed(c); });
   if (!s.perfConfig) s.perfConfig = copy(PERF_SEED.perfConfig);
@@ -8462,6 +8495,7 @@ function b2bApplyRemote(raw) {
   if (b2bActive()) { B2B.deferred = true; return; } // 입력 중인 칸을 빼앗지 않는다
   renderAll();
   if (UI.b2bInd && !UI.b2bIndDirty) b2bDrawInd();
+  if (UI.b2bAch && !$("modal-kpi-body").contains(document.activeElement)) b2bDrawAch();
 }
 document.addEventListener("focusout", () => { setTimeout(() => { if (B2B.deferred && !b2bActive()) { B2B.deferred = false; renderAll(); } }, 0); });
 function b2bPollTick() {
@@ -8682,14 +8716,35 @@ function b2bAvgLine(label, defs) {
   const a = b2bAvg(defs);
   return `<div class="kc-avg">${label} <b>${a ? a.pct + "%" : "—"}</b><span>${a ? `측정된 ${a.n}/${a.of}개 평균 · 100% 넘는 값은 100%로` : "아직 측정된 지표가 없어요"}</span></div>`;
 }
+/* 팀원 성과 카드(2026-11-03 사용자 지시, 조재연 팀장) — 개인 KPI 목표 글 대신 추진 활동과 기준일 전후로 관찰된 팀 지표를 한 카드로 묶는다.
+   전후 값은 통합 KPI 대시보드 계산과 대조해 저장한 분자·분모만 두고 비율·증감은 화면에서 다시 계산한다(대시보드와 같이 각 비율을 소수 첫째 자리로 맞춘 뒤 뺀다).
+   감소했거나 이전 분모가 대시보드 비교 기준(minDen)보다 적은 지표는 성과로 표시하지 않는다.
+   확인되지 않은 활동 수치·목표·기여율은 만들지 않고 '미집계'로 둔다. 팀 KPI 실적·평균 진척률에는 쓰지 않는다. */
+function b2bMd(d) { const m = String(d || "").match(/^\d{4}-(\d{2})-(\d{2})/); return m ? +m[1] + "/" + +m[2] : ""; }
+function b2bAchPct(x) { return x && x.den ? PC.round1(x.num / x.den * 100) : null; }
+function b2bAchCmp(o) {
+  const b = b2bAchPct(o.before), a = b2bAchPct(o.after), ok = b !== null && a !== null && o.before.den >= (o.minDen || 5), d = ok ? PC.round1(a - b) : null;
+  return { b, a, d, verdict: !ok ? "na" : d > 0 ? "up" : d < 0 ? "down" : "flat" };
+}
+function b2bAchTop(x) { return (x.outcomes || []).map(o => Object.assign({ o }, b2bAchCmp(o))).filter(c => c.verdict === "up").sort((p, q) => q.d - p.d)[0] || null; }
+function b2bAchCard(x) {
+  const top = b2bAchTop(x);
+  return `<button class="kc ach" data-ach="${x.id}" onclick="b2bOpenAch('${x.id}')">
+    <span class="kc-tag">성과 · ${escapeHtml(b2bMd(x.base))} 이후 · 팀 변화</span>
+    <span class="kc-pct">${top ? "+" + top.d + "<small>%p</small>" : "상승 확인 전"}</span>
+    <span class="kc-desc">${escapeHtml(x.title)}</span>
+    <span class="kc-foot">${top ? escapeHtml(top.o.name) + ` <b>${top.b}% → ${top.a}%</b>` : '<b class="txt">상승이 확인된 지표 없음</b>'}</span>
+  </button>`;
+}
 function b2bMemberSection(mid) {
   const s = B2B.shape, byId = (a, b) => a.id < b.id ? -1 : 1, name = escapeHtml(b2bMemberName(mid));
   const leads = Object.values(s.leadDefs).filter(l => l.member === mid).sort((a, b) => (B2B_LEAD_KIND[a.id] !== "exec") - (B2B_LEAD_KIND[b.id] !== "exec") || byId(a, b));
-  const lags = Object.values(s.lagDefs).filter(g => g.member === mid).sort(byId);
-  if (!leads.length && !lags.length) return `<div class="ks-empty">아직 ${name}님의 지표가 없어요.</div>`;
+  const lags = Object.values(s.lagDefs).filter(g => g.member === mid).sort(byId), achs = Object.values(s.achievements).filter(x => x.member === mid).sort(byId);
+  if (!leads.length && !lags.length && !achs.length) return `<div class="ks-empty">아직 ${name}님의 지표가 없어요.</div>`;
   const group = (cls, title, help, label, list) => list.length ? `<div class="ks-sec ${cls}"><div class="ks-h">${title} <span>${help}</span></div>
     <div class="kc-grid">${list.map(d => b2bCard(d, cls)).join("")}</div>${b2bAvgLine(label, list)}</div>` : "";
-  return group("lead", name + " 선행지표", "직접 하는 일 · 실행과 운영 지원", "선행지표 평균 진척률", leads) +
+  return (achs.length ? `<div class="ks-sec ach"><div class="ks-h">${name} 성과 <span>추진 활동 이후 관찰된 팀 변화 · 개인 단독 효과로 보지 않음</span></div><div class="kc-grid">${achs.map(b2bAchCard).join("")}</div></div>` : "") +
+    group("lead", name + " 선행지표", "직접 하는 일 · 실행과 운영 지원", "선행지표 평균 진척률", leads) +
     group("lag", name + " 후행지표", "관리한 업체에서 생긴 변화 · 개인 평가 점수 아님", "후행지표 평균 진척률", lags);
 }
 renderKpiPage = function () {
@@ -8700,7 +8755,7 @@ renderKpiPage = function () {
   if ($("kpi-updated")) $("kpi-updated").textContent = month;
   const kpis = Object.values(s.mainKpis).sort((a, b) => a.id < b.id ? -1 : 1);
   const chips = Object.values(s.members).sort((a, b) => a.id < b.id ? -1 : 1).map(m => {
-    const n = Object.values(s.leadDefs).concat(Object.values(s.lagDefs)).filter(d => d.member === m.id).length;
+    const n = Object.values(s.leadDefs).concat(Object.values(s.lagDefs), Object.values(s.achievements)).filter(d => d.member === m.id).length;
     return `<button class="member-chip ${m.id === mid ? "on" : ""}" data-kpi-member="${m.id}" onclick="b2bSetKpiMember('${m.id}')"><span class="chip-dot" style="background:${m.color || "#1B4480"};"></span>${escapeHtml(String(m.name || "").trim())}<span class="chip-count">${n}</span></button>`;
   }).join("");
   root.innerHTML = `<div class="ks-h">🎯 팀 공통 KPI ${kpis.length}개 <span>최상위 목표 · 카드를 누르면 상세보기</span></div>
@@ -8711,6 +8766,20 @@ renderKpiPage = function () {
 };
 function b2bNowMonth() { const d = new Date(), m = d.getMonth() + 1; return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m; }
 
+/* 상세 창을 다시 그려도 커서가 사용자가 옮겨 가던 입력칸에 남게 한다(목표 → 현재 실적, 활동 집계 칸 사이 이동).
+   값 저장(change)은 커서가 옮겨 가기 전에 일어나므로 누른 칸·Tab 방향을 미리 기억해 두고, 다시 그린 뒤 restore() 로 돌려준다. */
+function b2bKeepFocus(el) {
+  if (!el.dataset.focusKeep) {
+    el.dataset.focusKeep = "1";
+    const idx = t => [...el.querySelectorAll("input")].indexOf(t);
+    el.addEventListener("pointerdown", e => { UI.b2bFocusTo = { i: idx(e.target), at: Date.now() }; });
+    el.addEventListener("keydown", e => { if (e.key === "Tab" && idx(e.target) >= 0) UI.b2bFocusTo = { i: idx(e.target) + (e.shiftKey ? -1 : 1), at: Date.now() }; });
+  }
+  const to = UI.b2bFocusTo && Date.now() - UI.b2bFocusTo.at < 1000 ? UI.b2bFocusTo.i : -1;
+  const at = to >= 0 ? to : el.contains(document.activeElement) ? [...el.querySelectorAll("input")].indexOf(document.activeElement) : -1;
+  UI.b2bFocusTo = null;
+  return () => { const back = at >= 0 && el.querySelectorAll("input")[at]; if (back && !back.readOnly) back.focus(); };
+}
 /* 지표 상세 창 */
 function b2bOpenInd(ref) { closeModal(); UI.b2bInd = ref; $("modal-kpi").classList.add("open"); UI.modalOpen = "kpi"; b2bDrawInd(); }
 function b2bDrawInd() {
@@ -8735,17 +8804,7 @@ function b2bDrawInd() {
     : kv("연결 팀 KPI", kl || lagKpi) + kv("연결 프로젝트", projs ? projs + " (진행률 합산 안 함)" : "") +
       (isLead ? `<div class="b2b-kv"><span>업무 진행률</span><b>${tasks.length ? Math.round(w.value) + "% · 완료 " + w.done + " / " + w.total : "세부업무 없음"} (달성률과 별개)</b></div>
       <div class="subtask-container" style="margin-top:8px;"><div class="subtask-head"><span>📎 세부업무</span><span style="font-family:var(--num); font-weight:800;">${w.done}/${w.total}</span></div><div class="subtask-list">${subs}</div><div class="subtask-add"><input type="text" id="b2b-sub-add" placeholder="세부업무 추가" onkeydown="if(event.key==='Enter')b2bSubAdd('${ref}')"><button onclick="b2bSubAdd('${ref}')">+ 추가</button></div></div>` : "");
-  // 목표를 넣고 현재 실적 칸을 누르거나 Tab 으로 넘어가면, 저장 후 다시 그려도 그 칸에 커서가 가게 한다.
-  // 값 저장(change)은 커서가 옮겨 가기 전에 일어나므로 누른 칸·Tab 방향을 미리 기억해 둔다.
-  if (!el.dataset.focusKeep) {
-    el.dataset.focusKeep = "1";
-    const idx = t => [...el.querySelectorAll("input")].indexOf(t);
-    el.addEventListener("pointerdown", e => { UI.b2bFocusTo = { i: idx(e.target), at: Date.now() }; });
-    el.addEventListener("keydown", e => { if (e.key === "Tab" && idx(e.target) >= 0) UI.b2bFocusTo = { i: idx(e.target) + (e.shiftKey ? -1 : 1), at: Date.now() }; });
-  }
-  const to = UI.b2bFocusTo && Date.now() - UI.b2bFocusTo.at < 1000 ? UI.b2bFocusTo.i : -1;
-  const focusAt = to >= 0 ? to : el.contains(document.activeElement) ? [...el.querySelectorAll("input")].indexOf(document.activeElement) : -1;
-  UI.b2bFocusTo = null;
+  const restore = b2bKeepFocus(el);
   el.innerHTML = sec("목표 · 현재 실적", b2bIndRow(def) + autoBox) +
     sec("계산식", `<div class="b2b-kv"><span>목표</span><b>${escapeHtml(def.denLabel || "대상 수")}</b></div><div class="b2b-kv"><span>현재 실적</span><b>${escapeHtml(def.numLabel || "완료 수")}</b></div><div class="b2b-kv"><span>달성률</span><b>${escapeHtml(def.formula || "현재 실적 ÷ 목표 × 100")}</b></div>${kv("집계 범위", def.scope)}`) +
     sec("설명", `${kv("관리 목적", def.purpose)}${kv("측정 항목", def.measure)}${kv("목표 설명", def.targetText)}${kv("참고", def.outcome || def.defNote)}${kv("데이터", (def.src || "") + (def.linkNote ? " · " + def.linkNote : ""))}
@@ -8753,11 +8812,61 @@ function b2bDrawInd() {
     sec("월별 기록", rows ? `<div class="kd-table"><table class="table"><thead><tr><th>월</th><th>실적</th><th>달성률</th>${isLead ? "<th>업무 진행률</th>" : ""}<th>입력</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<div class="empty-small">아직 저장된 실적이 없습니다.</div>') +
     sec("관련 업무", related || '<div class="empty-small">연결된 업무가 없습니다.</div>') +
     `<details style="margin-top:8px;"><summary class="b2b-sum">변경 이력</summary>${hist || '<div class="empty-small">변경 이력이 없습니다.</div>'}</details>`;
-  const back = focusAt >= 0 && el.querySelectorAll("input")[focusAt];
-  if (back && !back.readOnly) back.focus();
+  restore();
 }
 const _closeModal = closeModal;
-closeModal = function () { UI.b2bInd = null; _closeModal(); const b = $("modal-kpi-body"); if (b) b.innerHTML = ""; }; // 닫힌 창에 지표 입력칸이 남아 겹치지 않게 비운다
+closeModal = function () { UI.b2bInd = null; UI.b2bAch = null; _closeModal(); const b = $("modal-kpi-body"); if (b) b.innerHTML = ""; }; // 닫힌 창에 지표 입력칸이 남아 겹치지 않게 비운다
+
+/* 성과 카드 상세 — 추진 활동 · 기준일 전후 지표 · 활동과 성과의 연결 · 한계 · 미집계 · 근거 */
+function b2bOpenAch(id) { closeModal(); UI.b2bAch = id; $("modal-kpi").classList.add("open"); UI.modalOpen = "kpi"; b2bDrawAch(); }
+function b2bDrawAch() {
+  const s = B2B.shape, x = UI.b2bAch && s.achievements[UI.b2bAch], el = $("modal-kpi-body");
+  if (!x || !el) return;
+  const day = d => String(d || "").slice(2).replace(/-/g, "."), md = b2bMd(x.base), num = v => PC.isNum(v) ? v : "—";
+  $("modal-kpi-title").textContent = x.title;
+  $("modal-kpi-sub").textContent = b2bMemberName(x.member) + " · 성과 · 기준일 " + x.base;
+  const sec = (title, body) => `<div class="kd-sec"><div class="kd-h">${title}</div>${body}</div>`;
+  const kv = (k, v) => v ? `<div class="b2b-kv"><span>${k}</span><b>${escapeHtml(v)}</b></div>` : "";
+  const VERD = { up: ["상승", "s-done"], down: ["감소 · 성과로 보지 않음", "s-down"], flat: ["변화 없음", "s-todo"], na: ["비교 불가", "s-todo"] };
+  const acts = (x.activities || []).map((a, i) => `<div class="ach-act"><div class="ach-act-h"><span class="kt-kind exec">추진 활동</span><b>${escapeHtml(a.name)}</b></div><div class="ach-act-p">${escapeHtml(a.period || "")}</div>
+    <label class="ach-act-v"><span>${escapeHtml(a.metric || "집계값")}</span><input type="number" min="0" step="1" inputmode="numeric" class="ach-in" data-act="${i}" value="${PC.isNum(a.value) ? a.value : ""}" placeholder="미집계" onchange="b2bAchSetAct('${x.id}',${i},this)"></label></div>`).join("");
+  const outs = (x.outcomes || []).map(o => {
+    const c = b2bAchCmp(o), v = VERD[c.verdict], u = o.unit || "곳";
+    const side = (lbl, p, r) => `<div class="ach-side"><span>${lbl}</span><b>${p === null ? "—" : p + "%"}</b><em>${num(r.num)} / ${num(r.den)}${u}</em><i>${day(r.from)}~${day(r.to)}</i></div>`;
+    const parts = (o.parts || []).map(p => `${escapeHtml(p.name)} ${p.before}→${p.after}${u}`).join(" · ");
+    return `<div class="ach-out ${c.verdict}" data-out="${o.ref}"><div class="ach-out-h"><b>${escapeHtml(o.name)}</b><span class="kt-rate ${v[1]}">${v[0]}</span></div>
+      <div class="ach-nums">${side(md + " 전", c.b, o.before)}<div class="ach-d"><span>증감</span><b>${c.d === null ? "—" : (c.d > 0 ? "+" : "") + c.d + "%p"}</b></div>${side(md + " 후", c.a, o.after)}</div>
+      <div class="ach-why">분자: ${escapeHtml(o.numLabel || "")} · 분모: ${escapeHtml(o.denLabel || "")}</div>
+      ${parts ? `<div class="ach-why">세부: ${parts}</div>` : ""}
+      ${c.verdict === "na" ? `<div class="ach-why">이전 분모 ${num(o.before.den)}${u}로 대시보드 비교 기준(${o.minDen}${u} 이상)에 못 미쳐 증감을 보지 않습니다.</div>` : ""}</div>`;
+  }).join("");
+  const cl = x.claim, cc = cl && (x.outcomes || []).find(o => o.ref === cl.ref), cm = cc && b2bAchCmp(cc);
+  const claim = cm ? `<div class="ach-claim ${cm.b === cl.before && cm.a === cl.after && cm.d === cl.delta ? "ok" : "bad"}">${escapeHtml(cl.from || "제시 수치")} ${cl.before}% → ${cl.after}% (+${cl.delta}%p) — 원본 계산 ${cc.before.num}/${cc.before.den} → ${cc.after.num}/${cc.after.den} 과 ${cm.b === cl.before && cm.a === cl.after && cm.d === cl.delta ? "일치" : "불일치 · 확인 필요"}</div>` : "";
+  const open = (x.activities || []).filter(a => !PC.isNum(a.value)).map(a => a.metric || a.name).concat(["성과 목표", "팀장 개인 기여율"]);
+  const hist = Object.values(s.perfHistory).filter(h => h.ref === x.id).sort((a, b) => a.at < b.at ? 1 : -1).slice(0, 20).map(h => `<div class="b2b-kv"><span>${escapeHtml((h.at || "").slice(0, 16).replace("T", " "))}</span><b>${escapeHtml(h.by || "")} · ${escapeHtml(h.summary || "")} ${escapeHtml((h.changes || []).map(c => c.f + " " + c.from + "→" + c.to).join(", "))}</b></div>`).join("");
+  const restore = b2bKeepFocus(el);
+  el.innerHTML = (x.goal ? `<p class="ach-goal">${escapeHtml(x.goal)}</p>` : "") +
+    sec("추진 활동", `<div class="ach-acts">${acts}</div><div class="ach-why">숫자는 기록이 확인될 때만 넣습니다. 비어 있으면 미집계입니다.</div>`) +
+    sec(md + " 전후 지표", claim + outs) +
+    sec("활동과 성과의 연결", `<p class="ach-p">${escapeHtml(x.link || "")}</p>`) +
+    sec("한계", `<ul class="ach-ul">${(x.limits || []).map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ul>`) +
+    sec("미집계", `<div class="ach-open">${open.map(t => `<span>${escapeHtml(t)} <b>미집계</b></span>`).join("")}</div>`) +
+    sec("근거", kv("출처", x.source) + kv("확인", [x.checkedAt, x.checkedBy].filter(Boolean).join(" · "))) +
+    `<details style="margin-top:8px;"><summary class="b2b-sum">변경 이력</summary>${hist || '<div class="empty-small">변경 이력이 없습니다.</div>'}</details>`;
+  restore();
+}
+function b2bAchSetAct(id, i, el) {
+  const x = B2B.shape.achievements[id], a = x && (x.activities || [])[i];
+  if (!a) return;
+  const raw = (el.value || "").trim(), val = raw === "" ? null : Number(raw);
+  if (val !== null && (!Number.isInteger(val) || val < 0)) { toast("0 이상의 정수를 입력해 주세요"); b2bDrawAch(); return; }
+  const old = PC.isNum(a.value) ? a.value : null;
+  if (old === val) return;
+  if (val === null) delete a.value; else a.value = val;
+  x.rev = (x.rev || 0) + 1; x.updatedAt = new Date().toISOString(); x.updatedBy = b2bActor("");
+  b2bHist({ ref: id, kind: "ach", by: x.updatedBy, summary: "추진 활동 집계 변경", changes: [{ f: a.metric || a.name, from: old === null ? "미집계" : String(old), to: val === null ? "미집계" : String(val) }] });
+  b2bFlush(); renderKpiPage(); b2bDrawAch();
+}
 
 /* ---------- 앱·도구 모음: 업무 자동화 목록도 함께 표시 ---------- */
 const _renderAutomationPage = renderAutomationPage;

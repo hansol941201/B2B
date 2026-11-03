@@ -7,15 +7,15 @@ function t(name, fn) { try { fn(); pass++; results.push('성공 ' + name); } cat
 
 const AT = Date.UTC(2026, 10, 2, 11, 0, 0); // 2026-11-02 20:00 KST
 // 대시보드 결과(analyze.js OUT.kpi3) 모양 — 업체명이 든 todo 목록도 실제처럼 넣어 전송되지 않는지 본다
-const KPI3 = { base: '2026-05-20', obs: 60, per: { after: { from: '2026-05-20', to: '2026-11-02' } },
+const KPI3 = { base: '2026-05-20', obs: 60, per: { before: { from: '2025-12-05', to: '2026-05-19' }, after: { from: '2026-05-20', to: '2026-11-02' } },
   k1: { before: { n: 30, done: 23, hit: 9, open: 0, openHit: 0 }, after: { n: 25, done: 17, hit: 3, open: 8, openHit: 2 } },
-  k2: { before: { done: 19 }, after: { n: 18, done: 16, active: 10, open: 2, openActive: 1 } },
+  k2: { before: { n: 20, done: 19, active: 4, site: 3, plat: 1 }, after: { n: 18, done: 16, active: 10, site: 6, plat: 7, open: 2, openActive: 1 } },
   k3: { before: { n: 0 }, after: { n: 1014, sure: 19, cand: 7, sameDay: 3 } },
   todo: { k1open: [['비밀업체', '2026-10-20', 10]], k1miss: [['다른업체', '2026-08-01']] } };
 function env({ cache = { meta: { at: AT, computedAt: '2026-11-02 20:00:00' }, json: JSON.stringify({ kpi3: KPI3 }) }, code = 200 } = {}) {
   const writes = [];
   const ctx = vm.createContext({ Date, JSON, Math, Object, Array, String, Number, console: { log() {} },
-    readCache_: () => cache,
+    readCache_: () => cache, staffOnly_: () => {}, // 대시보드 프로젝트에 이미 있는 직원 확인 함수(편집기에서 추가됨)
     Utilities: { formatDate: (d, tz, f) => { const p = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit' }).formatToParts(d); return p.find(x => x.type === 'year').value + '-' + p.find(x => x.type === 'month').value; } },
     UrlFetchApp: { fetch: (url, opt) => { writes.push({ url, opt }); return { getResponseCode: () => code }; } } });
   const before = new Set(Object.keys(ctx));
@@ -34,6 +34,14 @@ t('대시보드 첫 화면과 같은 분자·분모: ① 3/17 · ② 10/16 · �
   assert.equal(g('MK3').num, 19); assert.equal(g('MK3').den, 1014); assert.equal(g('MK3').counts.cand, 7);
   assert.equal(g('MK1').mode, 'auto'); assert.equal(g('MK1').source, '통합 KPI 대시보드');
   assert.equal(e.writes[0].opt.method, 'patch'); assert.ok(/b2b-task-tracker-39144/.test(e.writes[0].url));
+});
+t('기준일 전후 비교(cmp): 대시보드 KPI 관리의 이전·이후와 같은 분자·분모·기간', () => {
+  const e = env(); e.ctx.trackerPushRun(); const body = JSON.parse(e.writes[0].opt.payload);
+  const c2 = body['perfAuto/MK2_2026-11'].cmp;
+  assert.equal(JSON.stringify(c2), JSON.stringify({ base: '2026-05-20', before: { num: 4, den: 19, site: 3, plat: 1, from: '2025-12-05', to: '2026-05-19' }, after: { num: 10, den: 16, site: 6, plat: 7, from: '2026-05-20', to: '2026-11-02' } }));
+  const c1 = body['perfAuto/MK1_2026-11'].cmp; assert.equal(c1.before.num, 9); assert.equal(c1.before.den, 23); assert.equal(c1.after.num, 3); assert.equal(c1.after.den, 17);
+  const c3 = body['perfAuto/MK3_2026-11'].cmp; assert.equal(c3.before.den, 0); assert.equal(c3.after.num, 19);
+  assert.equal(body['perfAuto/MK2_2026-11'].num, 10, '이후 값은 그대로');
 });
 t('업체명(todo 목록)은 보내지 않음', () => { const e = env(); e.ctx.trackerPushRun(); const p = e.writes[0].opt.payload; assert.ok(!p.includes('비밀업체') && !p.includes('다른업체')); });
 t('점검 실행은 쓰지 않음', () => { const e = env(); const r = e.ctx.trackerPushCheck(); assert.ok(r.ok); assert.equal(e.writes.length, 0); assert.equal(JSON.stringify(Array.from(r.values)), JSON.stringify(['MK1 3/17', 'MK2 10/16', 'MK3 19/1014'])); });

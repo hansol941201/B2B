@@ -295,6 +295,63 @@ const setInd = async (p, id, tgt, cur) => {
       assert.ok(b.includes(MONTH) && b.includes(PREV), b.slice(0, 200));
       await p.evaluate(() => closeModal());
     });
+    /* 조재연 성과 카드 — 기록은 tools/achievements/ACH_m2_sales.json(운영에 넣는 것과 같은 파일) */
+    const ACH = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'tools', 'achievements', 'ACH_m2_sales.json'), 'utf8'));
+    let achBase = null;
+    await t('조재연 성과 카드: 큰 증감(%p)·이름·전후 비율, 지표를 새로 만들지 않음', async () => {
+      await patchDb({ ['achievements/' + ACH.id]: ACH });
+      achBase = await db();
+      await p.reload(); await ready(p); await tab(p, 'kpi'); await pick('조재연');
+      const card = await p.locator('#kpi-member-view .kc.ach').innerText();
+      assert.ok(/\+41\.4%p/.test(card) && /영업체계 개선 및 협력사 활성화 성과/.test(card) && /21\.1% → 62\.5%/.test(card) && /5\/20 이후/.test(card), card);
+      assert.ok(/조재연\s*1/.test(await p.locator('#kpi-root .member-chip:has-text("조재연")').innerText()), '팀원 칩에 1개');
+      assert.ok(/단독 효과로 보지 않음/.test(await p.locator('#kpi-member-view').innerText()));
+      assert.equal(await p.locator('#kpi-member-view .kc:not(.ach)').count(), 0, '조재연 선행·후행 지표는 새로 만들지 않음');
+      assert.ok(!/41\.4/.test(await p.locator('.ks-team').innerText() + await p.locator('#kpi-root > .kc-avg').innerText()), '팀 KPI·팀 평균에 섞지 않음');
+    });
+    await t('성과 상세: 추진 활동 3개(미집계)·전후 지표(분자/분모·기간·근거)·감소와 비교 불가는 성과 아님·제시 수치 일치', async () => {
+      await p.click('#kpi-member-view .kc.ach'); await p.waitForSelector('#modal-kpi.open .ach-act');
+      assert.deepStrictEqual(await p.locator('#modal-kpi .kd-h').allInnerTexts(), ['추진 활동', '5/20 전후 지표', '활동과 성과의 연결', '한계', '미집계', '근거']);
+      const acts = await p.locator('#modal-kpi .ach-act').allInnerTexts();
+      assert.equal(acts.length, 3); ['질문지 개편·보완', '팀 구성·역할 배정', '시공사 직접 전화'].forEach((n, i) => assert.ok(acts[i].includes(n) && acts[i].includes('추진 활동'), n));
+      assert.deepStrictEqual(await p.locator('#modal-kpi .ach-in').evaluateAll(a => a.map(e => e.value + '|' + e.placeholder)), ['|미집계', '|미집계', '|미집계']);
+      const up = await p.locator('#modal-kpi .ach-out[data-out="MK2"]').innerText();
+      ['상승', '21.1%', '62.5%', '+41.4%p', '4 / 19곳', '10 / 16곳', '25.12.03~26.05.19', '26.05.20~26.11.03', '분자', '분모', '새 현장 등록 업체 4→10곳'].forEach(w => assert.ok(up.includes(w), w + ' 없음: ' + up));
+      assert.equal(await p.locator('#modal-kpi .ach-out[data-out="MK2"]').getAttribute('class'), 'ach-out up');
+      const down = await p.locator('#modal-kpi .ach-out[data-out="MK1"]').innerText();
+      assert.ok(/감소 · 성과로 보지 않음/.test(down) && /34\.6%/.test(down) && /17\.6%/.test(down) && /-17%p/.test(down) && /9 \/ 26곳/.test(down), down);
+      const na = await p.locator('#modal-kpi .ach-out[data-out="MK3"]').innerText();
+      assert.ok(/비교 불가/.test(na) && /0 \/ 7건/.test(na) && /30건 이상/.test(na), na);
+      assert.ok(/일치/.test(await p.locator('#modal-kpi .ach-claim.ok').innerText()), '첨부 수치와 원본 계산 일치');
+      const b = await p.locator('#modal-kpi-body').innerText();
+      ['전화 건수 미집계', '개편 질문지 적용 업체 수 미집계', '성과 목표 미집계', '팀장 개인 기여율 미집계', '단독 효과로 보지 않고', '비교 신뢰도 낮음', '통합 KPI 대시보드'].forEach(w => assert.ok(b.includes(w), w));
+      assert.ok(!/기여율\s*\d|기여도\s*\d/.test(b), '기여율 숫자를 만들지 않음');
+      await p.evaluate(() => closeModal());
+    });
+    await t('성과 상세: 활동 집계 입력은 저장·다른 화면 동기화·새로고침 후 유지, 정수만, 비우면 미집계', async () => {
+      const o = await newPage(browser); await open(o); await tab(o, 'kpi'); await o.click('#kpi-root .member-chip:has-text("조재연")'); await o.click('#kpi-member-view .kc.ach'); await o.waitForSelector('#modal-kpi.open .ach-act');
+      await p.click('#kpi-member-view .kc.ach'); await p.waitForSelector('#modal-kpi.open .ach-act');
+      const box = '#modal-kpi .ach-in[data-act="2"]';
+      await p.fill(box, '120'); await p.press(box, 'Tab');
+      const x = await until(async () => { const d = (await db()).achievements[ACH.id]; return d.activities[2].value === 120 ? d : false; });
+      assert.equal(x.activities[0].value, undefined, '다른 활동은 미집계 그대로'); assert.ok(x.rev >= 1 && x.updatedAt);
+      assert.ok(Object.values((await db()).perfHistory).some(h => h.ref === ACH.id && /전화 건수/.test(JSON.stringify(h.changes))), '변경 이력');
+      await until(async () => (await o.inputValue(box)) === '120', 10000); // 다른 화면에도 반영
+      await o.context().close();
+      await p.evaluate(() => closeModal()); await p.reload(); await ready(p); await tab(p, 'kpi'); await pick('조재연');
+      await p.click('#kpi-member-view .kc.ach'); await p.waitForSelector('#modal-kpi.open .ach-act');
+      assert.equal(await p.inputValue(box), '120', '새로고침 후 유지');
+      assert.ok(!/전화 건수 미집계/.test(await p.locator('#modal-kpi .ach-open').innerText()));
+      await p.fill(box, '1.5'); await p.press(box, 'Tab'); await new Promise(r => setTimeout(r, 300));
+      assert.ok(/정수/.test(await p.locator('#toast').innerText())); assert.equal((await db()).achievements[ACH.id].activities[2].value, 120);
+      await p.fill(box, ''); await p.press(box, 'Tab');
+      await until(async () => (await db()).achievements[ACH.id].activities[2].value === undefined);
+      assert.ok(/전화 건수 미집계/.test(await p.locator('#modal-kpi .ach-open').innerText()));
+      await p.evaluate(() => closeModal());
+      const d = await db();
+      ['mainKpis', 'leadDefs', 'lagDefs', 'members', 'perfMonthly', 'perfAuto', 'projects', 'routines'].forEach(k => assert.deepStrictEqual(d[k], achBase[k], k + ' 바뀜'));
+      await pick('신한솔');
+    });
     await t('팀원 선택은 새로고침 후에도 유지', async () => {
       await pick('조재연'); await p.reload(); await ready(p); await tab(p, 'kpi');
       assert.ok(/조재연/.test(await p.locator('#kpi-root .member-chip.on').innerText()));
@@ -408,6 +465,11 @@ const setInd = async (p, id, tgt, cur) => {
         await m.screenshot({ path: path.join(outDir, `모바일${w}_kpi_신한솔.png`), fullPage: true });
         const o2 = await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         assert.ok(o2 <= 0, '개인 지표 넘침 ' + o2);
+        await m.tap('#kpi-root .member-chip:has-text("조재연")'); await m.tap('#kpi-member-view .kc.ach'); await m.waitForSelector('#modal-kpi.open .ach-act');
+        const o3 = await m.evaluate(() => { const b = document.getElementById('modal-kpi-body'); return [document.documentElement.scrollWidth - document.documentElement.clientWidth, b.scrollWidth - b.clientWidth]; });
+        assert.ok(o3[0] <= 0 && o3[1] <= 0, '성과 상세 넘침 ' + o3);
+        await m.screenshot({ path: path.join(outDir, `모바일${w}_조재연_성과.png`) });
+        await m.evaluate(() => closeModal()); await m.tap('#kpi-root .member-chip:has-text("신한솔")');
       });
       await m.context().close();
     }
