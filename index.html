@@ -8587,7 +8587,10 @@ function b2bRec(ref, month) { return B2B.shape.perfMonthly[ref + "_" + month] ||
    자동값이 있는 달은 그 값을 보여 주고, 같은 달의 직접 입력값(perfMonthly)은 지우지 않고 이력으로 남긴다. */
 function b2bAuto(ref, month) { return (B2B.shape.perfAuto || {})[ref + "_" + month] || null; }
 function b2bView(ref, month) { return b2bAuto(ref, month) || b2bRec(ref, month); }
-function b2bRate(ref, month) { return PC.rate(b2bView(ref, month)); }
+/* 팀 3대 KPI 공식 확인분 값(kpiOfficial, 고객관리카드 B2B KPI 탭·팀원 안내서와 같은 숫자) — 있으면 팀 KPI 실적으로 쓴다(이 화면은 읽기만, 저장 안 함) */
+function b2bOfficial(ref) { const it = ((B2B.shape && B2B.shape.kpiOfficial) || {}).items || {}; return it[ref] && PC.isNum(it[ref].value) ? it[ref] : null; }
+const B2B_KPI_ORDER = { MK1: 1, MK3: 2, MK2: 3 }; // KPI1 신규 협약 활용 · KPI2 문의별 L3 도달 · KPI3 다른 단지 재사용
+function b2bRate(ref, month) { const o = b2bOfficial(ref); if (o) return { state: "ok", value: Math.max(0, Math.min(100, o.value)), num: o.num, den: o.den, mode: "official" }; return PC.rate(b2bView(ref, month)); }
 function b2bDef(ref) { const s = B2B.shape; return s.mainKpis[ref] || s.leadDefs[ref] || s.lagDefs[ref] || null; }
 function b2bMembersOf(k) { const out = []; (k.links || []).forEach(l => { const d = B2B.shape.leadDefs[l.li]; if (d && d.member && !out.includes(d.member)) out.push(d.member); }); return out; }
 function b2bHist(h) { const id = "H" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); h.id = id; h.at = new Date().toISOString(); B2B.shape.perfHistory[id] = h; }
@@ -8699,12 +8702,13 @@ function b2bKpiTree(k) {
 function b2bCard(def, kind) {
   const month = b2bMonth(), r = b2bRate(def.id, month), auto = b2bAuto(def.id, month), rec = auto || b2bRec(def.id, month), ok = r.state === "ok", pct = ok ? b2bPct(r.value) : 0;
   const has = rec && rec.mode !== "direct" && PC.isNum(rec.num) && PC.isNum(rec.den), nums = has ? rec.num + " / " + rec.den : rec && rec.mode === "direct" ? "직접 입력" : "입력 전";
-  const tag = kind === "team" ? "팀 KPI " + (def.no || "") : (def.no || "") + (B2B_LEAD_KIND[def.id] ? " · " + (B2B_LEAD_KIND[def.id] === "exec" ? "실행" : "운영 지원") : "");
+  const off = kind === "team" ? b2bOfficial(def.id) : null;
+  const tag = off ? off.kpi + " · 확인분" : kind === "team" ? "팀 KPI " + (def.no || "") : (def.no || "") + (B2B_LEAD_KIND[def.id] ? " · " + (B2B_LEAD_KIND[def.id] === "exec" ? "실행" : "운영 지원") : "");
   return `<button class="kc ${kind}${!ok ? " none" : pct >= 100 ? " done" : ""}" data-ind="${def.id}" onclick="b2bOpenInd('${def.id}')">
-    <span class="kc-tag">${escapeHtml(tag)}${auto ? `<i class="kc-auto" title="${escapeHtml(b2bAutoLabel(auto) + " · " + b2bAutoTime(auto))}">${b2bAutoLabel(auto)}</i>` : ""}</span>
+    <span class="kc-tag">${escapeHtml(tag)}${auto && !off ? `<i class="kc-auto" title="${escapeHtml(b2bAutoLabel(auto) + " · " + b2bAutoTime(auto))}">${b2bAutoLabel(auto)}</i>` : ""}</span>
     <span class="kc-pct">${ok ? pct + "<small>%</small>" : escapeHtml(b2bRateLabel(r))}</span>
-    <span class="kc-desc">${escapeHtml(def.name)}</span>
-    <span class="kc-foot">실적 / 목표 <b${has ? "" : ' class="txt"'}>${nums}</b></span>
+    <span class="kc-desc">${escapeHtml(off ? off.name : def.name)}</span>
+    <span class="kc-foot">${off ? `${escapeHtml(Number(off.num).toLocaleString("ko-KR") + "/" + Number(off.den).toLocaleString("ko-KR") + " " + (off.unit || ""))} · <b>목표 ${off.target}%${off.floor ? " 도전 · " + off.floor + "% 하한" : ""}</b>` : `실적 / 목표 <b${has ? "" : ' class="txt"'}>${nums}</b>`}</span>
   </button>`;
 }
 /* 카드 아래 평균 — 측정된 지표만, 100% 넘는 값은 100%로 본다. 화면 표시용이라 저장하지 않고 팀 KPI 실적에도 쓰지 않는다. */
@@ -8753,13 +8757,13 @@ renderKpiPage = function () {
   const sel = $("kpi-month");
   if (sel) { const o = {}; PC.monthsBack(month > b2bNowMonth() ? month : b2bNowMonth(), 18).forEach(m => { o[m] = 1; }); Object.values(s.perfMonthly).concat(Object.values(s.perfAuto || {})).forEach(r => { o[r.month] = 1; }); sel.innerHTML = Object.keys(o).sort().reverse().map(m => `<option${m === month ? " selected" : ""}>${m}</option>`).join(""); }
   if ($("kpi-updated")) $("kpi-updated").textContent = month;
-  const kpis = Object.values(s.mainKpis).sort((a, b) => a.id < b.id ? -1 : 1);
+  const kpis = Object.values(s.mainKpis).sort((a, b) => (B2B_KPI_ORDER[a.id] || 9) - (B2B_KPI_ORDER[b.id] || 9) || (a.id < b.id ? -1 : 1));
   const chips = Object.values(s.members).sort((a, b) => a.id < b.id ? -1 : 1).map(m => {
     const n = Object.values(s.leadDefs).concat(Object.values(s.lagDefs), Object.values(s.achievements)).filter(d => d.member === m.id).length;
     return `<button class="member-chip ${m.id === mid ? "on" : ""}" data-kpi-member="${m.id}" onclick="b2bSetKpiMember('${m.id}')"><span class="chip-dot" style="background:${m.color || "#1B4480"};"></span>${escapeHtml(String(m.name || "").trim())}<span class="chip-count">${n}</span></button>`;
   }).join("");
   root.innerHTML = `<div class="ks-h">🎯 팀 공통 KPI ${kpis.length}개 <span>최상위 목표 · 카드를 누르면 상세보기</span></div>
-    <div class="kc-grid ks-team">${kpis.map(k => b2bCard(k, "team")).join("")}</div>${b2bAvgLine("팀 평균 진척률", kpis)}
+    <div class="kc-grid ks-team">${kpis.map(k => b2bCard(k, "team")).join("")}</div>${b2bAvgLine("팀 평균 진척률", kpis)}${s.kpiOfficial ? `<div class="kc-avg">현재값은 ${escapeHtml(String(s.kpiOfficial.cutoff || "").replace(/-/g, "."))} 마감 확인분 기준선<span>전체 공식 최신 실적이 아니며 분모·연결 기준이 달라 직접 증감 비교하지 않습니다 · 고객관리카드 B2B KPI 탭과 같은 값</span></div>` : ""}
     <div class="ks-h">🙋 팀원별로 보기 <span>이름을 누르면 그 사람의 선행·후행지표</span></div>
     <div class="member-pick ks-pick">${chips}</div>
     <div id="kpi-member-view">${mid ? b2bMemberSection(mid) : ""}</div>`;
